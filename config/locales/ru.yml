@@ -238,6 +238,7 @@ ru:
     client: Клиент
     issued_by: Выставил
     create_new: "+ Выставить счёт"
+    print_pdf: Печать / PDF
     price_hint: Цена в копейках (100 коп = 1 ₽). Кол-во поддерживает дробные.
     no_items: Нет позиций
     status:

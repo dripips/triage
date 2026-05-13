@@ -285,6 +285,7 @@ en:
     empty_hint: Invoices are created from the ticket page
     panel_title: Invoice
     create_new: "+ Create invoice"
+    print_pdf: Print / PDF
     from_price_list: "From price list:"
     status_label: Status
     currency: Currency

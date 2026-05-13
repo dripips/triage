@@ -370,3 +370,14 @@
     span:last-child { font-variant-numeric: tabular-nums; }
   }
 }
+
+// ── Print styles (invoice PDF via browser print) ─────────────────────────
+@media print {
+  .sidebar-apple, .topbar-apple, .page-header, .skip-to-main,
+  .toast-stack, .btn, button, .filter-bar-tr, .notif-badge-tr { display: none !important; }
+  .app-shell { display: block !important; }
+  .main-apple { overflow: visible !important; padding: 0 !important; }
+  .invoice-doc-tr { box-shadow: none !important; border: none !important; padding: 0 !important; }
+  body { background: #fff !important; color: #000 !important; }
+  * { color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
