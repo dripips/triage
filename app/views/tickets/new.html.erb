@@ -1,0 +1,42 @@
+<% content_for :title, t("tickets.new", default: "New ticket") %>
+
+<header class="page-header">
+  <div>
+    <div class="subtitle"><%= link_to "← #{t('tickets.title', default: 'Tickets')}", tickets_path %></div>
+    <h1><%= t("tickets.new", default: "New ticket") %></h1>
+  </div>
+</header>
+
+<%= form_with model: @ticket, local: true, class: "card" do |f| %>
+  <% if @ticket.errors.any? %>
+    <div class="flash flash-alert"><%= @ticket.errors.full_messages.to_sentence %></div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :ticket_type_id, t("tickets.type", default: "Type") %>
+    <%= f.collection_select :ticket_type_id,
+                            TicketType.where(company: current_company).active_types,
+                            :id, :name,
+                            { include_blank: false } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subject, t("tickets.subject", default: "Subject") %>
+    <%= f.text_field :subject, required: true, autofocus: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, t("tickets.description", default: "Description") %>
+    <%= f.text_area :description, rows: 6 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :priority, t("tickets.priority", default: "Priority") %>
+    <%= f.select :priority, Ticket.priorities.keys.map { |p| [ t("tickets.priorities.#{p}", default: p.humanize), p ] } %>
+  </div>
+
+  <div style="display: flex; gap: 8px;">
+    <%= f.submit t("common.create", default: "Create"), class: "btn" %>
+    <%= link_to t("common.cancel", default: "Cancel"), tickets_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

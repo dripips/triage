@@ -1,0 +1,59 @@
+ru:
+  app:
+    name: Triage
+    tagline: Универсальный helpdesk
+  common:
+    save: Сохранить
+    cancel: Отмена
+    back: Назад
+    create: Создать
+    edit: Редактировать
+    delete: Удалить
+    confirm_delete: Удалить?
+    search: Поиск
+    all: Все
+    yes: Да
+    no: Нет
+    actions: Действия
+    settings: Настройки
+    profile: Профиль
+    sign_in: Войти
+    sign_out: Выйти
+    ago: назад
+  pundit:
+    not_authorized: Доступ запрещён
+  navigation:
+    dashboard: Дашборд
+    tickets: Тикеты
+    knowledge_base: База знаний
+    reports: Отчёты
+    settings: Настройки
+  roles:
+    agent: Агент
+    supervisor: Супервайзер
+    admin: Админ
+    superadmin: Супер-админ
+  tickets:
+    title: Тикеты
+    new: Новый тикет
+    subject: Тема
+    description: Описание
+    priority: Приоритет
+    status: Статус
+    assignee: Исполнитель
+    reporter: Кем создан
+    type: Тип
+    created_at: Создан
+    updated_at: Обновлён
+    no_tickets: Тикетов пока нет
+    priorities:
+      low: Низкий
+      normal: Обычный
+      high: Высокий
+      urgent: Срочный
+  errors:
+    not_found:
+      title: Не найдено
+      message: Запрашиваемая страница не существует.
+  a11y:
+    skip_to_main: Перейти к содержимому

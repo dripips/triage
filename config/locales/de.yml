@@ -1,0 +1,59 @@
+de:
+  app:
+    name: Triage
+    tagline: Universelles Helpdesk
+  common:
+    save: Speichern
+    cancel: Abbrechen
+    back: Zurück
+    create: Erstellen
+    edit: Bearbeiten
+    delete: Löschen
+    confirm_delete: Löschen?
+    search: Suche
+    all: Alle
+    yes: Ja
+    no: Nein
+    actions: Aktionen
+    settings: Einstellungen
+    profile: Profil
+    sign_in: Anmelden
+    sign_out: Abmelden
+    ago: her
+  pundit:
+    not_authorized: Zugriff verweigert
+  navigation:
+    dashboard: Dashboard
+    tickets: Tickets
+    knowledge_base: Wissensdatenbank
+    reports: Berichte
+    settings: Einstellungen
+  roles:
+    agent: Agent
+    supervisor: Supervisor
+    admin: Admin
+    superadmin: Super-Admin
+  tickets:
+    title: Tickets
+    new: Neues Ticket
+    subject: Betreff
+    description: Beschreibung
+    priority: Priorität
+    status: Status
+    assignee: Bearbeiter
+    reporter: Ersteller
+    type: Typ
+    created_at: Erstellt
+    updated_at: Aktualisiert
+    no_tickets: Noch keine Tickets
+    priorities:
+      low: Niedrig
+      normal: Normal
+      high: Hoch
+      urgent: Dringend
+  errors:
+    not_found:
+      title: Nicht gefunden
+      message: Die angeforderte Seite existiert nicht.
+  a11y:
+    skip_to_main: Zum Inhalt springen

@@ -1,0 +1,44 @@
+<% content_for :title, t("tickets.title", default: "Tickets") %>
+
+<header class="page-header">
+  <div>
+    <h1><%= t("tickets.title", default: "Tickets") %></h1>
+    <div class="subtitle">
+      <%= @open_count %> open · <%= @closed_count %> closed
+    </div>
+  </div>
+  <div>
+    <%= link_to t("tickets.new", default: "+ New ticket"), new_ticket_path, class: "btn" %>
+  </div>
+</header>
+
+<% if @tickets.any? %>
+  <div class="card" style="padding: 0;">
+    <% @tickets.each do |ticket| %>
+      <%= link_to ticket_path(ticket), class: "ticket-row" do %>
+        <div>
+          <div class="ticket-row__subject"><%= ticket.subject %></div>
+          <div class="ticket-row__meta">
+            <span><%= ticket.ticket_type.name %></span>
+            <span>·</span>
+            <span><%= ticket.reporter&.email || "anonymous" %></span>
+            <span>·</span>
+            <span><%= time_ago_in_words(ticket.created_at) %> <%= t("common.ago") %></span>
+          </div>
+        </div>
+        <div>
+          <span class="pill pill--<%= ticket.closed? ? 'green' : 'blue' %>"><%= ticket.status %></span>
+          <% if ticket.urgent? %><span class="pill pill--red">urgent</span><% end %>
+          <% if ticket.high?   %><span class="pill pill--orange">high</span><% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <div class="empty-state">
+      <p><%= t("tickets.no_tickets", default: "No tickets yet") %></p>
+      <%= link_to t("tickets.new", default: "+ New ticket"), new_ticket_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>

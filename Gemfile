@@ -24,6 +24,7 @@ gem "pundit"
 gem "rotp"                  # TOTP 2FA
 gem "rqrcode"               # QR for 2FA setup
 gem "bcrypt", "~> 3.1.7"    # для API tokens
+gem "jwt"                   # для external SSO endpoint
 
 # ── Model essentials ──────────────────────────────────────────────────────
 gem "paper_trail"           # audit log

@@ -1,31 +1,59 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  app:
+    name: Triage
+    tagline: Universal helpdesk
+  common:
+    save: Save
+    cancel: Cancel
+    back: Back
+    create: Create
+    edit: Edit
+    delete: Delete
+    confirm_delete: Delete?
+    search: Search
+    all: All
+    yes: "Yes"
+    no: "No"
+    actions: Actions
+    settings: Settings
+    profile: Profile
+    sign_in: Sign in
+    sign_out: Sign out
+    ago: ago
+  pundit:
+    not_authorized: Access denied
+  navigation:
+    dashboard: Dashboard
+    tickets: Tickets
+    knowledge_base: Knowledge base
+    reports: Reports
+    settings: Settings
+  roles:
+    agent: Agent
+    supervisor: Supervisor
+    admin: Admin
+    superadmin: Super-admin
+  tickets:
+    title: Tickets
+    new: New ticket
+    subject: Subject
+    description: Description
+    priority: Priority
+    status: Status
+    assignee: Assignee
+    reporter: Reporter
+    type: Type
+    created_at: Created
+    updated_at: Updated
+    no_tickets: No tickets yet
+    priorities:
+      low: Low
+      normal: Normal
+      high: High
+      urgent: Urgent
+  errors:
+    not_found:
+      title: Not found
+      message: The page you requested does not exist.
+  a11y:
+    skip_to_main: Skip to main content

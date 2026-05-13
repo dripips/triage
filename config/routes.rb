@@ -7,5 +7,15 @@ Rails.application.routes.draw do
   # CSP violation reports from browsers
   post "csp_violations", to: "csp_violations#create"
 
-  root "welcome#show"
+  # External SSO — JWT-based login from a third-party customer auth system.
+  # Tenant's secret/claims живут в company.sso_*. См. ExternalSso.
+  get "sso", to: "external_sso#callback", as: :external_sso
+
+  resources :tickets, only: %i[index show new create] do
+    member do
+      post :transition
+    end
+  end
+
+  root "tickets#index"
 end

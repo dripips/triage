@@ -19,11 +19,34 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <a href="#main" class="skip-to-main"><%= t("a11y.skip_to_main", default: "Skip to main") %></a>
+
+    <header class="topbar">
+      <a href="/" class="brand">
+        <span class="brand-mark">T</span>
+        <span><%= t("app.name", default: "Triage") %></span>
+      </a>
+      <nav class="topbar-nav">
+        <% if user_signed_in? %>
+          <a href="/tickets"><%= t("navigation.tickets", default: "Tickets") %></a>
+          <span class="topbar-user"><%= current_user.email %> (<%= current_user.full_role_name %>)</span>
+          <%= button_to t("common.sign_out", default: "Sign out"), destroy_user_session_path, method: :delete, class: "btn-link" %>
+        <% else %>
+          <%= link_to t("common.sign_in", default: "Sign in"), new_user_session_path %>
+        <% end %>
+      </nav>
+    </header>
+
+    <% if flash[:notice].present? %><div class="flash flash-notice"><%= flash[:notice] %></div><% end %>
+    <% if flash[:alert].present?  %><div class="flash flash-alert"><%= flash[:alert] %></div><% end %>
+
+    <main id="main" class="main-content">
+      <%= yield %>
+    </main>
   </body>
 </html>
