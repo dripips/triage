@@ -22,7 +22,7 @@
     <div class="col-md-6">
       <%= f.label :provider, t("settings.payments.provider", default: "Провайдер"), class: "form-label" %>
       <%= f.select :provider,
-          [["Stripe", "stripe"], ["ЮKassa", "yookassa"], ["Тинькофф", "tinkoff"], ["Нет (только счета)", "none"]],
+          [["Stripe", "stripe"], ["YooKassa", "yookassa"], ["Tinkoff", "tinkoff"], [t("settings.payments.none", default: "None (invoices only)"), "none"]],
           { selected: @setting.get("provider") || "none" },
           { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
@@ -46,13 +46,13 @@
     </div>
     <div class="col-md-6">
       <%= f.label :stripe_secret_key, "Secret Key", class: "form-label" %>
-      <%= f.password_field :stripe_secret_key, value: "", class: "form-control", placeholder: @setting.get("stripe_secret_key").present? ? "••••••• (сохранён)" : "sk_live_..." %>
+      <%= f.password_field :stripe_secret_key, value: "", class: "form-control", placeholder: @setting.get("stripe_secret_key").present? ? "••••••• (saved)" : "sk_live_..." %>
     </div>
   </div>
 
   <hr class="my-3">
 
-  <h5 class="mb-3">ЮKassa</h5>
+  <h5 class="mb-3">YooKassa</h5>
   <div class="row g-3">
     <div class="col-md-6">
       <%= f.label :yookassa_shop_id, "Shop ID", class: "form-label" %>
@@ -60,13 +60,13 @@
     </div>
     <div class="col-md-6">
       <%= f.label :yookassa_secret_key, "Secret Key", class: "form-label" %>
-      <%= f.password_field :yookassa_secret_key, value: "", class: "form-control", placeholder: @setting.get("yookassa_secret_key").present? ? "••••••• (сохранён)" : "" %>
+      <%= f.password_field :yookassa_secret_key, value: "", class: "form-control", placeholder: @setting.get("yookassa_secret_key").present? ? "••••••• (saved)" : "" %>
     </div>
   </div>
 
   <hr class="my-3">
 
-  <h5 class="mb-3">Тинькофф</h5>
+  <h5 class="mb-3">Tinkoff</h5>
   <div class="row g-3">
     <div class="col-md-6">
       <%= f.label :tinkoff_terminal_key, "Terminal Key", class: "form-label" %>
@@ -74,7 +74,7 @@
     </div>
     <div class="col-md-6">
       <%= f.label :tinkoff_secret_key, "Secret Key", class: "form-label" %>
-      <%= f.password_field :tinkoff_secret_key, value: "", class: "form-control", placeholder: @setting.get("tinkoff_secret_key").present? ? "••••••• (сохранён)" : "" %>
+      <%= f.password_field :tinkoff_secret_key, value: "", class: "form-control", placeholder: @setting.get("tinkoff_secret_key").present? ? "••••••• (saved)" : "" %>
     </div>
   </div>
 

@@ -22,13 +22,13 @@
       <% unless is_mine %>
         <div class="chat-bubble-tr__name">
           <%= conversation_message.author&.respond_to?(:display_name) ? conversation_message.author.display_name : "система" %>
-          <% if conversation_message.internal %><span class="pill pill--warning pill--sm">внутр.</span><% end %>
+          <% if conversation_message.internal %><span class="pill pill--warning pill--sm"<%= t("chat.internal_short") %></span><% end %>
           <% if is_ai %><span class="pill pill--info pill--sm">AI</span><% end %>
         </div>
       <% end %>
       <div class="chat-bubble-tr__text"><%= simple_format(conversation_message.body) %></div>
       <div class="chat-bubble-tr__time">
-        <% if conversation_message.internal && is_mine %><span class="pill pill--warning pill--sm">внутр.</span><% end %>
+        <% if conversation_message.internal && is_mine %><span class="pill pill--warning pill--sm"<%= t("chat.internal_short") %></span><% end %>
         <%= conversation_message.created_at.strftime("%H:%M") %>
       </div>
     </div>

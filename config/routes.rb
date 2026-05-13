@@ -30,6 +30,9 @@ Rails.application.routes.draw do
       resource  :api_token,     only: %i[show],        controller: "api_tokens"
       resource  :payment,       only: %i[show update], controller: "payments"
       resource  :chat,          only: %i[show update], controller: "chats"
+      resources :languages, only: %i[index], controller: "languages" do
+        collection { post :toggle, as: :language_toggle }
+      end
       resources :knowledge_articles
       resources :price_lists
     end

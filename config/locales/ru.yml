@@ -224,6 +224,16 @@ ru:
     total: ИТОГО
     notes: Примечания
     notes_placeholder: Условия оплаты, реквизиты, комментарии...
+    surcharge: "Наценка %"
+    surcharge_hidden: Скрыть наценку
+    surcharge_tooltip: Скрытая — не отображается клиенту в счёте
+    surcharge_line: Наценка
+    discount_line: Скидка
+    date_issued: Дата
+    related_ticket: Тикет
+    client: Клиент
+    issued_by: Выставил
+    create_new: "+ Выставить счёт"
     price_hint: Цена в копейках (100 коп = 1 ₽). Кол-во поддерживает дробные.
     no_items: Нет позиций
     status:
@@ -234,9 +244,16 @@ ru:
       cancelled: Отменён
   invoice_items:
     name: Название
+    name_placeholder: Услуга, товар...
     description: Описание
+    desc_placeholder: Опционально
     qty: Кол-во
-    unit_price: Цена (коп)
+    unit_price: Цена
+    price_label: "Цена (%{sym})"
+    item_discount: Скидка
+    surcharge: Наценка
+    surcharge_tooltip: Скрытая наценка — клиент не видит
+    hidden_short: скр.
     total: Итого
     active_label: активна
     inactive: неактивна
@@ -260,6 +277,113 @@ ru:
     assigned: "%{actor} назначил на %{assignee}"
     assigned_notification: "Вам назначен тикет %{ticket}"
   system_user: Система
+  settings:
+    title: Настройки
+    subtitle: Конфигурация системы для вашей компании
+    saved: Настройки сохранены
+    tabs:
+      general: Общие
+      ai: AI ассистент
+      notifications: Уведомления
+      sso: SSO
+      api: API токены
+      kb: База знаний
+      price_lists: Прайс-листы
+      payments: Платежи
+      chat: Чат
+      languages: Языки
+    languages:
+      title: Языки
+      subtitle: Включите или отключите доступные языки
+      default: По умолчанию
+    ai:
+      title: AI ассистент
+      subtitle: Настройка AI-модели для работы с тикетами
+      mode_standard: Стандартный
+      mode_advanced: Расширенный
+      mode_hint: Стандартный — готовые пресеты. Расширенный — полный контроль.
+      provider: Провайдер
+      api_key: API ключ
+      api_key_hint: Оставьте пустым чтобы сохранить текущий ключ.
+      api_base_url: API Endpoint URL
+      model_select: Модель
+      model_custom: Или впишите модель вручную
+      model_freeform: Или впишите модель вручную
+      features_title: AI-функции
+      features_subtitle: Включите задачи которые AI выполняет автоматически
+      auto_categorize: Авто-категоризация тикетов
+      auto_suggest_reply: Подсказка ответов агенту
+      auto_summarize: Авто-резюме тредов
+      auto_sentiment: Анализ настроения клиента
+      advanced_title: Расширенные параметры
+      budget: Бюджет $/мес
+      system_prompt: Системный промпт
+      system_prompt_hint: Передаётся модели при каждом запросе.
+      cost_title: Калькулятор стоимости
+      task: Задача
+      est_cost: "≈ Стоимость"
+      model_label: Модель
+      month: мес
+      usage_title: Расход за месяц
+      usage_cost: Потрачено
+      usage_runs: Запросов
+      no_usage: Ещё не было AI-запросов
+      recent_title: Последние запросы
+      enabled: AI ассистент включён
+    payments:
+      title: Платёжные системы
+      subtitle: Подключите платёжную систему для выставления счетов клиентам
+      enabled: Приём платежей включён
+      provider: Провайдер
+      none: Нет (только счета)
+      currency: Валюта
+      tax_rate: НДС %
+    notifications:
+      title: Уведомления
+      subtitle: Когда и как отправлять уведомления
+      in_app: In-app уведомления (toast)
+      email_new: Email при новом тикете
+      email_comment: Email при новом комментарии
+      email_transition: Email при смене статуса
+      digest: Дайджест
+      digest_none: Отключён
+      digest_daily: Ежедневный
+      digest_weekly: Еженедельный
+    sso:
+      title: External SSO (JWT)
+      subtitle: Клиенты с собственной системой авторизации могут логиниться через JWT
+      enabled: SSO включён
+      secret: JWT Secret
+      algorithm: Алгоритм
+      user_id_claim: "Claim: user_id"
+      email_claim: "Claim: email"
+      name_claim: "Claim: name"
+      auto_provision: Авто-создание пользователей
+      endpoint: Endpoint
+    chat:
+      title: Чат в тикетах
+      subtitle: Real-time чат между агентом и клиентом
+      enabled: Чат включён
+      enabled_hint: Если выключен — тикеты используют только комментарии.
+      allow_customer: Клиенты могут писать в чат
+      typing_indicator: Индикатор набора текста
+      auto_assign: Авто-назначение при ответе
+      idle_timeout: "Авто-закрытие (минуты idle)"
+      idle_hint: 0 = отключено
+      welcome_msg: Автоприветствие
+      welcome_placeholder: Здравствуйте! Чем можем помочь?
+    general:
+      company_name: Название компании
+      timezone: Таймзона
+      default_locale: Язык по умолчанию
+      welcome_message: Приветственное сообщение
+      welcome_placeholder: Показывается клиентам при создании тикета
+      subtitle: Название компании, локаль, таймзона
+    api:
+      title: API токены
+      subtitle: Bearer-токены для REST API.
+      coming_soon: Создание и отзыв API-токенов будет доступно в следующей версии.
+      no_tokens: Токенов пока нет
   chat:
     title: Чат
     empty: Начните переписку

@@ -73,7 +73,7 @@
           <%= f.label :api_key, t("settings.ai.api_key", default: "API ключ"), class: "form-label" %>
           <%= f.password_field :api_key, value: "",
               class: "form-control",
-              placeholder: @setting.get("api_key").present? ? "••••••••••• (сохранён)" : "sk-..., AQVN..., ..." %>
+              placeholder: @setting.get("api_key").present? ? "••••••••••• (saved)" : "sk-..., AQVN..., ..." %>
           <div class="footnote text-tertiary mt-1"><%= t("settings.ai.api_key_hint", default: "Оставьте пустым чтобы сохранить текущий ключ.") %></div>
         </div>
         <div class="col-12" data-ai-settings-target="apiUrlBlock">
@@ -150,14 +150,11 @@
     <div class="card-apple mb-3">
       <h4 class="card-apple__title mb-3"><%= t("settings.ai.features_title", default: "AI-функции") %></h4>
       <div class="row g-3">
-        <% [ ["auto_categorize",    "Авто-категоризация тикетов"],
-             ["auto_suggest_reply", "Подсказка ответов агенту"],
-             ["auto_summarize",     "Авто-резюме тредов"],
-             ["auto_sentiment",     "Анализ настроения клиента"] ].each do |key, label| %>
+        <% %w[auto_categorize auto_suggest_reply auto_summarize auto_sentiment].each do |key| %>
           <div class="col-md-6">
             <div class="form-check form-switch">
               <%= f.check_box key.to_sym, checked: @setting.get(key).to_s == "1", class: "form-check-input", role: "switch" %>
-              <%= f.label key.to_sym, t("settings.ai.#{key}", default: label), class: "form-check-label" %>
+              <%= f.label key.to_sym, t("settings.ai.#{key}"), class: "form-check-label" %>
             </div>
           </div>
         <% end %>
@@ -201,7 +198,7 @@
     <div class="card-apple mb-3">
       <h4 class="card-apple__title mb-2"><%= t("settings.ai.cost_title", default: "Калькулятор стоимости") %></h4>
       <table class="table table-sm mt-2">
-        <thead><tr><th>Задача</th><th>≈ стоимость</th></tr></thead>
+        <thead><tr><th><%= t("settings.ai.task", default: "Task") %></th><th><%= t("settings.ai.est_cost", default: "≈ Cost") %></th></tr></thead>
         <tbody>
           <% TicketAi::TASK_KINDS.each do |task_key, task_info| %>
             <tr>
@@ -212,7 +209,7 @@
         </tbody>
       </table>
       <div class="footnote text-tertiary mt-2">
-        Модель: <strong><%= @ai.model_info[:label] %></strong> · Бюджет: $<%= @ai.monthly_budget %>/мес
+        <%= t("settings.ai.model_label", default: "Model") %>: <strong><%= @ai.model_info[:label] %></strong> · <%= t("settings.ai.budget", default: "Budget") %>: $<%= @ai.monthly_budget %>/<%= t("settings.ai.month", default: "mo") %>
       </div>
     </div>
 
@@ -220,17 +217,17 @@
       <h4 class="card-apple__title mb-2"><%= t("settings.ai.usage_title", default: "Расход за месяц") %></h4>
       <div class="d-flex gap-3 mt-2">
         <div>
-          <div class="footnote text-tertiary">Потрачено</div>
+          <div class="footnote text-tertiary"><%= t("settings.ai.usage_cost", default: "Spent") %></div>
           <strong class="text-mono">$<%= sprintf("%.2f", @usage_this_month) %></strong>
         </div>
         <div>
-          <div class="footnote text-tertiary">Запросов</div>
+          <div class="footnote text-tertiary"><%= t("settings.ai.usage_runs", default: "Requests") %></div>
           <strong><%= AiRun.where(company: current_company).this_month.count %></strong>
         </div>
       </div>
       <% if @by_kind.any? %>
         <table class="table table-sm mt-2">
-          <thead><tr><th>Задача</th><th>#</th><th>$</th></tr></thead>
+          <thead><tr><th><%= t("settings.ai.task", default: "Task") %></th><th>#</th><th>$</th></tr></thead>
           <tbody>
             <% @by_kind.each do |row| %>
               <tr>
@@ -242,7 +239,7 @@
           </tbody>
         </table>
       <% else %>
-        <p class="footnote text-secondary-apple m-0 mt-2">Ещё не было AI-запросов</p>
+        <p class="footnote text-secondary-apple m-0 mt-2"><%= t("settings.ai.no_usage", default: "No AI requests this month") %></p>
       <% end %>
     </div>
   </div>

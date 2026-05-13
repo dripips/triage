@@ -206,11 +206,16 @@ en:
       cancelled: Cancelled
   invoice_items:
     name: Name
+    name_placeholder: Service, product...
     description: Description
+    desc_placeholder: Optional
     qty: Qty
     unit_price: Price
     price_label: "Price (%{sym})"
     item_discount: Discount
+    surcharge: Surcharge
+    surcharge_tooltip: Hidden surcharge — not visible to client
+    hidden_short: hid.
     total: Total
   notifications:
     title: Notifications
@@ -247,3 +252,96 @@ en:
       price_lists: Price Lists
       payments: Payments
       chat: Chat
+      languages: Languages
+    languages:
+      title: Languages
+      subtitle: Enable or disable available languages for your helpdesk
+      default: Default
+    ai:
+      title: AI Assistant
+      subtitle: Configure the AI model for ticket automation
+      mode_standard: Standard
+      mode_advanced: Advanced
+      mode_hint: Standard — ready presets. Advanced — full control.
+      provider: Provider
+      api_key: API Key
+      api_key_hint: Leave blank to keep the current key.
+      api_base_url: API Endpoint URL
+      model_select: Model
+      model_custom: Or enter model manually
+      model_freeform: Or enter model manually
+      features_title: AI Features
+      features_subtitle: Enable tasks that AI performs automatically
+      auto_categorize: Auto-categorize tickets
+      auto_suggest_reply: Suggest replies to agent
+      auto_summarize: Auto-summarize threads
+      auto_sentiment: Sentiment analysis
+      advanced_title: Advanced Parameters
+      budget: Budget $/mo
+      system_prompt: System Prompt
+      system_prompt_hint: Sent to the model with every request.
+      cost_title: Cost Calculator
+      task: Task
+      est_cost: "≈ Cost"
+      model_label: Model
+      month: mo
+      usage_title: Usage This Month
+      usage_cost: Spent
+      usage_runs: Requests
+      no_usage: No AI requests this month
+      recent_title: Recent Requests
+      enabled: AI Assistant enabled
+    payments:
+      title: Payment Systems
+      subtitle: Connect a payment system for client invoicing
+      enabled: Accept payments enabled
+      provider: Provider
+      none: None (invoices only)
+      currency: Currency
+      tax_rate: VAT %
+    notifications:
+      title: Notifications
+      subtitle: When and how to send notifications
+      in_app: In-app notifications (toast)
+      email_new: Email on new ticket
+      email_comment: Email on new comment
+      email_transition: Email on status change
+      digest: Digest
+      digest_none: Disabled
+      digest_daily: Daily
+      digest_weekly: Weekly
+    sso:
+      title: External SSO (JWT)
+      subtitle: Customers with their own auth system can log in via JWT
+      enabled: SSO enabled
+      secret: JWT Secret
+      algorithm: Algorithm
+      user_id_claim: "Claim: user_id"
+      email_claim: "Claim: email"
+      name_claim: "Claim: name"
+      auto_provision: Auto-provision users
+      endpoint: Endpoint
+    chat:
+      title: Ticket Chat
+      subtitle: Real-time chat between agent and client
+      enabled: Chat enabled
+      enabled_hint: If disabled — tickets use comments only.
+      allow_customer: Customers can write in chat
+      typing_indicator: Typing indicator
+      auto_assign: Auto-assign on reply
+      idle_timeout: Auto-close (idle minutes)
+      idle_hint: 0 = disabled
+      welcome_msg: Auto-greeting
+      welcome_placeholder: Hello! How can we help?
+    general:
+      company_name: Company name
+      timezone: Timezone
+      default_locale: Default language
+      welcome_message: Welcome message
+      welcome_placeholder: Shown to customers when creating a ticket
+      subtitle: Company name, locale, timezone
+    api:
+      title: API Tokens
+      subtitle: Bearer tokens for REST API.
+      coming_soon: Token management will be available in the next version.
+      no_tokens: No tokens yet

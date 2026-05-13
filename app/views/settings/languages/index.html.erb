@@ -1,0 +1,43 @@
+<% content_for :title, t("settings.tabs.languages", default: "Languages") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<div class="card-apple">
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.languages.title", default: "Languages") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.languages.subtitle", default: "Enable or disable available languages for your helpdesk") %></p>
+  </div>
+
+  <div class="d-flex flex-column gap-2 mt-3">
+    <% @languages.each do |lang| %>
+      <div class="d-flex justify-content-between align-items-center p-3" style="border: 1px solid var(--ds-separator); border-radius: var(--ds-radius-md);">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fi fi-<%= lang[:flag] %>" style="font-size: 20px;"></span>
+          <div>
+            <strong><%= lang[:native_name] %></strong>
+            <span class="footnote text-tertiary ms-2"><%= lang[:code].upcase %></span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <% is_enabled = @enabled.include?(lang[:code]) %>
+          <% if is_enabled && @enabled.size <= 1 %>
+            <span class="pill pill--info"><%= t("settings.languages.default", default: "Default") %></span>
+          <% else %>
+            <%= button_to settings_language_toggle_path(code: lang[:code]),
+                          method: :post,
+                          class: "form-check form-switch m-0",
+                          form: { style: "display:inline" } do %>
+              <input type="checkbox" class="form-check-input" role="switch"
+                     <%= "checked" if is_enabled %>
+                     style="pointer-events:none;">
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
