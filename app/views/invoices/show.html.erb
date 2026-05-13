@@ -1,90 +1,146 @@
 <% content_for :title, @invoice.number %>
+<%
+  sym = { "RUB" => "₽", "USD" => "$", "EUR" => "€" }[@invoice.currency] || @invoice.currency
+  status_tone = { "draft" => "neutral", "sent" => "info", "paid" => "success", "overdue" => "danger", "cancelled" => "neutral" }[@invoice.status] || "neutral"
+%>
 
 <header class="page-header">
   <div>
     <div class="page-header__eyebrow"><%= link_to "← #{t('invoices.title', default: 'Счета')}", invoices_path %></div>
     <h1 class="page-header__title m-0"><%= @invoice.number %></h1>
-    <div class="ticket-meta mt-2">
-      <span class="pill pill--<%= { 'draft' => 'neutral', 'sent' => 'info', 'paid' => 'success', 'overdue' => 'danger', 'cancelled' => 'neutral' }[@invoice.status] || 'neutral' %>">
-        <%= t("invoices.status.#{@invoice.status}", default: @invoice.status.humanize) %>
-      </span>
-      <% if @invoice.ticket %>
-        <span>·</span>
-        <%= link_to "##{@invoice.ticket.id} #{@invoice.ticket.subject.truncate(40)}", ticket_path(@invoice.ticket) %>
-      <% end %>
-      <span>·</span>
-      <span><%= @invoice.user.display_name %></span>
-      <% if @invoice.due_at %>
-        <span>·</span>
-        <span>до <%= l(@invoice.due_at, format: :short) rescue @invoice.due_at.to_date %></span>
-      <% end %>
-    </div>
+  </div>
+  <div class="page-header__actions d-flex gap-2">
+    <%= link_to t("common.edit", default: "Редактировать"), edit_invoice_path(@invoice), class: "btn btn-ghost" %>
   </div>
 </header>
 
-<div class="card-apple">
+<div class="card-apple invoice-doc-tr">
+  <%# ── Header: company + invoice meta ── %>
+  <div class="invoice-doc-tr__head">
+    <div class="invoice-doc-tr__brand">
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <span class="sidebar-apple__brand-mark" style="width:40px;height:40px;font-size:20px;">T</span>
+        <div>
+          <div style="font-size:18px;font-weight:700;"><%= current_company.name %></div>
+        </div>
+      </div>
+    </div>
+    <div class="invoice-doc-tr__meta text-end">
+      <div style="font-size:24px;font-weight:800;letter-spacing:-0.02em;" class="mb-1">
+        <%= @invoice.number %>
+      </div>
+      <div>
+        <span class="pill pill--<%= status_tone %>"><%= t("invoices.status.#{@invoice.status}", default: @invoice.status.humanize) %></span>
+      </div>
+      <div class="footnote text-tertiary mt-2">
+        <%= t("invoices.date_issued", default: "Дата") %>: <%= @invoice.created_at.strftime("%d.%m.%Y") %>
+      </div>
+      <% if @invoice.due_at %>
+        <div class="footnote text-tertiary">
+          <%= t("invoices.due_at", default: "Оплатить до") %>: <strong><%= @invoice.due_at.strftime("%d.%m.%Y") %></strong>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Client + ticket info ── %>
+  <div class="invoice-doc-tr__parties">
+    <% if @invoice.ticket %>
+      <div>
+        <div class="footnote text-tertiary mb-1"><%= t("invoices.related_ticket", default: "Тикет") %></div>
+        <%= link_to ticket_path(@invoice.ticket), class: "d-block" do %>
+          <strong>#<%= @invoice.ticket.id %></strong> · <%= @invoice.ticket.subject.truncate(60) %>
+        <% end %>
+        <% if @invoice.ticket.reporter.respond_to?(:display_name) %>
+          <div class="footnote text-tertiary mt-1">
+            <%= t("invoices.client", default: "Клиент") %>: <strong><%= @invoice.ticket.reporter.display_name %></strong>
+            <% if @invoice.ticket.reporter.respond_to?(:email) %><br><%= @invoice.ticket.reporter.email %><% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="text-end">
+      <div class="footnote text-tertiary mb-1"><%= t("invoices.issued_by", default: "Выставил") %></div>
+      <strong><%= @invoice.user.display_name %></strong>
+      <div class="footnote text-tertiary"><%= @invoice.user.email %></div>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <%# ── Items table ── %>
   <% if @items.any? %>
-    <table class="table">
+    <table class="invoice-table-tr">
       <thead>
         <tr>
-          <th style="width:50%"><%= t("invoice_items.name", default: "Позиция") %></th>
-          <th class="text-end"><%= t("invoice_items.qty", default: "Кол-во") %></th>
-          <th class="text-end"><%= t("invoice_items.unit_price", default: "Цена") %></th>
-          <th class="text-end"><%= t("invoice_items.item_discount", default: "Скидка") %></th>
-          <th class="text-end"><%= t("invoice_items.total", default: "Итого") %></th>
+          <th class="invoice-table-tr__num">#</th>
+          <th class="invoice-table-tr__name"><%= t("invoice_items.name", default: "Позиция") %></th>
+          <th class="invoice-table-tr__qty"><%= t("invoice_items.qty", default: "Кол-во") %></th>
+          <th class="invoice-table-tr__price"><%= t("invoice_items.unit_price", default: "Цена") %></th>
+          <% has_discounts = @items.any? { |i| i.discount_percent.to_d > 0 } %>
+          <% if has_discounts %><th class="invoice-table-tr__discount"><%= t("invoice_items.item_discount", default: "Скидка") %></th><% end %>
+          <th class="invoice-table-tr__total"><%= t("invoice_items.total", default: "Сумма") %></th>
         </tr>
       </thead>
       <tbody>
-        <% @items.each do |item| %>
+        <% @items.each_with_index do |item, idx| %>
           <tr>
-            <td>
+            <td class="invoice-table-tr__num footnote text-tertiary"><%= idx + 1 %></td>
+            <td class="invoice-table-tr__name">
               <strong><%= item.name %></strong>
               <% if item.description.present? %><div class="footnote text-tertiary"><%= item.description %></div><% end %>
             </td>
-            <td class="text-end text-mono"><%= item.quantity %></td>
-            <td class="text-end text-mono"><%= item.unit_price %> <%= @invoice.currency %></td>
-            <td class="text-end text-mono">
-              <% if item.discount_percent.to_d > 0 %><span class="pill pill--success pill--sm">-<%= item.discount_percent %>%</span><% end %>
-            </td>
-            <td class="text-end text-mono"><%= item.total %> <%= @invoice.currency %></td>
+            <td class="invoice-table-tr__qty"><%= item.quantity %></td>
+            <td class="invoice-table-tr__price"><%= number_with_delimiter(item.unit_price, delimiter: " ") %> <%= sym %></td>
+            <% if has_discounts %>
+              <td class="invoice-table-tr__discount">
+                <% if item.discount_percent.to_d > 0 %>
+                  <span class="pill pill--success pill--sm">−<%= item.discount_percent %>%</span>
+                <% end %>
+              </td>
+            <% end %>
+            <td class="invoice-table-tr__total"><strong><%= number_with_delimiter(item.total, delimiter: " ") %> <%= sym %></strong></td>
           </tr>
         <% end %>
       </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3" class="text-end"><strong><%= t("invoices.subtotal", default: "Подитог") %></strong></td>
-          <td class="text-end text-mono"><strong><%= @invoice.subtotal %> <%= @invoice.currency %></strong></td>
-        </tr>
-        <% if @invoice.discount_cents > 0 %>
-          <tr>
-            <td colspan="4" class="text-end"><%= t("invoices.discount_line", default: "Скидка") %> (<%= @invoice.discount_percent %>%)</td>
-            <td class="text-end text-mono text-success">−<%= @invoice.discount %> <%= @invoice.currency %></td>
-          </tr>
-        <% end %>
-        <% if @invoice.surcharge_cents > 0 && !@invoice.surcharge_hidden %>
-          <tr>
-            <td colspan="4" class="text-end"><%= t("invoices.surcharge_line", default: "Наценка") %> (<%= @invoice.surcharge_percent %>%)</td>
-            <td class="text-end text-mono">+<%= @invoice.surcharge_cents / 100.0 %> <%= @invoice.currency %></td>
-          </tr>
-        <% end %>
-        <% if @invoice.tax_cents > 0 %>
-          <tr>
-            <td colspan="4" class="text-end"><%= t("invoices.tax", default: "НДС") %> (<%= @invoice.tax_percent %>%)</td>
-            <td class="text-end text-mono"><%= @invoice.tax %> <%= @invoice.currency %></td>
-          </tr>
-        <% end %>
-        <tr style="border-top: 2px solid var(--ds-separator);">
-          <td colspan="4" class="text-end"><strong><%= t("invoices.total", default: "ИТОГО") %></strong></td>
-          <td class="text-end text-mono" style="font-size:16px;"><strong><%= @invoice.formatted_total %></strong></td>
-        </tr>
-      </tfoot>
     </table>
-  <% else %>
-    <p class="footnote text-secondary-apple m-0"><%= t("invoices.no_items", default: "Нет позиций") %></p>
   <% end %>
 
+  <%# ── Totals block ── %>
+  <div class="invoice-totals-tr">
+    <div class="invoice-totals-tr__row">
+      <span><%= t("invoices.subtotal", default: "Подитог") %></span>
+      <span><%= number_with_delimiter(@invoice.subtotal, delimiter: " ") %> <%= sym %></span>
+    </div>
+    <% if @invoice.discount_cents > 0 %>
+      <div class="invoice-totals-tr__row invoice-totals-tr__row--discount">
+        <span><%= t("invoices.discount_line", default: "Скидка") %> (<%= @invoice.discount_percent %>%)</span>
+        <span>−<%= number_with_delimiter(@invoice.discount, delimiter: " ") %> <%= sym %></span>
+      </div>
+    <% end %>
+    <% if @invoice.surcharge_cents > 0 && !@invoice.surcharge_hidden %>
+      <div class="invoice-totals-tr__row">
+        <span><%= t("invoices.surcharge_line", default: "Наценка") %> (<%= @invoice.surcharge_percent %>%)</span>
+        <span>+<%= number_with_delimiter(@invoice.surcharge_cents / 100.0, delimiter: " ") %> <%= sym %></span>
+      </div>
+    <% end %>
+    <% if @invoice.tax_cents > 0 %>
+      <div class="invoice-totals-tr__row">
+        <span><%= t("invoices.tax", default: "НДС") %> (<%= @invoice.tax_percent %>%)</span>
+        <span><%= number_with_delimiter(@invoice.tax, delimiter: " ") %> <%= sym %></span>
+      </div>
+    <% end %>
+    <div class="invoice-totals-tr__total">
+      <span><%= t("invoices.total", default: "ИТОГО") %></span>
+      <span><%= number_with_delimiter(@invoice.total, delimiter: " ") %> <%= sym %></span>
+    </div>
+  </div>
+
+  <%# ── Notes ── %>
   <% if @invoice.notes.present? %>
-    <hr>
-    <div class="footnote text-secondary-apple"><%= @invoice.notes %></div>
+    <div class="invoice-doc-tr__notes">
+      <div class="footnote text-tertiary mb-1"><%= t("invoices.notes", default: "Примечания") %></div>
+      <p class="m-0" style="white-space:pre-wrap;"><%= @invoice.notes %></p>
+    </div>
   <% end %>
 </div>

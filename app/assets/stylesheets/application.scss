@@ -292,3 +292,76 @@
   background: var(--ds-blue, #0A84FF); border-radius: 50%;
   margin-right: 6px; vertical-align: middle;
 }
+
+// ── Invoice document ─────────────────────────────────────────────────────
+.invoice-doc-tr {
+  padding: 32px;
+  @media (max-width: 575px) { padding: 16px; }
+
+  &__head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 16px;
+    margin-bottom: 24px;
+  }
+  &__parties {
+    display: flex; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  &__notes {
+    margin-top: 24px; padding-top: 16px;
+    border-top: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
+  }
+}
+
+.invoice-table-tr {
+  width: 100%; border-collapse: collapse; margin-bottom: 24px;
+
+  th {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ds-label-tertiary, rgba(60,60,67,0.54));
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--ds-separator, rgba(60,60,67,0.18));
+  }
+  td {
+    padding: 12px; font-size: 14px;
+    border-bottom: 1px solid var(--ds-separator, rgba(60,60,67,0.08));
+    vertical-align: top;
+  }
+  &__num { width: 36px; text-align: center; }
+  &__qty, &__price, &__discount, &__total { text-align: right; white-space: nowrap; }
+  &__name { min-width: 200px; }
+
+  tbody tr {
+    transition: background var(--ds-dur-fast, 140ms);
+    &:hover { background: var(--ds-fill-tertiary, rgba(120,120,128,0.04)); }
+    &:last-child td { border-bottom: none; }
+  }
+}
+
+.invoice-totals-tr {
+  display: flex; flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-top: 16px;
+  border-top: 2px solid var(--ds-separator, rgba(60,60,67,0.18));
+
+  &__row {
+    display: flex; justify-content: space-between; gap: 40px;
+    min-width: 280px;
+    font-size: 14px;
+    span:last-child { font-variant-numeric: tabular-nums; }
+  }
+  &__row--discount {
+    color: var(--ds-green, #34C759);
+  }
+  &__total {
+    display: flex; justify-content: space-between; gap: 40px;
+    min-width: 280px;
+    padding-top: 8px; margin-top: 4px;
+    border-top: 2px solid var(--ds-label-primary, #1D1D1F);
+    font-size: 18px; font-weight: 800;
+    span:last-child { font-variant-numeric: tabular-nums; }
+  }
+}
