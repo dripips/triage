@@ -1,5 +1,5 @@
 <%
-  is_mine   = conversation_message.author == current_user
+  is_mine   = defined?(current_user) && current_user && conversation_message.author == current_user rescue false
   is_system = conversation_message.system?
   is_ai     = conversation_message.ai_suggestion?
 %>
