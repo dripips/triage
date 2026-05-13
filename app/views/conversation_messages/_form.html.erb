@@ -12,7 +12,7 @@
           </svg>
           <%= f.file_field :files, multiple: true, class: "d-none", data: { chat_paste_target: "fileInput" } %>
         </label>
-        <% if defined?(current_user) && current_user&.staff? rescue false %>
+        <% if (defined?(current_user) && current_user&.staff?) %>
           <label class="form-check m-0">
             <%= f.check_box :internal, class: "form-check-input" %>
             <span class="footnote"><%= t("chat.internal_short") %></span>
