@@ -28,7 +28,7 @@
       <%= f.select :algorithm,
                    [["HS256", "HS256"], ["HS384", "HS384"], ["HS512", "HS512"]],
                    { selected: @setting.get("algorithm") || "HS256" },
-                   { class: "form-select" } %>
+                   { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-4">
       <%= f.label :user_id_claim, t("settings.sso.user_id_claim", default: "Claim: user_id"), class: "form-label" %>

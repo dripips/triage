@@ -13,7 +13,7 @@
       <%= f.collection_select :ticket_type_id,
                               TicketType.where(company: current_company).active_types, :id, :name,
                               { include_blank: t("knowledge.all_types", default: "— Все типы —") },
-                              { class: "form-select" } %>
+                              { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-12">
       <%= f.label :body, t("knowledge.body", default: "Содержание"), class: "form-label" %>

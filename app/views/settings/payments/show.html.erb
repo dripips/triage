@@ -24,11 +24,11 @@
       <%= f.select :provider,
           [["Stripe", "stripe"], ["ЮKassa", "yookassa"], ["Тинькофф", "tinkoff"], ["Нет (только счета)", "none"]],
           { selected: @setting.get("provider") || "none" },
-          { class: "form-select" } %>
+          { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-3">
       <%= f.label :currency, t("settings.payments.currency", default: "Валюта"), class: "form-label" %>
-      <%= f.select :currency, [["RUB ₽", "RUB"], ["USD $", "USD"], ["EUR €", "EUR"]], { selected: @setting.get("currency") || "RUB" }, { class: "form-select" } %>
+      <%= f.select :currency, [["RUB ₽", "RUB"], ["USD $", "USD"], ["EUR €", "EUR"]], { selected: @setting.get("currency") || "RUB" }, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-3">
       <%= f.label :tax_rate_percent, t("settings.payments.tax_rate", default: "НДС %"), class: "form-label" %>

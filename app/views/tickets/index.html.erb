@@ -32,21 +32,21 @@
         <%= f.select :ticket_type_id,
             TicketType.where(company: current_company).active_types.map { |tt| [tt.name, tt.id] },
             { include_blank: t("common.all", default: "Все"), selected: params[:ticket_type_id] },
-            { class: "form-select form-select-sm" } %>
+            { class: "form-select form-select-sm", data: { controller: "apple-select" } } %>
       </div>
       <div class="col-md-3">
         <%= f.label :priority, t("tickets.priority_label", default: "Приоритет"), class: "form-label" %>
         <%= f.select :priority,
             Ticket.priorities.keys.map { |p| [t("tickets.priority.#{p}", default: p.humanize), p] },
             { include_blank: t("common.all", default: "Все"), selected: params[:priority] },
-            { class: "form-select form-select-sm" } %>
+            { class: "form-select form-select-sm", data: { controller: "apple-select" } } %>
       </div>
       <div class="col-md-3">
         <%= f.label :assignee_id, t("tickets.assignee", default: "Исполнитель"), class: "form-label" %>
         <%= f.select :assignee_id,
             User.kept.staff_users.where(company: current_company).map { |u| [u.display_name, u.id] },
             { include_blank: t("common.all", default: "Все"), selected: params[:assignee_id] },
-            { class: "form-select form-select-sm" } %>
+            { class: "form-select form-select-sm", data: { controller: "apple-select" } } %>
       </div>
       <div class="col-md-3 d-flex align-items-end gap-2">
         <%= f.submit t("tickets.apply_filters", default: "Применить"), class: "btn btn-primary btn-sm" %>

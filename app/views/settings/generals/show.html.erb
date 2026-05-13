@@ -25,14 +25,14 @@
       <%= f.select :timezone,
                    ActiveSupport::TimeZone.all.map { |tz| [tz.to_s, tz.name] },
                    { selected: @setting.get("timezone") || "Moscow" },
-                   { class: "form-select" } %>
+                   { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-6">
       <%= f.label :default_locale, t("settings.general.default_locale", default: "Язык по умолчанию"), class: "form-label" %>
       <%= f.select :default_locale,
                    TriageLocales::AVAILABLE.map { |l| [l[:native_name], l[:code]] },
                    { selected: @setting.get("default_locale") || "ru" },
-                   { class: "form-select" } %>
+                   { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-12">
       <%= f.label :welcome_message, t("settings.general.welcome_message", default: "Приветственное сообщение"), class: "form-label" %>

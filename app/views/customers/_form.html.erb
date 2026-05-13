@@ -16,7 +16,7 @@
       <%= f.label :locale, t("users.locale", default: "Язык"), class: "form-label" %>
       <%= f.select :locale,
                    TriageLocales::AVAILABLE.map { |l| [ l[:native_name], l[:code] ] },
-                   {}, { class: "form-select" } %>
+                   {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-6">
       <%= f.label :external_id, t("customers.external_id", default: "External ID"), class: "form-label" %>

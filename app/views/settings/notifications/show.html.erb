@@ -46,7 +46,7 @@
                      [t("settings.notifications.digest_weekly", default: "Еженедельный"), "weekly"]
                    ],
                    { selected: @setting.get("digest_frequency") || "none" },
-                   { class: "form-select" } %>
+                   { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
   </div>
 

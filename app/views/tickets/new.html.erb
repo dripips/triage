@@ -18,7 +18,7 @@
                             TicketType.where(company: current_company).active_types,
                             :id, :name,
                             { include_blank: false },
-                            { class: "form-select" } %>
+                            { class: "form-select", data: { controller: "apple-select" } } %>
   </div>
 
   <div class="mb-3">
@@ -35,7 +35,7 @@
     <%= f.label :priority, t("tickets.priority_label", default: "Приоритет"), class: "form-label" %>
     <%= f.select :priority,
                  Ticket.priorities.keys.map { |p| [ t("tickets.priority.#{p}", default: p.humanize), p ] },
-                 {}, { class: "form-select" } %>
+                 {}, { class: "form-select", data: { controller: "apple-select" } } %>
   </div>
 
   <div class="d-flex gap-2 justify-content-end">

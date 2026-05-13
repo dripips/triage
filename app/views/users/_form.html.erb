@@ -16,13 +16,13 @@
       <%= f.label :role, t("users.role", default: "Роль"), class: "form-label" %>
       <%= f.select :role,
                    User.roles.keys.map { |r| [ I18n.t("roles.#{r}", default: r.humanize), r ] },
-                   {}, { class: "form-select" } %>
+                   {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-6">
       <%= f.label :locale, t("users.locale", default: "Язык"), class: "form-label" %>
       <%= f.select :locale,
                    TriageLocales::AVAILABLE.map { |l| [ l[:native_name], l[:code] ] },
-                   {}, { class: "form-select" } %>
+                   {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <% if user.new_record? %>
       <div class="col-md-6">

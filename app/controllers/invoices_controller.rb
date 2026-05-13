@@ -72,10 +72,19 @@ class InvoicesController < ApplicationController
   end
 
   def invoice_params
-    params.require(:invoice).permit(
+    raw = params.require(:invoice).permit(
       :ticket_id, :currency, :notes, :due_at, :status,
       :discount_percent, :tax_percent,
-      invoice_items_attributes: [ :id, :name, :description, :quantity, :unit_price_cents, :_destroy ]
+      invoice_items_attributes: [ :id, :name, :description, :quantity, :unit_price_rub, :_destroy ]
     )
+    if raw[:invoice_items_attributes]
+      raw[:invoice_items_attributes].each do |_idx, item|
+        next unless item.is_a?(ActionController::Parameters) || item.is_a?(Hash)
+        if item[:unit_price_rub].present?
+          item[:unit_price_cents] = (item.delete(:unit_price_rub).to_d * 100).to_i
+        end
+      end
+    end
+    raw
   end
 end
