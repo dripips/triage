@@ -1,0 +1,42 @@
+<% content_for :title, t("settings.tabs.kb", default: "База знаний") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <p class="footnote text-secondary-apple m-0"><%= t("knowledge.summary", default: "%{count} статей", count: @articles.size) %></p>
+  <%= link_to "+ #{t('knowledge.new', default: 'Новая статья')}", new_settings_knowledge_article_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @articles.any? %>
+  <div class="card-apple card-apple--flush">
+    <% @articles.each do |a| %>
+      <%= link_to edit_settings_knowledge_article_path(a), class: "ticket-row-tr" do %>
+        <div class="ticket-row-tr__main">
+          <div class="ticket-row-tr__subject"><%= a.title %></div>
+          <div class="ticket-row-tr__meta">
+            <% if a.ticket_type %><span class="pill pill--neutral"><%= a.ticket_type.name %></span><% end %>
+            <span><%= a.body.to_s.truncate(80) %></span>
+          </div>
+        </div>
+        <div class="ticket-row-tr__pills">
+          <% if a.published %>
+            <span class="pill pill--success"><%= t("knowledge.published", default: "опубликована") %></span>
+          <% else %>
+            <span class="pill pill--neutral"><%= t("knowledge.draft", default: "черновик") %></span>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card-apple">
+    <div class="empty-state">
+      <h3 class="empty-state__title"><%= t("knowledge.empty", default: "Статей пока нет") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("knowledge.empty_hint", default: "Статьи базы знаний помогают AI-ассистенту давать точные ответы.") %></p>
+    </div>
+  </div>
+<% end %>

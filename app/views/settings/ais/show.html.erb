@@ -1,0 +1,251 @@
+<% content_for :title, t("settings.tabs.ai", default: "AI ассистент") %>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1>
+  </div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<%
+  mode      = @setting.get("mode") || "standard"
+  provider  = @setting.get("provider") || "anthropic"
+  model_key = @setting.get("model")
+  presets   = TicketAi::PROVIDER_PRESETS
+%>
+
+<%= form_with model: @setting, url: settings_ai_path, method: :patch, data: { controller: "ai-settings" } do |f| %>
+
+<div class="row g-4">
+  <div class="col-12 col-xl-7">
+
+    <%# ── Enable + Mode ── %>
+    <div class="card-apple mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h3 class="card-apple__title m-0"><%= t("settings.ai.title", default: "AI ассистент") %></h3>
+          <p class="card-apple__subtitle m-0"><%= t("settings.ai.subtitle", default: "Настройка AI-модели для работы с тикетами") %></p>
+        </div>
+        <div class="form-check form-switch">
+          <%= f.check_box :enabled, checked: @setting.get("enabled").to_s == "1" || @setting.get("enabled") == true,
+              class: "form-check-input", role: "switch" %>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="d-flex gap-2 mb-3">
+        <label class="filter-chip-tr" data-ai-settings-target="modeChip" style="cursor:pointer">
+          <%= f.radio_button :mode, "standard", checked: mode == "standard",
+              data: { ai_settings_target: "modeRadio", action: "change->ai-settings#switchMode" }, class: "d-none" %>
+          <%= t("settings.ai.mode_standard", default: "Стандартный") %>
+        </label>
+        <label class="filter-chip-tr" data-ai-settings-target="modeChip" style="cursor:pointer">
+          <%= f.radio_button :mode, "advanced", checked: mode == "advanced",
+              data: { ai_settings_target: "modeRadio", action: "change->ai-settings#switchMode" }, class: "d-none" %>
+          <%= t("settings.ai.mode_advanced", default: "Расширенный") %>
+        </label>
+      </div>
+      <div class="footnote text-tertiary">
+        <%= t("settings.ai.mode_hint", default: "Стандартный — готовые пресеты. Расширенный — полный контроль.") %>
+      </div>
+    </div>
+
+    <%# ── Provider ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.provider", default: "Провайдер") %></h4>
+      <div class="d-flex flex-wrap gap-2">
+        <% presets.each do |key, preset| %>
+          <label class="filter-chip-tr" data-ai-settings-target="providerChip" style="cursor:pointer">
+            <%= f.radio_button :provider, key, checked: provider == key,
+                data: { ai_settings_target: "providerRadio", action: "change->ai-settings#switchProvider" }, class: "d-none" %>
+            <%= preset[:label] %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── API Key + URL ── %>
+    <div class="card-apple mb-3">
+      <div class="row g-3">
+        <div class="col-12">
+          <%= f.label :api_key, t("settings.ai.api_key", default: "API ключ"), class: "form-label" %>
+          <%= f.password_field :api_key, value: "",
+              class: "form-control",
+              placeholder: @setting.get("api_key").present? ? "••••••••••• (сохранён)" : "sk-..., AQVN..., ..." %>
+          <div class="footnote text-tertiary mt-1"><%= t("settings.ai.api_key_hint", default: "Оставьте пустым чтобы сохранить текущий ключ.") %></div>
+        </div>
+        <div class="col-12" data-ai-settings-target="apiUrlBlock">
+          <%= f.label :api_base_url, t("settings.ai.api_base_url", default: "API Endpoint URL"), class: "form-label" %>
+          <%= f.text_field :api_base_url, value: @setting.get("api_base_url") || @ai.api_url,
+              class: "form-control text-mono", style: "font-size:13px",
+              placeholder: "https://api.openai.com/v1/chat/completions" %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Models ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.model_select", default: "Модель") %></h4>
+
+      <%# Standard mode: rich model cards per provider %>
+      <% presets.each do |pkey, preset| %>
+        <% next if preset[:models].empty? %>
+        <div data-ai-settings-target="modelCards" data-provider="<%= pkey %>"
+             data-ai-settings-target-also="standardModels">
+          <div data-ai-settings-target="standardModels">
+            <div class="d-flex flex-column gap-2">
+              <% preset[:models].each do |mk, info| %>
+                <label class="card-apple p-3" style="cursor:pointer; transition: box-shadow 140ms;">
+                  <div class="d-flex align-items-start gap-3">
+                    <%= f.radio_button :model, mk, checked: model_key == mk, class: "form-check-input mt-1", style: "flex:0 0 auto" %>
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <strong><%= info[:label] %></strong>
+                        <span class="pill pill--<%= { 'fast' => 'success', 'balanced' => 'info', 'smart' => 'warning', 'reasoning' => 'danger' }[info[:tier]] || 'neutral' %>">
+                          <%= info[:tier] %>
+                        </span>
+                      </div>
+                      <div class="footnote text-tertiary"><%= info[:hint] %></div>
+                      <div class="footnote text-tertiary mt-1">
+                        $<%= info[:input_1m] %>/1M in · $<%= info[:output_1m] %>/1M out · <%= number_with_delimiter(info[:ctx]) %> ctx
+                      </div>
+                    </div>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          </div>
+
+          <div data-ai-settings-target="advancedModels">
+            <div class="d-flex flex-wrap gap-2 mb-2">
+              <% preset[:models].each do |mk, info| %>
+                <label class="filter-chip-tr <%= 'active' if model_key == mk %>" style="cursor:pointer">
+                  <%= f.radio_button :model, mk, checked: model_key == mk, class: "d-none" %>
+                  <%= info[:label] %>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Custom provider: always free-form %>
+      <div data-ai-settings-target="modelCards" data-provider="custom">
+        <%= f.label :model, t("settings.ai.model_custom", default: "Название модели:"), class: "form-label" %>
+        <%= f.text_field :model, value: model_key, class: "form-control text-mono", style: "font-size:13px",
+            placeholder: "llama3.2, mistral, my-fine-tuned-model..." %>
+      </div>
+
+      <%# Free-form field for advanced mode (all providers) %>
+      <div class="mt-3" data-ai-settings-target="advancedBlock">
+        <%= f.label :model, t("settings.ai.model_freeform", default: "Или впишите модель вручную:"), class: "form-label" %>
+        <%= f.text_field :model, value: model_key, class: "form-control text-mono", style: "font-size:13px",
+            placeholder: "claude-sonnet-4-5-20250514, gpt-4.1..." %>
+      </div>
+    </div>
+
+    <%# ── AI Features ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.features_title", default: "AI-функции") %></h4>
+      <div class="row g-3">
+        <% [ ["auto_categorize",    "Авто-категоризация тикетов"],
+             ["auto_suggest_reply", "Подсказка ответов агенту"],
+             ["auto_summarize",     "Авто-резюме тредов"],
+             ["auto_sentiment",     "Анализ настроения клиента"] ].each do |key, label| %>
+          <div class="col-md-6">
+            <div class="form-check form-switch">
+              <%= f.check_box key.to_sym, checked: @setting.get(key).to_s == "1", class: "form-check-input", role: "switch" %>
+              <%= f.label key.to_sym, t("settings.ai.#{key}", default: label), class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Advanced params ── %>
+    <div data-ai-settings-target="advancedBlock">
+      <div class="card-apple mb-3">
+        <h4 class="card-apple__title mb-3"><%= t("settings.ai.advanced_title", default: "Расширенные параметры") %></h4>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <%= f.label :temperature, "Temperature", class: "form-label" %>
+            <%= f.number_field :temperature, value: @setting.get("temperature") || "0.3", step: 0.1, min: 0, max: 2, class: "form-control" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :max_tokens, "Max tokens", class: "form-label" %>
+            <%= f.number_field :max_tokens, value: @setting.get("max_tokens") || "1024", step: 128, min: 128, max: 16384, class: "form-control" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :monthly_budget_usd, t("settings.ai.budget", default: "Бюджет $/мес"), class: "form-label" %>
+            <%= f.number_field :monthly_budget_usd, value: @setting.get("monthly_budget_usd") || "5", step: 1, min: 0, class: "form-control" %>
+          </div>
+          <div class="col-12">
+            <%= f.label :system_prompt, t("settings.ai.system_prompt", default: "Системный промпт"), class: "form-label" %>
+            <%= f.text_area :system_prompt, value: @setting.get("system_prompt"), rows: 8, class: "form-control text-mono",
+                style: "font-family:'JetBrains Mono',monospace;font-size:13px",
+                placeholder: "Ты — AI-ассистент helpdesk-системы Triage..." %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+      <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <%# ═══ RIGHT: cost + usage ═══ %>
+  <div class="col-12 col-xl-5">
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-2"><%= t("settings.ai.cost_title", default: "Калькулятор стоимости") %></h4>
+      <table class="table table-sm mt-2">
+        <thead><tr><th>Задача</th><th>≈ стоимость</th></tr></thead>
+        <tbody>
+          <% TicketAi::TASK_KINDS.each do |task_key, task_info| %>
+            <tr>
+              <td><%= task_info[:label] %></td>
+              <td class="text-mono footnote">$<%= sprintf("%.4f", @ai.estimate_cost(task_key)) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="footnote text-tertiary mt-2">
+        Модель: <strong><%= @ai.model_info[:label] %></strong> · Бюджет: $<%= @ai.monthly_budget %>/мес
+      </div>
+    </div>
+
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-2"><%= t("settings.ai.usage_title", default: "Расход за месяц") %></h4>
+      <div class="d-flex gap-3 mt-2">
+        <div>
+          <div class="footnote text-tertiary">Потрачено</div>
+          <strong class="text-mono">$<%= sprintf("%.2f", @usage_this_month) %></strong>
+        </div>
+        <div>
+          <div class="footnote text-tertiary">Запросов</div>
+          <strong><%= AiRun.where(company: current_company).this_month.count %></strong>
+        </div>
+      </div>
+      <% if @by_kind.any? %>
+        <table class="table table-sm mt-2">
+          <thead><tr><th>Задача</th><th>#</th><th>$</th></tr></thead>
+          <tbody>
+            <% @by_kind.each do |row| %>
+              <tr>
+                <td><%= TicketAi::TASK_KINDS.dig(row.kind, :label) || row.kind %></td>
+                <td><%= row.runs_count %></td>
+                <td class="text-mono footnote">$<%= sprintf("%.4f", row.total_cost || 0) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="footnote text-secondary-apple m-0 mt-2">Ещё не было AI-запросов</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% end %>

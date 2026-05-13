@@ -1,0 +1,10 @@
+<% content_for :title, t("price_lists.new", default: "Новый прайс-лист") %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('settings.tabs.price_lists', default: 'Прайс-листы')}", settings_price_lists_path %></div>
+    <h1 class="page-header__title m-0"><%= t("price_lists.new", default: "Новый прайс-лист") %></h1>
+  </div>
+</header>
+
+<%= render "form", price_list: @price_list %>

@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_092731) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_122158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "ai_runs", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.float "cost_usd", default: 0.0, null: false
+    t.datetime "created_at", null: false
+    t.text "error"
+    t.integer "input_tokens", default: 0, null: false
+    t.string "kind", null: false
+    t.string "model", null: false
+    t.integer "output_tokens", default: 0, null: false
+    t.jsonb "payload"
+    t.boolean "success", default: true, null: false
+    t.bigint "ticket_id"
+    t.integer "total_tokens", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["company_id", "created_at"], name: "index_ai_runs_on_company_id_and_created_at"
+    t.index ["company_id", "kind"], name: "index_ai_runs_on_company_id_and_kind"
+    t.index ["company_id"], name: "index_ai_runs_on_company_id"
+    t.index ["ticket_id"], name: "index_ai_runs_on_ticket_id"
+    t.index ["user_id"], name: "index_ai_runs_on_user_id"
+  end
 
   create_table "api_tokens", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -26,6 +48,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_092731) do
     t.index ["token_digest"], name: "index_api_tokens_on_token_digest", unique: true
     t.index ["token_prefix"], name: "index_api_tokens_on_token_prefix"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
+  end
+
+  create_table "app_settings", force: :cascade do |t|
+    t.string "category", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}, null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "category"], name: "index_app_settings_on_company_id_and_category", unique: true
+    t.index ["company_id"], name: "index_app_settings_on_company_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -43,6 +75,47 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_092731) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_companies_on_code", unique: true, where: "(code IS NOT NULL)"
     t.index ["subdomain"], name: "index_companies_on_subdomain", unique: true, where: "(subdomain IS NOT NULL)"
+  end
+
+  create_table "knowledge_articles", force: :cascade do |t|
+    t.text "body", default: "", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.integer "position", default: 0, null: false
+    t.boolean "published", default: false, null: false
+    t.bigint "ticket_type_id"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "published"], name: "index_knowledge_articles_on_company_id_and_published"
+    t.index ["company_id"], name: "index_knowledge_articles_on_company_id"
+    t.index ["discarded_at"], name: "index_knowledge_articles_on_discarded_at"
+    t.index ["ticket_type_id"], name: "index_knowledge_articles_on_ticket_type_id"
+  end
+
+  create_table "price_items", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.integer "amount_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.string "currency", default: "RUB", null: false
+    t.text "description"
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.bigint "price_list_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["price_list_id", "position"], name: "index_price_items_on_price_list_id_and_position"
+    t.index ["price_list_id"], name: "index_price_items_on_price_list_id"
+  end
+
+  create_table "price_lists", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_price_lists_on_company_id"
+    t.index ["discarded_at"], name: "index_price_lists_on_discarded_at"
   end
 
   create_table "ticket_comments", force: :cascade do |t|
@@ -125,7 +198,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_092731) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "ai_runs", "companies"
+  add_foreign_key "ai_runs", "tickets"
+  add_foreign_key "ai_runs", "users"
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "app_settings", "companies"
+  add_foreign_key "knowledge_articles", "companies"
+  add_foreign_key "knowledge_articles", "ticket_types"
+  add_foreign_key "price_items", "price_lists"
+  add_foreign_key "price_lists", "companies"
   add_foreign_key "ticket_comments", "tickets"
   add_foreign_key "ticket_types", "companies"
   add_foreign_key "tickets", "companies"

@@ -14,6 +14,17 @@ Rails.application.routes.draw do
     resources :users
     resources :customers, controller: "customers"
 
+    namespace :settings do
+      root to: "generals#show"
+      resource  :general,       only: %i[show update], controller: "generals"
+      resource  :ai,            only: %i[show update], controller: "ais"
+      resource  :notification,  only: %i[show update], controller: "notifications"
+      resource  :sso,           only: %i[show update], controller: "ssos"
+      resource  :api_token,     only: %i[show],        controller: "api_tokens"
+      resources :knowledge_articles
+      resources :price_lists
+    end
+
     root "tickets#index"
   end
 

@@ -1,0 +1,41 @@
+<% content_for :title, t("settings.tabs.price_lists", default: "Прайс-листы") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <p class="footnote text-secondary-apple m-0"><%= t("price_lists.summary", default: "%{count} прайс-листов", count: @price_lists.size) %></p>
+  <%= link_to "+ #{t('price_lists.new', default: 'Новый прайс-лист')}", new_settings_price_list_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @price_lists.any? %>
+  <div class="card-apple card-apple--flush">
+    <% @price_lists.each do |pl| %>
+      <%= link_to edit_settings_price_list_path(pl), class: "ticket-row-tr" do %>
+        <div class="ticket-row-tr__main">
+          <div class="ticket-row-tr__subject"><%= pl.name %></div>
+          <div class="ticket-row-tr__meta">
+            <span><%= t("price_lists.items_count", default: "%{n} позиций", n: pl.price_items.count) %></span>
+          </div>
+        </div>
+        <div class="ticket-row-tr__pills">
+          <% if pl.active %>
+            <span class="pill pill--success"><%= t("price_lists.active_label", default: "активен") %></span>
+          <% else %>
+            <span class="pill pill--neutral"><%= t("price_lists.inactive", default: "неактивен") %></span>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card-apple">
+    <div class="empty-state">
+      <h3 class="empty-state__title"><%= t("price_lists.empty", default: "Прайс-листов пока нет") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("price_lists.empty_hint", default: "Создайте прайс-лист чтобы агенты видели цены при ответе клиентам") %></p>
+    </div>
+  </div>
+<% end %>

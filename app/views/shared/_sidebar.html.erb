@@ -25,7 +25,9 @@
       *(current_user&.admin? || current_user&.superadmin? ? [
         { title: t("navigation.admin", default: "Администрирование"),
           items: [
-            { key: :ticket_types, path: ticket_types_path, icon: "diagram" }
+            { key: :ticket_types, path: ticket_types_path,  icon: "diagram" },
+            { key: :knowledge,    path: settings_knowledge_articles_path, icon: "book", exact_prefix: "/settings/knowledge" },
+            { key: :settings,     path: settings_root_path, icon: "settings", settings_catch_all: true }
           ] }
       ] : [])
     ]
@@ -41,8 +43,11 @@
 
           active =
             if item.key?(:scope_value)
-              # Tickets list shares a path — distinguish by ?scope=
               request.path == item_root && current_scope == item[:scope_value]
+            elsif item.key?(:exact_prefix)
+              request.path.start_with?(item[:exact_prefix])
+            elsif item[:settings_catch_all]
+              request.path.start_with?("/settings") && !request.path.start_with?("/settings/knowledge")
             else
               current_page?(item[:path]) ||
                 (item_root.length > 1 && request.path.start_with?(item_root))

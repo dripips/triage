@@ -1,0 +1,10 @@
+<% content_for :title, @article.title %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('settings.tabs.kb', default: 'База знаний')}", settings_knowledge_articles_path %></div>
+    <h1 class="page-header__title m-0"><%= @article.title %></h1>
+  </div>
+</header>
+
+<%= render "form", article: @article %>

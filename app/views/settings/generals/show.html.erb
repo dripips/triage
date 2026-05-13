@@ -1,0 +1,47 @@
+<% content_for :title, t("settings.title", default: "Настройки") %>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("settings.subtitle", default: "Конфигурация системы для вашей компании") %></p>
+  </div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<%= form_with model: @setting, url: settings_general_path, method: :patch, class: "card-apple" do |f| %>
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.tabs.general", default: "Общие") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.general.subtitle", default: "Название компании, локаль, таймзона") %></p>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-md-6">
+      <%= f.label :company_name, t("settings.general.company_name", default: "Название компании"), class: "form-label" %>
+      <%= f.text_field :company_name, value: @setting.get("company_name") || current_company.name, class: "form-control" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :timezone, t("settings.general.timezone", default: "Таймзона"), class: "form-label" %>
+      <%= f.select :timezone,
+                   ActiveSupport::TimeZone.all.map { |tz| [tz.to_s, tz.name] },
+                   { selected: @setting.get("timezone") || "Moscow" },
+                   { class: "form-select" } %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :default_locale, t("settings.general.default_locale", default: "Язык по умолчанию"), class: "form-label" %>
+      <%= f.select :default_locale,
+                   TriageLocales::AVAILABLE.map { |l| [l[:native_name], l[:code]] },
+                   { selected: @setting.get("default_locale") || "ru" },
+                   { class: "form-select" } %>
+    </div>
+    <div class="col-12">
+      <%= f.label :welcome_message, t("settings.general.welcome_message", default: "Приветственное сообщение"), class: "form-label" %>
+      <%= f.text_area :welcome_message, value: @setting.get("welcome_message"), rows: 3, class: "form-control",
+                      placeholder: t("settings.general.welcome_placeholder", default: "Показывается клиентам при создании тикета") %>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3">
+    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+  </div>
+<% end %>

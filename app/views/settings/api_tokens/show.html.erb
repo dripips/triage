@@ -1,0 +1,43 @@
+<% content_for :title, t("settings.tabs.api", default: "API токены") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<div class="card-apple">
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.api.title", default: "API токены") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.api.subtitle", default: "Bearer-токены для REST API. Управление токенами — в v0.5.") %></p>
+  </div>
+
+  <div class="callout callout--warning mt-3">
+    <%= t("settings.api.coming_soon", default: "Создание и отзыв API-токенов будет доступно в следующей версии. Сейчас токены создаются через rails console.") %>
+  </div>
+
+  <% if defined?(@tokens) && @tokens.any? %>
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th>Prefix</th>
+          <th>User</th>
+          <th>Created</th>
+          <th>Last used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @tokens.each do |token| %>
+          <tr>
+            <td><code><%= token.prefix %>…</code></td>
+            <td><%= token.user.display_name %></td>
+            <td class="footnote text-tertiary"><%= l(token.created_at, format: :short) rescue token.created_at %></td>
+            <td class="footnote text-tertiary"><%= token.last_used_at ? l(token.last_used_at, format: :short) : "—" rescue "—" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="footnote text-secondary-apple mt-3 mb-0"><%= t("settings.api.no_tokens", default: "Токенов пока нет") %></p>
+  <% end %>
+</div>
