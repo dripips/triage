@@ -2,7 +2,7 @@
   payment_setting = AppSetting.fetch(company: current_company, category: "payments")
   default_tax = payment_setting.get("tax_rate_percent") || "0"
   default_currency = payment_setting.get("currency") || "RUB"
-  currency_symbol = { "RUB" => "₽", "USD" => "$", "EUR" => "€" }[invoice.currency || default_currency] || "₽"
+  sym = { "RUB" => "₽", "USD" => "$", "EUR" => "€" }[invoice.currency || default_currency] || "₽"
 %>
 
 <%= form_with model: invoice, class: "card-apple", data: { controller: "invoice-items" } do |f| %>
@@ -12,64 +12,66 @@
 
   <%= f.hidden_field :ticket_id %>
 
-  <div class="row g-3 mb-3">
-    <div class="col-md-3">
+  <%# ── Header: status + currency + due ── %>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
       <%= f.label :status, t("invoices.status_label", default: "Статус"), class: "form-label" %>
       <%= f.select :status, Invoice.statuses.keys.map { |s| [t("invoices.status.#{s}", default: s.humanize), s] },
                    {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <%= f.label :currency, t("invoices.currency", default: "Валюта"), class: "form-label" %>
       <%= f.select :currency, [["RUB ₽", "RUB"], ["USD $", "USD"], ["EUR €", "EUR"]],
-                   { selected: invoice.currency || default_currency }, { class: "form-select", data: { controller: "apple-select" } } %>
+                   { selected: invoice.currency || default_currency },
+                   { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
-    <div class="col-md-3">
-      <%= f.label :discount_percent, t("invoices.discount", default: "Скидка %"), class: "form-label" %>
-      <%= f.number_field :discount_percent, step: 0.5, min: 0, max: 100, class: "form-control" %>
-    </div>
-    <div class="col-md-3">
-      <%= f.label :tax_percent, t("invoices.tax_from_settings", default: "НДС %"), class: "form-label" %>
-      <%= f.number_field :tax_percent,
-          value: invoice.tax_percent.to_d > 0 ? invoice.tax_percent : default_tax,
-          step: 0.5, min: 0, max: 50, class: "form-control", readonly: false %>
-      <div class="footnote text-tertiary mt-1">
-        <%= t("invoices.tax_hint", default: "По умолчанию из настроек (%{rate}%). Можно изменить для этого счёта.", rate: default_tax) %>
-      </div>
-    </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <%= f.label :due_at, t("invoices.due_at", default: "Оплатить до"), class: "form-label" %>
       <%= f.date_field :due_at, class: "form-control", data: { controller: "apple-date-picker" } %>
     </div>
   </div>
 
-  <h4 class="card-apple__title mb-2"><%= t("invoices.items_title", default: "Позиции") %></h4>
+  <%# ── Позиции ── %>
+  <h4 class="card-apple__title mb-3"><%= t("invoices.items_title", default: "Позиции") %></h4>
 
   <div data-invoice-items-target="container">
     <% f.fields_for :invoice_items do |item_f| %>
-      <div class="invoice-item-card card-apple p-3 mb-2" data-invoice-items-target="row">
-        <div class="row g-2 align-items-center">
-          <div class="col-md-4">
-            <label class="footnote text-tertiary"><%= t("invoice_items.name", default: "Название") %></label>
-            <%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: "Консультация, ремонт..." %>
-          </div>
+      <div class="card-apple p-3 mb-2" data-invoice-items-target="row" style="border: 1px solid var(--ds-separator);">
+        <div class="row g-2 align-items-end">
           <div class="col-md-3">
-            <label class="footnote text-tertiary"><%= t("invoice_items.description", default: "Описание") %></label>
-            <%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: "Детали (опц.)" %>
+            <label class="footnote text-tertiary"><%= t("invoice_items.name", default: "Название") %></label>
+            <%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: "Услуга, товар..." %>
+          </div>
+          <div class="col-md-2">
+            <label class="footnote text-tertiary"><%= t("invoice_items.description", default: "Детали") %></label>
+            <%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: "Опц." %>
           </div>
           <div class="col-md-1">
-            <label class="footnote text-tertiary"><%= t("invoice_items.qty", default: "Кол") %></label>
+            <label class="footnote text-tertiary">Кол.</label>
             <%= item_f.number_field :quantity, step: 0.01, min: 0, class: "form-control form-control-sm text-end" %>
           </div>
-          <div class="col-md-3">
-            <label class="footnote text-tertiary"><%= t("invoice_items.price_label", default: "Цена (%{sym})") % { sym: currency_symbol } %></label>
+          <div class="col-md-2">
+            <label class="footnote text-tertiary">Цена (<%= sym %>)</label>
             <%= item_f.number_field :unit_price_rub, value: item_f.object.unit_price_cents.to_i / 100.0,
                 step: 0.01, min: 0, class: "form-control form-control-sm text-end" %>
+          </div>
+          <div class="col-md-1">
+            <label class="footnote text-tertiary">Скидка %</label>
+            <%= item_f.number_field :discount_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm text-end",
+                placeholder: "0" %>
+          </div>
+          <div class="col-md-2">
+            <label class="footnote text-tertiary" title="Скрытая наценка — клиент не видит">Наценка %
+              <span class="pill pill--warning pill--sm ms-1" title="Не отображается клиенту">скр.</span>
+            </label>
+            <%= item_f.number_field :surcharge_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm text-end",
+                placeholder: "0" %>
           </div>
           <div class="col-md-1 d-flex align-items-end justify-content-end">
             <% if item_f.object.persisted? %>
               <%= item_f.hidden_field :_destroy, value: "0", class: "destroy-flag" %>
             <% end %>
-            <button type="button" class="btn btn-ghost btn-sm" data-action="click->invoice-items#remove" title="<%= t('common.delete', default: 'Удалить') %>">✕</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-action="click->invoice-items#remove" title="Удалить">✕</button>
           </div>
         </div>
       </div>
@@ -77,23 +79,31 @@
   </div>
 
   <template data-invoice-items-target="template">
-    <div class="invoice-item-card card-apple p-3 mb-2" data-invoice-items-target="row">
-      <div class="row g-2 align-items-center">
-        <div class="col-md-4">
-          <label class="footnote text-tertiary"><%= t("invoice_items.name", default: "Название") %></label>
-          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][name]" class="form-control form-control-sm" placeholder="Консультация, ремонт...">
-        </div>
+    <div class="card-apple p-3 mb-2" data-invoice-items-target="row" style="border: 1px solid var(--ds-separator);">
+      <div class="row g-2 align-items-end">
         <div class="col-md-3">
-          <label class="footnote text-tertiary"><%= t("invoice_items.description", default: "Описание") %></label>
-          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][description]" class="form-control form-control-sm" placeholder="Детали (опц.)">
+          <label class="footnote text-tertiary">Название</label>
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][name]" class="form-control form-control-sm" placeholder="Услуга, товар...">
+        </div>
+        <div class="col-md-2">
+          <label class="footnote text-tertiary">Детали</label>
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][description]" class="form-control form-control-sm" placeholder="Опц.">
         </div>
         <div class="col-md-1">
-          <label class="footnote text-tertiary"><%= t("invoice_items.qty", default: "Кол") %></label>
+          <label class="footnote text-tertiary">Кол.</label>
           <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][quantity]" value="1" step="0.01" min="0" class="form-control form-control-sm text-end">
         </div>
-        <div class="col-md-3">
-          <label class="footnote text-tertiary"><%= t("invoice_items.price_label", default: "Цена (%{sym})") % { sym: currency_symbol } %></label>
+        <div class="col-md-2">
+          <label class="footnote text-tertiary">Цена (<%= sym %>)</label>
           <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][unit_price_rub]" value="0" step="0.01" min="0" class="form-control form-control-sm text-end">
+        </div>
+        <div class="col-md-1">
+          <label class="footnote text-tertiary">Скидка %</label>
+          <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][discount_percent]" value="0" step="0.5" min="0" max="100" class="form-control form-control-sm text-end">
+        </div>
+        <div class="col-md-2">
+          <label class="footnote text-tertiary">Наценка % <span class="pill pill--warning pill--sm">скр.</span></label>
+          <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][surcharge_percent]" value="0" step="0.5" min="0" max="100" class="form-control form-control-sm text-end">
         </div>
         <div class="col-md-1 d-flex align-items-end justify-content-end">
           <button type="button" class="btn btn-ghost btn-sm" data-action="click->invoice-items#remove">✕</button>
@@ -102,13 +112,44 @@
     </div>
   </template>
 
-  <button type="button" class="btn btn-soft btn-sm mb-3" data-action="click->invoice-items#add">
+  <button type="button" class="btn btn-soft btn-sm mb-4" data-action="click->invoice-items#add">
     + <%= t("invoices.add_item", default: "Добавить позицию") %>
   </button>
 
+  <%# ── Итоги: общая скидка + скрытая наценка + НДС ── %>
+  <div class="card-apple p-3 mb-3" style="background: var(--ds-fill-tertiary);">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label"><%= t("invoices.discount", default: "Общая скидка %") %></label>
+        <%= f.number_field :discount_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm" %>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">
+          <%= t("invoices.surcharge", default: "Наценка %") %>
+          <span class="pill pill--warning pill--sm ms-1" title="Скрытая — не отображается клиенту в счёте">скрытая</span>
+        </label>
+        <%= f.number_field :surcharge_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm" %>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label"><%= t("invoices.tax_from_settings", default: "НДС %") %></label>
+        <%= f.number_field :tax_percent,
+            value: invoice.tax_percent.to_d > 0 ? invoice.tax_percent : default_tax,
+            step: 0.5, min: 0, max: 50, class: "form-control form-control-sm" %>
+        <div class="footnote text-tertiary mt-1">Из настроек: <%= default_tax %>%</div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-check form-switch mt-4">
+          <%= f.check_box :surcharge_hidden, class: "form-check-input", role: "switch", checked: invoice.surcharge_hidden != false %>
+          <%= f.label :surcharge_hidden, t("invoices.surcharge_hidden", default: "Скрыть наценку"), class: "form-check-label footnote" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Примечания ── %>
   <div class="mb-3">
     <%= f.label :notes, t("invoices.notes", default: "Примечания"), class: "form-label" %>
-    <%= f.text_area :notes, rows: 3, class: "form-control", placeholder: t("invoices.notes_placeholder", default: "Условия оплаты, реквизиты, комментарии...") %>
+    <%= f.text_area :notes, rows: 3, class: "form-control", placeholder: t("invoices.notes_placeholder", default: "Условия оплаты, реквизиты...") %>
   </div>
 
   <div class="d-flex gap-2 justify-content-end">

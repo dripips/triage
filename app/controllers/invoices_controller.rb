@@ -74,8 +74,8 @@ class InvoicesController < ApplicationController
   def invoice_params
     raw = params.require(:invoice).permit(
       :ticket_id, :currency, :notes, :due_at, :status,
-      :discount_percent, :tax_percent,
-      invoice_items_attributes: [ :id, :name, :description, :quantity, :unit_price_rub, :_destroy ]
+      :discount_percent, :tax_percent, :surcharge_percent, :surcharge_hidden,
+      invoice_items_attributes: [ :id, :name, :description, :quantity, :unit_price_rub, :discount_percent, :surcharge_percent, :_destroy ]
     )
     if raw[:invoice_items_attributes]
       raw[:invoice_items_attributes].each do |_idx, item|

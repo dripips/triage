@@ -30,6 +30,7 @@
           <th style="width:50%"><%= t("invoice_items.name", default: "Позиция") %></th>
           <th class="text-end"><%= t("invoice_items.qty", default: "Кол-во") %></th>
           <th class="text-end"><%= t("invoice_items.unit_price", default: "Цена") %></th>
+          <th class="text-end"><%= t("invoice_items.item_discount", default: "Скидка") %></th>
           <th class="text-end"><%= t("invoice_items.total", default: "Итого") %></th>
         </tr>
       </thead>
@@ -42,6 +43,9 @@
             </td>
             <td class="text-end text-mono"><%= item.quantity %></td>
             <td class="text-end text-mono"><%= item.unit_price %> <%= @invoice.currency %></td>
+            <td class="text-end text-mono">
+              <% if item.discount_percent.to_d > 0 %><span class="pill pill--success pill--sm">-<%= item.discount_percent %>%</span><% end %>
+            </td>
             <td class="text-end text-mono"><%= item.total %> <%= @invoice.currency %></td>
           </tr>
         <% end %>
@@ -51,14 +55,26 @@
           <td colspan="3" class="text-end"><strong><%= t("invoices.subtotal", default: "Подитог") %></strong></td>
           <td class="text-end text-mono"><strong><%= @invoice.subtotal %> <%= @invoice.currency %></strong></td>
         </tr>
+        <% if @invoice.discount_cents > 0 %>
+          <tr>
+            <td colspan="4" class="text-end"><%= t("invoices.discount_line", default: "Скидка") %> (<%= @invoice.discount_percent %>%)</td>
+            <td class="text-end text-mono text-success">−<%= @invoice.discount %> <%= @invoice.currency %></td>
+          </tr>
+        <% end %>
+        <% if @invoice.surcharge_cents > 0 && !@invoice.surcharge_hidden %>
+          <tr>
+            <td colspan="4" class="text-end"><%= t("invoices.surcharge_line", default: "Наценка") %> (<%= @invoice.surcharge_percent %>%)</td>
+            <td class="text-end text-mono">+<%= @invoice.surcharge_cents / 100.0 %> <%= @invoice.currency %></td>
+          </tr>
+        <% end %>
         <% if @invoice.tax_cents > 0 %>
           <tr>
-            <td colspan="3" class="text-end"><%= t("invoices.tax", default: "НДС") %></td>
+            <td colspan="4" class="text-end"><%= t("invoices.tax", default: "НДС") %> (<%= @invoice.tax_percent %>%)</td>
             <td class="text-end text-mono"><%= @invoice.tax %> <%= @invoice.currency %></td>
           </tr>
         <% end %>
-        <tr>
-          <td colspan="3" class="text-end"><strong><%= t("invoices.total", default: "ИТОГО") %></strong></td>
+        <tr style="border-top: 2px solid var(--ds-separator);">
+          <td colspan="4" class="text-end"><strong><%= t("invoices.total", default: "ИТОГО") %></strong></td>
           <td class="text-end text-mono" style="font-size:16px;"><strong><%= @invoice.formatted_total %></strong></td>
         </tr>
       </tfoot>

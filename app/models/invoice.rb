@@ -27,12 +27,14 @@ class Invoice < ApplicationRecord
   end
 
   def recalculate_totals
-    items_sum = invoice_items.reject(&:marked_for_destruction?).sum { |i| (i.quantity.to_d * i.unit_price_cents.to_i).to_i }
-    self.subtotal_cents = items_sum
-    self.discount_cents = (items_sum * discount_percent.to_d / 100).to_i
-    after_discount = items_sum - discount_cents
-    self.tax_cents = (after_discount * tax_percent.to_d / 100).to_i
-    self.total_cents = after_discount + tax_cents
+    items_sum = invoice_items.reject(&:marked_for_destruction?).sum(&:effective_price_cents)
+    self.subtotal_cents  = items_sum
+    self.discount_cents  = (items_sum * discount_percent.to_d / 100).to_i
+    after_discount       = items_sum - discount_cents
+    self.surcharge_cents = (after_discount * surcharge_percent.to_d / 100).to_i
+    after_surcharge      = after_discount + surcharge_cents
+    self.tax_cents       = (after_surcharge * tax_percent.to_d / 100).to_i
+    self.total_cents     = after_surcharge + tax_cents
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_182400) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_184714) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -113,10 +113,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_182400) do
   create_table "invoice_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.decimal "discount_percent", precision: 5, scale: 2, default: "0.0", null: false
     t.bigint "invoice_id", null: false
     t.string "name", null: false
     t.integer "position", default: 0, null: false
     t.decimal "quantity", precision: 10, scale: 2, default: "1.0", null: false
+    t.decimal "surcharge_percent", precision: 5, scale: 2, default: "0.0", null: false
     t.integer "total_cents", default: 0, null: false
     t.integer "unit_price_cents", default: 0, null: false
     t.datetime "updated_at", null: false
@@ -136,6 +138,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_182400) do
     t.datetime "paid_at"
     t.integer "status", default: 0, null: false
     t.integer "subtotal_cents", default: 0, null: false
+    t.integer "surcharge_cents", default: 0, null: false
+    t.boolean "surcharge_hidden", default: true, null: false
+    t.decimal "surcharge_percent", precision: 5, scale: 2, default: "0.0", null: false
     t.integer "tax_cents", default: 0, null: false
     t.decimal "tax_percent", precision: 5, scale: 2, default: "0.0", null: false
     t.bigint "ticket_id"
