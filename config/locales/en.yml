@@ -369,6 +369,10 @@ en:
       title: Languages
       subtitle: Enable or disable available languages for your helpdesk
       default: Default
+      enabled_label: Enabled
+      disabled_label: Disabled
+      enable: Enable
+      disable: Disable
     ai:
       title: AI Assistant
       subtitle: Configure the AI model for ticket automation

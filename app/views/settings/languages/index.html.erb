@@ -12,28 +12,32 @@
     <p class="card-apple__subtitle m-0"><%= t("settings.languages.subtitle") %></p>
   </div>
 
-  <div class="d-flex flex-column gap-2 mt-3">
+  <div class="d-flex flex-column gap-0 mt-3">
     <% @languages.each do |lang| %>
-      <div class="d-flex justify-content-between align-items-center p-3" style="border: 1px solid var(--ds-separator); border-radius: var(--ds-radius-md);">
+      <% is_enabled = @enabled.include?(lang[:code]) %>
+      <% is_only_one = @enabled.size <= 1 && is_enabled %>
+      <div class="d-flex justify-content-between align-items-center py-3" style="border-bottom:1px solid var(--ds-separator);">
         <div class="d-flex align-items-center gap-3">
-          <span class="fi fi-<%= lang[:flag] %>" style="font-size: 20px;"></span>
+          <span class="fi fi-<%= lang[:flag] %>" style="font-size:22px;"></span>
           <div>
             <strong><%= lang[:native_name] %></strong>
             <span class="footnote text-tertiary ms-2"><%= lang[:code].upcase %></span>
           </div>
         </div>
         <div class="d-flex align-items-center gap-2">
-          <% is_enabled = @enabled.include?(lang[:code]) %>
-          <% if is_enabled && @enabled.size <= 1 %>
+          <% if is_only_one %>
             <span class="pill pill--info"><%= t("settings.languages.default") %></span>
-          <% else %>
+          <% elsif is_enabled %>
+            <span class="pill pill--success"><%= t("settings.languages.enabled_label") %></span>
             <%= button_to language_toggle_settings_languages_path(code: lang[:code]),
-                          method: :post,
-                          class: "form-check form-switch m-0",
-                          form: { style: "display:inline" } do %>
-              <input type="checkbox" class="form-check-input" role="switch"
-                     <%= "checked" if is_enabled %>
-                     style="pointer-events:none;">
+                          method: :post, class: "btn btn-ghost btn-sm" do %>
+              <%= t("settings.languages.disable") %>
+            <% end %>
+          <% else %>
+            <span class="pill pill--neutral"><%= t("settings.languages.disabled_label") %></span>
+            <%= button_to language_toggle_settings_languages_path(code: lang[:code]),
+                          method: :post, class: "btn btn-soft btn-sm" do %>
+              <%= t("settings.languages.enable") %>
             <% end %>
           <% end %>
         </div>
