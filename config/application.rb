@@ -1,0 +1,44 @@
+require_relative "boot"
+
+require "rails"
+require "active_model/railtie"
+require "active_job/railtie"
+require "active_record/railtie"
+require "active_storage/engine"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "action_mailbox/engine"
+require "action_text/engine"
+require "action_view/railtie"
+require "action_cable/engine"
+
+Bundler.require(*Rails.groups)
+
+module Triage
+  class Application < Rails::Application
+    config.load_defaults 8.1
+
+    config.autoload_lib(ignore: %w[assets tasks])
+
+    config.time_zone = "Moscow"
+    config.active_record.default_timezone = :utc
+
+    config.i18n.available_locales = %i[ru en de]
+    config.i18n.default_locale = :ru
+    config.i18n.fallbacks = { en: [ :ru ], de: [ :ru ] }
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
+
+    config.generators do |g|
+      g.system_tests = nil
+      g.test_framework :rspec, fixture: false, view_specs: false, helper_specs: false, routing_specs: false
+      g.fixture_replacement :factory_bot, dir: "spec/factories"
+    end
+
+    # Multi-tenant resolver — ставит Current.company по subdomain'у.
+    config.autoload_paths += [ Rails.root.join("app/middleware").to_s ]
+    initializer "triage.tenant_resolver", after: :load_config_initializers do |app|
+      require Rails.root.join("app/middleware/tenant_resolver")
+      app.middleware.use TenantResolver
+    end
+  end
+end
