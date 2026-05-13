@@ -87,7 +87,7 @@
     </div>
 
     <% if is_staff && @ticket.reporter.respond_to?(:staff_notes) && @ticket.reporter.staff_notes.present? %>
-      <div class="card-apple mb-3" style="background:rgba(255,159,10,0.05);border-left:3px solid rgba(255,159,10,0.5);">
+      <div class="card-apple mb-3 staff-note-card-tr">
         <div class="d-flex align-items-center gap-2 mb-1">
           <span class="pill pill--warning pill--sm"><%= t("customers.staff_notes_badge") %></span>
           <strong class="footnote"><%= @ticket.reporter.display_name %></strong>

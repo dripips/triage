@@ -144,7 +144,7 @@
   }
 
   &--internal {
-    background: rgba(255,159,10,0.05);
+    background: var(--ds-orange-tint);
     margin-left: -12px; margin-right: -12px;
     padding-left: 12px; padding-right: 12px;
     border-radius: 8px;
@@ -239,13 +239,13 @@
   }
 
   &--internal .chat-bubble-tr__cloud {
-    background: rgba(255,159,10,0.12); border-left: 3px solid rgba(255,159,10,0.6);
+    background: var(--ds-orange-tint); border-left: 3px solid var(--ds-orange, #FF9F0A);
   }
   &--internal.chat-bubble-tr--mine .chat-bubble-tr__cloud {
-    background: rgba(255,159,10,0.85);
+    background: var(--ds-orange, #FF9F0A); color: #fff;
   }
   &--ai .chat-bubble-tr__cloud {
-    background: rgba(10,132,255,0.08); border-left: 3px solid var(--ds-blue, #0A84FF);
+    background: var(--ds-blue-tint); border-left: 3px solid var(--ds-blue, #0A84FF);
   }
 }
 
@@ -263,6 +263,11 @@
 
 .pill--sm { font-size: 10px; padding: 1px 6px; }
 
+.staff-note-card-tr {
+  background: var(--ds-orange-tint) !important;
+  border-left: 3px solid var(--ds-orange, #FF9F0A);
+}
+
 // ── Notification bell + dropdown ─────────────────────────────────────────
 .notif-badge-tr {
   position: absolute; top: 2px; right: 2px;
@@ -278,7 +283,7 @@
   border-bottom: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
   transition: background var(--ds-dur-fast, 140ms);
   &:hover { background: var(--ds-fill-tertiary, rgba(120,120,128,0.10)); }
-  &--unread { background: rgba(10,132,255,0.04); }
+  &--unread { background: var(--ds-blue-tint); }
   &__dot {
     flex: 0 0 8px; padding-top: 6px;
     span { display: block; width: 8px; height: 8px; background: var(--ds-blue, #0A84FF); border-radius: 50%; }
