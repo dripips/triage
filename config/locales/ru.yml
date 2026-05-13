@@ -298,12 +298,28 @@ ru:
       languages: Языки
     languages:
       title: Языки
-      subtitle: Включите или отключите доступные языки
+      subtitle: Управление доступными языками
       default: По умолчанию
       enabled_label: Включён
       disabled_label: Выключен
       enable: Включить
       disable: Выключить
+      make_default: Сделать основным
+      add_new: Добавить язык
+      add_btn: Добавить
+      code: Код (ISO)
+      native_name: Родное название
+      english_name: Название (EN)
+      flag: Флаг
+      flag_hint: "Код страны для flag-icons (ru, gb, de...)"
+      direction: Направление
+      position: Позиция
+      created: Язык добавлен
+      updated: Язык обновлён
+      deleted: Язык удалён
+      default_set: Язык по умолчанию изменён
+      cant_delete_default: Нельзя удалить язык по умолчанию
+      cant_disable_default: Нельзя отключить язык по умолчанию
     ai:
       title: AI ассистент
       subtitle: Настройка AI-модели для работы с тикетами

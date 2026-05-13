@@ -1,0 +1,52 @@
+<% content_for :title, @language.native_name %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('settings.languages.title')}", settings_languages_path %></div>
+    <h1 class="page-header__title m-0"><%= @language.native_name %> (<%= @language.code.upcase %>)</h1>
+  </div>
+</header>
+
+<%= form_with model: [:settings, @language], class: "card-apple" do |f| %>
+  <% if @language.errors.any? %>
+    <div class="alert alert-danger mb-3"><%= @language.errors.full_messages.to_sentence %></div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-3">
+      <%= f.label :code, t("settings.languages.code"), class: "form-label" %>
+      <%= f.text_field :code, class: "form-control" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :native_name, t("settings.languages.native_name"), class: "form-label" %>
+      <%= f.text_field :native_name, class: "form-control" %>
+    </div>
+    <div class="col-md-4">
+      <%= f.label :english_name, t("settings.languages.english_name"), class: "form-label" %>
+      <%= f.text_field :english_name, class: "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :flag, t("settings.languages.flag"), class: "form-label" %>
+      <%= f.text_field :flag, class: "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :direction, t("settings.languages.direction"), class: "form-label" %>
+      <%= f.select :direction, [["LTR", "ltr"], ["RTL", "rtl"]], {}, { class: "form-select", data: { controller: "apple-select" } } %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :position, t("settings.languages.position"), class: "form-label" %>
+      <%= f.number_field :position, class: "form-control", min: 0 %>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <div class="form-check">
+        <%= f.check_box :enabled, class: "form-check-input" %>
+        <%= f.label :enabled, t("settings.languages.enabled_label"), class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 justify-content-end mt-3">
+    <%= link_to t("common.cancel"), settings_languages_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
+  </div>
+<% end %>

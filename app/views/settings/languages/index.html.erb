@@ -6,7 +6,7 @@
 
 <%= render "shared/settings_tabs" %>
 
-<div class="card-apple">
+<div class="card-apple mb-3">
   <div class="card-apple__header">
     <h3 class="card-apple__title m-0"><%= t("settings.languages.title") %></h3>
     <p class="card-apple__subtitle m-0"><%= t("settings.languages.subtitle") %></p>
@@ -14,34 +14,80 @@
 
   <div class="d-flex flex-column gap-0 mt-3">
     <% @languages.each do |lang| %>
-      <% is_enabled = @enabled.include?(lang[:code]) %>
-      <% is_only_one = @enabled.size <= 1 && is_enabled %>
       <div class="d-flex justify-content-between align-items-center py-3" style="border-bottom:1px solid var(--ds-separator);">
         <div class="d-flex align-items-center gap-3">
-          <span class="fi fi-<%= lang[:flag] %>" style="font-size:22px;"></span>
+          <span class="fi fi-<%= lang.flag %>" style="font-size:22px;"></span>
           <div>
-            <strong><%= lang[:native_name] %></strong>
-            <span class="footnote text-tertiary ms-2"><%= lang[:code].upcase %></span>
+            <strong><%= lang.native_name %></strong>
+            <% if lang.english_name.present? %>
+              <span class="footnote text-tertiary ms-1">(<%= lang.english_name %>)</span>
+            <% end %>
+            <span class="footnote text-tertiary ms-2"><%= lang.code.upcase %></span>
+            <% if lang.rtl? %><span class="pill pill--neutral pill--sm ms-1">RTL</span><% end %>
           </div>
         </div>
         <div class="d-flex align-items-center gap-2">
-          <% if is_only_one %>
+          <% if lang.default? %>
             <span class="pill pill--info"><%= t("settings.languages.default") %></span>
-          <% elsif is_enabled %>
-            <span class="pill pill--success"><%= t("settings.languages.enabled_label") %></span>
-            <%= button_to language_toggle_settings_languages_path(code: lang[:code]),
-                          method: :post, class: "btn btn-ghost btn-sm" do %>
-              <%= t("settings.languages.disable") %>
-            <% end %>
           <% else %>
-            <span class="pill pill--neutral"><%= t("settings.languages.disabled_label") %></span>
-            <%= button_to language_toggle_settings_languages_path(code: lang[:code]),
-                          method: :post, class: "btn btn-soft btn-sm" do %>
-              <%= t("settings.languages.enable") %>
+            <% if lang.enabled? %>
+              <span class="pill pill--success"><%= t("settings.languages.enabled_label") %></span>
+            <% else %>
+              <span class="pill pill--neutral"><%= t("settings.languages.disabled_label") %></span>
+            <% end %>
+            <%= button_to toggle_settings_language_path(lang), method: :post, class: "btn btn-ghost btn-sm", form: { class: "d-inline" } do %>
+              <%= lang.enabled? ? t("settings.languages.disable") : t("settings.languages.enable") %>
+            <% end %>
+            <%= button_to set_default_settings_language_path(lang), method: :post, class: "btn btn-ghost btn-sm", form: { class: "d-inline" } do %>
+              <%= t("settings.languages.make_default") %>
+            <% end %>
+          <% end %>
+          <%= link_to t("common.edit"), edit_settings_language_path(lang), class: "btn btn-ghost btn-sm" %>
+          <% unless lang.default? %>
+            <%= button_to settings_language_path(lang), method: :delete, class: "btn btn-ghost btn-sm",
+                          form: { data: { turbo_confirm: t("common.confirm_delete") }, class: "d-inline" } do %>
+              ✕
             <% end %>
           <% end %>
         </div>
       </div>
     <% end %>
   </div>
+</div>
+
+<div class="card-apple">
+  <h4 class="card-apple__title mb-3"><%= t("settings.languages.add_new") %></h4>
+
+  <%= form_with model: [:settings, @language] do |f| %>
+    <% if @language.errors.any? %>
+      <div class="alert alert-danger mb-3"><%= @language.errors.full_messages.to_sentence %></div>
+    <% end %>
+
+    <div class="row g-3">
+      <div class="col-md-2">
+        <%= f.label :code, t("settings.languages.code"), class: "form-label" %>
+        <%= f.text_field :code, class: "form-control", placeholder: "en, de, fr..." %>
+      </div>
+      <div class="col-md-3">
+        <%= f.label :native_name, t("settings.languages.native_name"), class: "form-label" %>
+        <%= f.text_field :native_name, class: "form-control", placeholder: "Deutsch, Français..." %>
+      </div>
+      <div class="col-md-3">
+        <%= f.label :english_name, t("settings.languages.english_name"), class: "form-label" %>
+        <%= f.text_field :english_name, class: "form-control", placeholder: "German, French..." %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :flag, t("settings.languages.flag"), class: "form-label" %>
+        <%= f.text_field :flag, class: "form-control", placeholder: "de, fr, gb..." %>
+        <div class="footnote text-tertiary mt-1"><%= t("settings.languages.flag_hint") %></div>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :position, t("settings.languages.position"), class: "form-label" %>
+        <%= f.number_field :position, class: "form-control", min: 0, value: @language.position || 0 %>
+      </div>
+      <div class="col-12">
+        <%= f.submit t("settings.languages.add_btn"), class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
 </div>

@@ -9,6 +9,18 @@ company = Company.find_or_create_by!(code: "default") do |c|
 end
 puts "[seed] company: #{company.name} (id=#{company.id})"
 
+# ── 1b. Languages ──────────────────────────────────────────────────────
+[
+  { code: "ru", native_name: "Русский",  english_name: "Russian", flag: "ru", is_default: true,  position: 0 },
+  { code: "en", native_name: "English",  english_name: "English", flag: "gb", is_default: false, position: 1 },
+  { code: "de", native_name: "Deutsch",  english_name: "German",  flag: "de", is_default: false, position: 2 }
+].each do |attrs|
+  lang = Language.find_or_initialize_by(company: company, code: attrs[:code])
+  lang.assign_attributes(attrs.merge(enabled: true, direction: :ltr))
+  lang.save!
+  puts "[seed] language: #{lang.native_name} (#{lang.code})"
+end
+
 # ── 2. Staff (helpdesk team) ───────────────────────────────────────────
 staff_seeds = [
   { email: "admin@triage.local",      name: "Анна Админова",      role: :superadmin, locale: "ru" },

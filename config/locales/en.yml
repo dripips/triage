@@ -367,12 +367,28 @@ en:
       languages: Languages
     languages:
       title: Languages
-      subtitle: Enable or disable available languages for your helpdesk
+      subtitle: Manage available languages
       default: Default
       enabled_label: Enabled
       disabled_label: Disabled
       enable: Enable
       disable: Disable
+      make_default: Set default
+      add_new: Add language
+      add_btn: Add
+      code: Code (ISO)
+      native_name: Native name
+      english_name: English name
+      flag: Flag
+      flag_hint: "Country code for flag-icons (ru, gb, de...)"
+      direction: Direction
+      position: Position
+      created: Language added
+      updated: Language updated
+      deleted: Language deleted
+      default_set: Default language changed
+      cant_delete_default: Cannot delete the default language
+      cant_disable_default: Cannot disable the default language
     ai:
       title: AI Assistant
       subtitle: Configure the AI model for ticket automation
