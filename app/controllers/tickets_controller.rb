@@ -27,7 +27,8 @@ class TicketsController < ApplicationController
   def create
     @ticket = scope.new(ticket_params.merge(reporter: current_user))
     if @ticket.save
-      redirect_to ticket_path(@ticket), notice: t("tickets.created", default: "Тикет создан")
+      TicketAi.new(company: current_company).auto_assign_ticket(@ticket) rescue nil
+      redirect_to ticket_path(@ticket), notice: t("tickets.created")
     else
       render :new, status: :unprocessable_entity
     end

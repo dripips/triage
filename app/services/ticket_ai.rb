@@ -65,6 +65,18 @@ class TicketAi
     setting.get("enabled").to_s == "1" || setting.get("enabled") == true
   end
 
+  def autonomous?
+    enabled? && setting.get("autonomous_mode").to_s == "1"
+  end
+
+  def auto_assign_enabled?
+    enabled? && setting.get("auto_assign").to_s == "1"
+  end
+
+  def chat_monitoring_enabled?
+    enabled? && setting.get("chat_monitoring").to_s == "1"
+  end
+
   def provider_key
     setting.get("provider") || "anthropic"
   end
@@ -84,6 +96,39 @@ class TicketAi
   def api_url
     custom = setting.get("api_base_url").presence
     custom || provider_preset[:url]
+  end
+
+  def monitor_chat(ticket, new_message)
+    return unless chat_monitoring_enabled?
+    return if new_message.system? || new_message.ai_suggestion?
+
+    prompt = build_monitor_prompt(ticket, new_message)
+    result = call(:suggest_reply, prompt)
+    return unless result[:ok] && result[:content].present?
+
+    ticket.conversation_messages.create!(
+      author: nil,
+      body: "💡 #{result[:content]}",
+      message_type: :ai_suggestion,
+      internal: true
+    )
+  end
+
+  def auto_assign_ticket(ticket)
+    return unless auto_assign_enabled?
+    return if ticket.assignee.present?
+
+    staff = User.kept.staff_users.where(company: @company)
+    return if staff.empty?
+
+    prompt = "Given these available agents: #{staff.map(&:display_name).join(', ')}.\n" \
+             "Ticket: #{ticket.subject}\nDescription: #{ticket.description}\n" \
+             "Who should handle this? Reply with ONLY the agent name, nothing else."
+    result = call(:categorize, prompt)
+    return unless result[:ok]
+
+    match = staff.find { |u| result[:content].to_s.include?(u.display_name) }
+    ticket.assign_to!(match, actor: nil) if match
   end
 
   def estimate_cost(task_key)
@@ -259,5 +304,19 @@ class TicketAi
 
   def build_sentiment_prompt(ticket)
     "Analyze the customer sentiment for this ticket. Return JSON: { sentiment: positive/neutral/negative, score: -1 to 1, explanation: string }.\n\nSubject: #{ticket.subject}\nDescription: #{ticket.description}"
+  end
+
+  def build_monitor_prompt(ticket, new_message)
+    recent = ticket.conversation_messages.chronological.last(10).map { |m|
+      "#{m.author&.respond_to?(:display_name) ? m.author.display_name : 'system'}: #{m.body.to_s.truncate(200)}"
+    }.join("\n")
+
+    "You are monitoring a helpdesk chat. A new message just arrived.\n" \
+    "If the agent is going off-track, suggest a correction.\n" \
+    "If a service/product should be recommended, suggest it.\n" \
+    "If everything is fine, reply with just 'OK' (do not send a suggestion).\n\n" \
+    "Ticket: #{ticket.subject}\n\nRecent messages:\n#{recent}\n\n" \
+    "New message from #{new_message.author&.respond_to?(:display_name) ? new_message.author.display_name : 'unknown'}: #{new_message.body}\n\n" \
+    "Reply with a short internal suggestion for the team, or 'OK' if no action needed."
   end
 end

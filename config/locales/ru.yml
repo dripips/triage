@@ -363,6 +363,9 @@ ru:
       auto_suggest_reply: Подсказка ответов агенту
       auto_summarize: Авто-резюме тредов
       auto_sentiment: Анализ настроения клиента
+      autonomous_mode: Автономный режим (AI действует самостоятельно)
+      chat_monitoring: Мониторинг чата (AI следит за диалогом и подсказывает)
+      auto_assign: Авто-назначение (AI выбирает исполнителя)
       advanced_title: Расширенные параметры
       budget: Бюджет $/мес
       system_prompt: Системный промпт

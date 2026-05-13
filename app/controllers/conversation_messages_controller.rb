@@ -9,6 +9,7 @@ class ConversationMessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
+        ai_monitor_async(@ticket, @message)
         format.turbo_stream
         format.html { redirect_to ticket_path(@ticket) }
       else
@@ -26,5 +27,11 @@ class ConversationMessagesController < ApplicationController
 
   def message_params
     params.require(:conversation_message).permit(:body, :internal, files: [])
+  end
+
+  def ai_monitor_async(ticket, message)
+    TicketAi.new(company: current_company).monitor_chat(ticket, message)
+  rescue => e
+    Rails.logger.error("[AI Monitor] #{e.message}")
   end
 end

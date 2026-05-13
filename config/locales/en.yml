@@ -422,6 +422,9 @@ en:
       auto_suggest_reply: Suggest replies to agent
       auto_summarize: Auto-summarize threads
       auto_sentiment: Sentiment analysis
+      autonomous_mode: Autonomous mode (AI acts independently)
+      chat_monitoring: Chat monitoring (AI watches conversations and suggests)
+      auto_assign: Auto-assign (AI picks the best agent)
       advanced_title: Advanced Parameters
       budget: Budget $/mo
       system_prompt: System Prompt

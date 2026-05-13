@@ -21,6 +21,7 @@ module Settings
       raw = params.require(:app_setting).permit(
         :enabled, :mode, :provider, :model, :api_key, :api_base_url,
         :temperature, :max_tokens, :monthly_budget_usd,
+        :autonomous_mode, :chat_monitoring, :auto_assign,
         :auto_categorize, :auto_suggest_reply, :auto_summarize, :auto_sentiment,
         :system_prompt
       )
