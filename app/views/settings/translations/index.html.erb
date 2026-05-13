@@ -1,0 +1,49 @@
+<% content_for :title, t("settings.tabs.translations") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<div class="card-apple mb-3">
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.translations.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.translations.subtitle") %></p>
+  </div>
+
+  <%= form_with url: settings_translations_path, method: :get, class: "d-flex gap-2 mt-3 mb-3" do %>
+    <select name="locale_filter" class="form-select" style="max-width:140px;" data-controller="apple-select">
+      <% Language.where(company: current_company).enabled.each do |lang| %>
+        <option value="<%= lang.code %>" <%= "selected" if lang.code == @locale %>><%= lang.native_name %> (<%= lang.code.upcase %>)</option>
+      <% end %>
+    </select>
+    <input type="search" name="q" value="<%= @query %>" class="form-control" placeholder="<%= t("settings.translations.search_placeholder") %>" style="max-width:300px;">
+    <button type="submit" class="btn btn-soft btn-sm"><%= t("common.search") %></button>
+  <% end %>
+
+  <div class="footnote text-tertiary mb-2">
+    <%= t("settings.translations.showing", count: @entries.size, total: @total) %>
+  </div>
+
+  <% @entries.each do |entry| %>
+    <%= form_with url: update_settings_translations_path, method: :post,
+        class: "d-flex gap-2 align-items-center py-2", style: "border-bottom:1px solid var(--ds-separator);" do %>
+      <input type="hidden" name="key" value="<%= entry[:key] %>">
+      <input type="hidden" name="locale_code" value="<%= @locale %>">
+      <input type="hidden" name="q" value="<%= @query %>">
+      <div style="flex:2;min-width:0;">
+        <code class="footnote text-tertiary" style="word-break:break-all;"><%= entry[:key] %></code>
+      </div>
+      <div style="flex:2;min-width:0;">
+        <span class="footnote text-tertiary"><%= entry[:yaml_value].to_s.truncate(60) %></span>
+      </div>
+      <div style="flex:3;">
+        <input type="text" name="value" value="<%= entry[:db_value] || entry[:yaml_value] %>" class="form-control form-control-sm">
+      </div>
+      <div style="flex:0 0 auto;">
+        <button type="submit" class="btn btn-soft btn-sm"><%= t("common.save") %></button>
+      </div>
+    <% end %>
+  <% end %>
+</div>

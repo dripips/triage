@@ -320,6 +320,7 @@ ru:
       payments: Платежи
       chat: Чат
       languages: Языки
+      translations: Переводы
     languages:
       title: Языки
       subtitle: Управление доступными языками
@@ -344,6 +345,12 @@ ru:
       default_set: Язык по умолчанию изменён
       cant_delete_default: Нельзя удалить язык по умолчанию
       cant_disable_default: Нельзя отключить язык по умолчанию
+    translations:
+      title: Переводы
+      subtitle: Редактирование текстов интерфейса
+      search_placeholder: Поиск по ключу или тексту...
+      showing: "Показано %{count} из %{total}"
+      saved: Перевод сохранён
     ai:
       title: AI ассистент
       subtitle: Настройка AI-модели для работы с тикетами

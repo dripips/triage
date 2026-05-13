@@ -379,6 +379,7 @@ en:
       payments: Payments
       chat: Chat
       languages: Languages
+      translations: Translations
     languages:
       title: Languages
       subtitle: Manage available languages
@@ -403,6 +404,12 @@ en:
       default_set: Default language changed
       cant_delete_default: Cannot delete the default language
       cant_disable_default: Cannot disable the default language
+    translations:
+      title: Translations
+      subtitle: Edit interface texts per-key
+      search_placeholder: Search by key or text...
+      showing: "Showing %{count} of %{total}"
+      saved: Translation saved
     ai:
       title: AI Assistant
       subtitle: Configure the AI model for ticket automation

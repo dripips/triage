@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_201222) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_202436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -299,6 +299,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_201222) do
     t.index ["ticket_type_id"], name: "index_tickets_on_ticket_type_id"
   end
 
+  create_table "translations", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "locale", null: false
+    t.datetime "updated_at", null: false
+    t.text "value"
+    t.index ["company_id", "locale", "key"], name: "index_translations_on_company_id_and_locale_and_key", unique: true
+    t.index ["company_id"], name: "index_translations_on_company_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.bigint "company_id"
     t.datetime "created_at", null: false
@@ -346,5 +357,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_201222) do
   add_foreign_key "tickets", "companies"
   add_foreign_key "tickets", "ticket_types"
   add_foreign_key "tickets", "users", column: "assignee_id"
+  add_foreign_key "translations", "companies"
   add_foreign_key "users", "companies"
 end

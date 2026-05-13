@@ -42,6 +42,9 @@ Rails.application.routes.draw do
           post :toggle
         end
       end
+      resources :translations, only: %i[index], controller: "translations" do
+        collection { post :update }
+      end
       resources :knowledge_articles
       resources :price_lists do
         resources :price_items, only: %i[create update destroy], controller: "price_items"
