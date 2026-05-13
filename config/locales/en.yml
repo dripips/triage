@@ -361,6 +361,8 @@ en:
     sent: Message sent
     internal: internal
     internal_short: Int.
+    read: Read
+    delivered: Delivered
   settings:
     title: Settings
     subtitle: System configuration for your company

@@ -50,6 +50,7 @@ class Ticket < ApplicationRecord
       )
 
       comments.create!(author: actor, body: body, internal: true)
+      ConversationMessage.post_system_event!(ticket: self, body: body, actor: actor)
 
       if actor && assignee && assignee != actor
         notify!(assignee, actor: actor, action: "ticket_transitioned",
@@ -75,6 +76,7 @@ class Ticket < ApplicationRecord
       end
 
       comments.create!(author: actor, body: body, internal: true)
+      ConversationMessage.post_system_event!(ticket: self, body: body, actor: actor)
 
       if new_assignee != actor
         notify!(new_assignee, actor: actor, action: "ticket_assigned",

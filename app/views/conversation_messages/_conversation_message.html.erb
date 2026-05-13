@@ -21,15 +21,20 @@
     <div class="chat-bubble-tr__cloud">
       <% unless is_mine %>
         <div class="chat-bubble-tr__name">
-          <%= conversation_message.author&.respond_to?(:display_name) ? conversation_message.author.display_name : "система" %>
-          <% if conversation_message.internal %><span class="pill pill--warning pill--sm"<%= t("chat.internal_short") %></span><% end %>
+          <%= conversation_message.author&.respond_to?(:display_name) ? conversation_message.author.display_name : I18n.t("system_user") %>
+          <% if conversation_message.internal %><span class="pill pill--warning pill--sm"><%= I18n.t("chat.internal_short") %></span><% end %>
           <% if is_ai %><span class="pill pill--info pill--sm">AI</span><% end %>
         </div>
       <% end %>
       <div class="chat-bubble-tr__text"><%= simple_format(conversation_message.body) %></div>
-      <div class="chat-bubble-tr__time">
-        <% if conversation_message.internal && is_mine %><span class="pill pill--warning pill--sm"<%= t("chat.internal_short") %></span><% end %>
-        <%= conversation_message.created_at.strftime("%H:%M") %>
+      <div class="chat-bubble-tr__footer">
+        <% if conversation_message.internal && is_mine %><span class="pill pill--warning pill--sm"><%= I18n.t("chat.internal_short") %></span><% end %>
+        <span class="chat-bubble-tr__time"><%= conversation_message.created_at.strftime("%H:%M") %></span>
+        <% if is_mine %>
+          <span class="chat-bubble-tr__read" title="<%= conversation_message.read_by.except(conversation_message.author_id.to_s).any? ? I18n.t('chat.read') : I18n.t('chat.delivered') %>">
+            <%= conversation_message.read_by.except(conversation_message.author_id.to_s).any? ? "✓✓" : "✓" %>
+          </span>
+        <% end %>
       </div>
     </div>
   <% end %>

@@ -21,9 +21,17 @@
           <h3 class="card-apple__title m-0"><%= t("chat.title") %></h3>
           <span class="pill pill--neutral"><%= chat_messages.size %></span>
         </div>
-        <div class="chat-panel-tr__messages" id="chat-messages">
+        <div class="chat-panel-tr__messages" id="chat-messages" data-controller="chat-scroll">
           <% if chat_messages.any? %>
-            <%= render chat_messages %>
+            <% last_date = nil %>
+            <% chat_messages.each do |msg| %>
+              <% msg_date = msg.created_at.to_date %>
+              <% if msg_date != last_date %>
+                <div class="chat-date-sep-tr"><span><%= I18n.l(msg_date, format: :long) rescue msg_date %></span></div>
+                <% last_date = msg_date %>
+              <% end %>
+              <%= render msg %>
+            <% end %>
           <% else %>
             <p class="footnote text-secondary-apple text-center py-4 m-0"><%= t("chat.empty") %></p>
           <% end %>

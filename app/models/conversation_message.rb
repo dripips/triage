@@ -2,7 +2,6 @@ class ConversationMessage < ApplicationRecord
   belongs_to :ticket
   belongs_to :author, polymorphic: true, optional: true
 
-  # 0=text, 1=system (transition/assignment), 2=ai_suggestion, 3=file
   enum :message_type, { text: 0, system: 1, ai_suggestion: 2, file_attachment: 3 }
 
   validates :body, presence: true
@@ -10,8 +9,38 @@ class ConversationMessage < ApplicationRecord
   scope :chronological, -> { order(:created_at) }
   scope :public_only,   -> { where(internal: false) }
   scope :for_customer,  -> { public_only.where.not(message_type: :ai_suggestion) }
+  scope :unread_by,     ->(user) { where.not("read_by ? :uid", uid: user.id.to_s) }
 
   after_create_commit :broadcast_to_ticket
+
+  def read_by?(user)
+    read_by.key?(user.id.to_s)
+  end
+
+  def mark_read_by!(user)
+    return if read_by?(user)
+    self.read_by = read_by.merge(user.id.to_s => Time.current.iso8601)
+    save!
+  end
+
+  def read_at_by(user)
+    ts = read_by[user.id.to_s]
+    ts ? Time.parse(ts) : nil
+  end
+
+  def self.mark_all_read!(ticket, user)
+    where(ticket: ticket).unread_by(user).find_each { |m| m.mark_read_by!(user) }
+  end
+
+  def self.post_system_event!(ticket:, body:, actor: nil)
+    create!(
+      ticket: ticket,
+      author: actor,
+      body: body,
+      message_type: :system,
+      internal: false
+    )
+  end
 
   private
 

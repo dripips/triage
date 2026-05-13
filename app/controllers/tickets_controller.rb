@@ -17,6 +17,7 @@ class TicketsController < ApplicationController
     @transitions = current_user.staff? ? @ticket.ticket_type.transitions.select { |_event, cfg|
       Array(cfg["from"]).include?(@ticket.status)
     } : {}
+    ConversationMessage.mark_all_read!(@ticket, current_user) if current_user
   end
 
   def new
