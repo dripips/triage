@@ -19,8 +19,8 @@ class ConversationMessage < ApplicationRecord
     broadcast_append_to(
       "ticket_#{ticket_id}_chat",
       target: "chat-messages",
-      partial: "conversation_messages/message",
-      locals: { message: self }
+      partial: "conversation_messages/conversation_message",
+      locals: { conversation_message: self }
     )
   end
 end

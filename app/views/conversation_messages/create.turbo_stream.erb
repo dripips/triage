@@ -1,4 +1,4 @@
-<%= turbo_stream.append "chat-messages", partial: "conversation_messages/message", locals: { message: @message } %>
+<%= turbo_stream.append "chat-messages", partial: "conversation_messages/conversation_message", locals: { conversation_message: @message } %>
 
 <%= turbo_stream.replace "chat-form" do %>
   <%= render "conversation_messages/form", ticket: @ticket %>
