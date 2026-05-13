@@ -1,0 +1,32 @@
+<%= form_with model: customer, url: (customer.new_record? ? customers_path : customer_path(customer)), class: "card-apple" do |f| %>
+  <% if customer.errors.any? %>
+    <div class="alert alert-danger mb-3"><%= customer.errors.full_messages.to_sentence %></div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :name, t("users.name", default: "Имя"), class: "form-label" %>
+      <%= f.text_field :name, required: true, class: "form-control" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :email, t("users.email", default: "Email"), class: "form-label" %>
+      <%= f.email_field :email, required: true, class: "form-control" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :locale, t("users.locale", default: "Язык"), class: "form-label" %>
+      <%= f.select :locale,
+                   TriageLocales::AVAILABLE.map { |l| [ l[:native_name], l[:code] ] },
+                   {}, { class: "form-select" } %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :external_id, t("customers.external_id", default: "External ID"), class: "form-label" %>
+      <%= f.text_field :external_id, class: "form-control",
+                        placeholder: t("customers.external_id_hint", default: "ID в вашей системе (опционально)") %>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 justify-content-end mt-3">
+    <%= link_to t("common.cancel", default: "Отмена"), customers_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+  </div>
+<% end %>

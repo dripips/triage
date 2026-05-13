@@ -1,0 +1,11 @@
+<%# Сегменты языка для дропдауна профиля. Текущая локаль помечена активной. %>
+<div class="theme-segments" role="radiogroup">
+  <% TriageLocales::AVAILABLE.each do |lang| %>
+    <%= link_to url_for(locale: lang[:code]),
+                class: "theme-segment #{'active' if lang[:code] == I18n.locale.to_s}",
+                data: { turbo: false } do %>
+      <span class="fi fi-<%= lang[:flag] %>"></span>
+      <span><%= lang[:code].upcase %></span>
+    <% end %>
+  <% end %>
+</div>

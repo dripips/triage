@@ -9,26 +9,57 @@ company = Company.find_or_create_by!(code: "default") do |c|
 end
 puts "[seed] company: #{company.name} (id=#{company.id})"
 
-# ── 2. Users ───────────────────────────────────────────────────────────
-[
-  { email: "admin@triage.local",      role: :superadmin },
-  { email: "supervisor@triage.local", role: :supervisor },
-  { email: "agent@triage.local",      role: :agent }
-].each do |attrs|
+# ── 2. Staff (helpdesk team) ───────────────────────────────────────────
+staff_seeds = [
+  { email: "admin@triage.local",      name: "Анна Админова",      role: :superadmin, locale: "ru" },
+  { email: "supervisor@triage.local", name: "Сергей Старший",     role: :supervisor, locale: "ru" },
+  { email: "agent@triage.local",      name: "Алина Агентова",     role: :agent,      locale: "ru" },
+  { email: "agent2@triage.local",     name: "Игорь Поддержкин",   role: :agent,      locale: "en" }
+]
+
+staff_seeds.each do |attrs|
   user = User.find_or_initialize_by(email: attrs[:email])
   is_new = user.new_record?
   user.password = default_password if is_new
+  user.kind     = :staff
   user.role     = attrs[:role]
-  user.locale   = "ru"
-  user.time_zone = "Moscow"
+  user.name     = attrs[:name]
+  user.locale   = attrs[:locale]
   user.company  = company
   user.save!
-  puts "[seed] user #{attrs[:role]} #{attrs[:email]} (#{is_new ? 'created' : 'updated'})"
+  puts "[seed] staff #{attrs[:role]} #{attrs[:email]} (#{is_new ? 'created' : 'updated'})"
 end
 
-agent = User.find_by(email: "agent@triage.local")
+# ── 3. Customers (внешние клиенты) ─────────────────────────────────────
+customer_seeds = [
+  { email: "anna.p@example.com",   name: "Анна Петрова",        locale: "ru", external_id: "ext-1001" },
+  { email: "ivan.s@example.com",   name: "Иван Сидоров",        locale: "ru", external_id: "ext-1002" },
+  { email: "maria.k@example.com",  name: "Мария Козлова",       locale: "ru", external_id: "ext-1003" },
+  { email: "john.smith@example.com", name: "John Smith",         locale: "en", external_id: "ext-1004" },
+  { email: "lena@example.com",     name: "Лена Морозова",       locale: "ru", external_id: nil       },
+  { email: "max@example.com",      name: "Max Müller",          locale: "de", external_id: "ext-1005" }
+]
 
-# ── 3. Ticket types с workflow + custom fields ─────────────────────────
+customer_seeds.each do |attrs|
+  user = User.find_or_initialize_by(email: attrs[:email])
+  is_new = user.new_record?
+  user.password = default_password if is_new
+  user.kind     = :customer
+  user.role     = nil
+  user.name     = attrs[:name]
+  user.locale   = attrs[:locale]
+  user.external_id = attrs[:external_id]
+  user.external_provider = "jwt"
+  user.company  = company
+  user.save!
+  puts "[seed] customer #{attrs[:email]} (#{is_new ? 'created' : 'updated'})"
+end
+
+agent  = User.find_by(email: "agent@triage.local")
+agent2 = User.find_by(email: "agent2@triage.local")
+sup    = User.find_by(email: "supervisor@triage.local")
+
+# ── 4. Ticket types с workflow + custom fields ─────────────────────────
 bug_workflow = {
   "initial_state" => "new",
   "states" => %w[new triage in_progress in_review released closed],
@@ -62,7 +93,7 @@ it_workflow = {
 }
 
 types = [
-  { key: "bug",       name: "Bug",          color: "#FF453A", default_priority: 2, workflow: bug_workflow,
+  { key: "bug",       name: "Bug",            color: "#FF453A", default_priority: 2, workflow: bug_workflow,
     custom_fields_schema: [
       { "key" => "severity", "label" => "Severity", "type" => "select", "options" => %w[minor major critical] },
       { "key" => "browser",  "label" => "Browser",  "type" => "string" }
@@ -72,7 +103,7 @@ types = [
       { "key" => "channel",     "label" => "Канал получения", "type" => "select", "options" => %w[email phone reception other] },
       { "key" => "amount_rub",  "label" => "Сумма ущерба ₽",  "type" => "integer" }
     ] },
-  { key: "it_request", name: "IT-заявка",   color: "#0A84FF", default_priority: 1, workflow: it_workflow,
+  { key: "it_request", name: "IT-заявка",     color: "#0A84FF", default_priority: 1, workflow: it_workflow,
     custom_fields_schema: [
       { "key" => "os",     "label" => "OS",     "type" => "string" },
       { "key" => "device", "label" => "Device", "type" => "string" }
@@ -93,32 +124,91 @@ types.each do |attrs|
   puts "[seed] ticket_type: #{type.name}"
 end
 
-# ── 4. Sample tickets ──────────────────────────────────────────────────
-bug_type = TicketType.find_by(company: company, key: "bug")
+# ── 5. Sample tickets + некоторые с комментариями + transitions ────────
+bug_type  = TicketType.find_by(company: company, key: "bug")
 it_type   = TicketType.find_by(company: company, key: "it_request")
 comp_type = TicketType.find_by(company: company, key: "complaint")
 
+customers = User.customer_users.where(company: company).to_a
+
 samples = [
-  { type: bug_type,  subject: 'Кнопка "Сохранить" не работает в Safari 17',  priority: :high,   description: 'При клике на "Сохранить" в форме создания заявки Safari 17 на macOS — никакой реакции. На Chrome / Firefox работает.' },
-  { type: bug_type,  subject: "500 при выгрузке отчёта за период >30 дней",  priority: :urgent, description: "Запрос /reports/export?from=2026-01-01&to=2026-04-01 валится с timeout. Логи: PG statement_timeout (30s)." },
-  { type: it_type,   subject: "Не работает Wi-Fi в переговорке 3.14",        priority: :normal, description: "Третий день подряд Wi-Fi пропадает каждые 15 минут. Подходящий канал — 5GHz." },
-  { type: it_type,   subject: "Установить Figma на новый MacBook",           priority: :low,    description: "Новому дизайнеру Алине Соколовой нужно установить Figma + Adobe CC + Slack." },
-  { type: comp_type, subject: "Мастер опоздал на час, потерял время",        priority: :high,   description: "Клиент Анна П. жалуется что мастер Игорь опоздал на час 12 мая. Просит компенсацию." },
-  { type: comp_type, subject: "Услуга не оказана, оплата проведена",         priority: :urgent, description: "Клиент оплатил окрашивание 8 мая, не явился — деньги не возвращены. Запрос refund." }
+  { type: bug_type,  subject: 'Кнопка "Сохранить" не работает в Safari 17',
+    priority: :high, reporter: customers[0],
+    description: 'При клике на "Сохранить" в форме создания заявки Safari 17 на macOS — никакой реакции. На Chrome / Firefox работает.',
+    assignee: agent, transition: "triage" },
+  { type: bug_type,  subject: "500 при выгрузке отчёта за период >30 дней",
+    priority: :urgent, reporter: customers[1],
+    description: "Запрос /reports/export?from=2026-01-01&to=2026-04-01 валится с timeout. Логи: PG statement_timeout (30s).",
+    assignee: agent2, transition: "start" },
+  { type: bug_type,  subject: "Layout сломан на iPhone SE",
+    priority: :normal, reporter: customers[3],
+    description: "On iPhone SE (375px width) the sidebar overlaps the content. Safari only.",
+    assignee: agent },
+  { type: it_type,   subject: "Не работает Wi-Fi в переговорке 3.14",
+    priority: :normal, reporter: customers[2],
+    description: "Третий день подряд Wi-Fi пропадает каждые 15 минут. Подходящий канал — 5GHz.",
+    assignee: agent2, transition: "assign" },
+  { type: it_type,   subject: "Установить Figma на новый MacBook",
+    priority: :low, reporter: customers[4],
+    description: "Новому дизайнеру Алине Соколовой нужно установить Figma + Adobe CC + Slack." },
+  { type: it_type,   subject: "Доступ к VPN не работает после смены пароля",
+    priority: :high, reporter: customers[1],
+    description: "После сброса пароля по корп.правилам VPN-клиент Cisco AnyConnect не принимает новый пароль.",
+    assignee: agent },
+  { type: comp_type, subject: "Мастер опоздал на час, потерял время",
+    priority: :high, reporter: customers[0],
+    description: "Клиент Анна П. жалуется что мастер Игорь опоздал на час 12 мая. Просит компенсацию.",
+    assignee: sup },
+  { type: comp_type, subject: "Услуга не оказана, оплата проведена",
+    priority: :urgent, reporter: customers[4],
+    description: "Клиент оплатил окрашивание 8 мая, не явился — деньги не возвращены. Запрос refund." },
+  { type: comp_type, subject: "Кофе пролили на коврик в салоне",
+    priority: :low, reporter: customers[2],
+    description: "Лёгкая ситуация — кофе пролили, попросили компенсацию химчистки." },
+  { type: bug_type,  subject: "Авторизация ломается после 30 минут idle",
+    priority: :normal, reporter: customers[3],
+    description: "Session expires silently — пользователю не показывается banner, просто 401 на следующий запрос." },
+  { type: it_type,   subject: "Принтер на 3-м этаже не печатает",
+    priority: :normal, reporter: customers[5],
+    description: "Brother HL-L2350DW. Светит оранжевым. Подозреваем замятие бумаги — менеджер занят, нужен IT." },
+  { type: comp_type, subject: "Грубое отношение администратора на ресепшене",
+    priority: :high, reporter: customers[5],
+    description: "Beschwerde: der Empfang war sehr unhöflich am 10. Mai um 14:00. Bitte überprüfen." }
 ]
 
 samples.each do |attrs|
-  next if Ticket.exists?(company: company, subject: attrs[:subject])
-  t = Ticket.create!(
-    company:     company,
-    ticket_type: attrs[:type],
-    reporter:    agent,
-    assignee:    nil,
-    subject:     attrs[:subject],
-    description: attrs[:description],
-    priority:    attrs[:priority]
-  )
-  puts "[seed] ticket: ##{t.id} #{t.subject.truncate(50)} (#{t.status})"
+  ticket = Ticket.find_or_initialize_by(company: company, subject: attrs[:subject])
+  is_new = ticket.new_record?
+  if is_new
+    ticket.assign_attributes(
+      ticket_type: attrs[:type],
+      reporter:    attrs[:reporter],
+      assignee:    attrs[:assignee],
+      description: attrs[:description],
+      priority:    attrs[:priority]
+    )
+    ticket.save!
+    if attrs[:transition].present? && ticket.can_transition?(attrs[:transition])
+      ticket.transition!(attrs[:transition], actor: attrs[:assignee] || agent)
+    end
+  end
+  puts "[seed] ticket: ##{ticket.id} #{ticket.subject.truncate(50)} (#{ticket.status})"
 end
 
-puts "[seed] done. users password: #{default_password}"
+# ── 6. Несколько комментариев для демонстрации ────────────────────────
+first_bug = Ticket.find_by(company: company, subject: 'Кнопка "Сохранить" не работает в Safari 17')
+if first_bug && first_bug.comments.count < 3
+  first_bug.comments.create!(author: agent, body: "Воспроизвёл локально на Safari 17.4 / macOS Sonoma. Проблема в onClick — preventDefault кладёт всё.", internal: false)
+  first_bug.comments.create!(author: sup,   body: "Эскалирую к фронтенд-команде — это блокер для всех маков.",   internal: true)
+  first_bug.comments.create!(author: customers[0], body: "Спасибо, жду исправления — пока работаю через Chrome.", internal: false)
+end
+
+puts "[seed] done. password for all accounts: #{default_password}"
+puts ""
+puts "Test accounts:"
+puts "  admin@triage.local       — superadmin"
+puts "  supervisor@triage.local  — supervisor"
+puts "  agent@triage.local       — agent"
+puts "  agent2@triage.local      — agent (locale: en)"
+puts "  anna.p@example.com       — customer"
+puts "  ... + 5 more customers (see db/seeds.rb)"

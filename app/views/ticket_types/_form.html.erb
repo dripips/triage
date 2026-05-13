@@ -1,0 +1,38 @@
+<%= form_with model: ticket_type, class: "card-apple" do |f| %>
+  <% if ticket_type.errors.any? %>
+    <div class="alert alert-danger mb-3"><%= ticket_type.errors.full_messages.to_sentence %></div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :key, t("ticket_types.key", default: "Ключ (slug)"), class: "form-label" %>
+      <%= f.text_field :key, required: true, class: "form-control", placeholder: "bug, complaint, it_request" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :name, t("ticket_types.name", default: "Название"), class: "form-label" %>
+      <%= f.text_field :name, required: true, class: "form-control" %>
+    </div>
+    <div class="col-12">
+      <%= f.label :workflow_json, t("ticket_types.workflow_json", default: "Workflow (JSON)"), class: "form-label" %>
+      <%= f.text_area :workflow_json,
+                      value: JSON.pretty_generate(ticket_type.workflow.presence || {}),
+                      rows: 14,
+                      class: "form-control text-mono",
+                      style: "font-family: 'JetBrains Mono', monospace; font-size: 13px;" %>
+      <div class="footnote text-secondary-apple mt-1">
+        <%= t("ticket_types.workflow_hint", default: "Ключи: initial_state, states (array), transitions (event → { from, to }).") %>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-check">
+        <%= f.check_box :active, class: "form-check-input" %>
+        <%= f.label :active, t("ticket_types.is_active", default: "Активен"), class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 justify-content-end mt-3">
+    <%= link_to t("common.cancel", default: "Отмена"), ticket_types_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+  </div>
+<% end %>

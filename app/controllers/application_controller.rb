@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   before_action :sync_current_user
   before_action :set_paper_trail_whodunnit
 
+  layout :resolve_layout
+
   rescue_from Pundit::NotAuthorizedError,   with: :user_not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -26,6 +28,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def resolve_layout
+    devise_controller? ? "auth" : "application"
+  end
 
   def sync_current_user
     Current.user = current_user if respond_to?(:current_user)

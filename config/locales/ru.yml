@@ -10,6 +10,7 @@ ru:
     edit: Редактировать
     delete: Удалить
     confirm_delete: Удалить?
+    close: Закрыть
     search: Поиск
     all: Все
     yes: Да
@@ -20,40 +21,175 @@ ru:
     sign_in: Войти
     sign_out: Выйти
     ago: назад
+    time_ago: "%{time} назад"
   pundit:
     not_authorized: Доступ запрещён
+  user_menu:
+    profile: Профиль
+    settings: Настройки
+    language: Язык
+    theme: Тема
+    theme_light: Светлая
+    theme_dark: Тёмная
+    theme_auto: Авто
   navigation:
     dashboard: Дашборд
-    tickets: Тикеты
+    workspace: Рабочее пространство
+    tickets: Все тикеты
+    my_tickets: Мои тикеты
+    knowledge: База знаний
     knowledge_base: База знаний
+    team: Команда
+    customers: Клиенты
+    ticket_types: Типы тикетов
+    admin: Администрирование
     reports: Отчёты
     settings: Настройки
+    sign_out: Выйти
+    menu: Меню
   roles:
     agent: Агент
     supervisor: Супервайзер
     admin: Админ
     superadmin: Супер-админ
+    customer: Клиент
   tickets:
     title: Тикеты
     new: Новый тикет
     subject: Тема
     description: Описание
-    priority: Приоритет
+    priority_label: Приоритет
     status: Статус
     assignee: Исполнитель
     reporter: Кем создан
     type: Тип
     created_at: Создан
     updated_at: Обновлён
+    created: Тикет создан
+    transitioned: Статус обновлён
+    transitioned_to: "Статус: %{state}"
+    workflow: Workflow
+    comments: Комментарии
     no_tickets: Тикетов пока нет
-    priorities:
-      low: Низкий
-      normal: Обычный
-      high: Высокий
-      urgent: Срочный
+    no_tickets_hint: Создайте первый тикет, чтобы начать
+    no_comments: Пока нет комментариев
+    summary: "%{open} открытых · %{closed} закрытых"
+    anonymous: аноним
+    unassigned: не назначен
+    scope_all: Все
+    scope_mine: Мои
+    scope_open: Открытые
+    scope_closed: Закрытые
+    priority:
+      low: низкий
+      normal: обычный
+      high: высокий
+      urgent: срочный
+  ticket_states:
+    new: Новый
+    triage: Триаж
+    in_progress: В работе
+    waiting_customer: Ждём клиента
+    resolved: Решён
+    closed: Закрыт
+    rejected: Отклонён
+    received: Принят
+    investigating: Анализ
+    answered: Отвечен
+    open: Открыт
+    assigned: Назначен
+    done: Готово
+  ticket_events:
+    triage: На триаж
+    start: Взять в работу
+    resolve: Решить
+    close: Закрыть
+    reopen: Открыть заново
+    reject: Отклонить
+    answer: Ответить
+    investigate: Расследовать
+    assign: Назначить
+    complete: Завершить
+  ticket_comments:
+    placeholder: Напишите комментарий...
+    body_label: Комментарий
+    submit: Опубликовать
+    posted: Комментарий опубликован
+    internal: Внутренний (только команда)
+    internal_badge: внутренний
+  users:
+    new: Добавить сотрудника
+    name: Имя
+    email: Email
+    role: Роль
+    locale: Язык
+    password: Пароль
+    password_hint: Оставьте пустым — сгенерируется
+    created: Сотрудник добавлен
+    updated: Профиль обновлён
+    disabled: Сотрудник отключён
+    summary: "%{count} сотрудников"
+    empty: Команда пока пуста
+  customers:
+    new: Добавить клиента
+    external_id: External ID
+    external_id_hint: ID в вашей системе (опционально)
+    created: Клиент добавлен
+    updated: Клиент обновлён
+    disabled: Клиент отключён
+    summary: "%{count} клиентов"
+    empty: Клиентов пока нет
+    empty_hint: Клиенты появятся автоматически через SSO или email-форму
+  ticket_types:
+    new: Новый тип
+    key: Ключ (slug)
+    name: Название
+    workflow_json: Workflow (JSON)
+    workflow_hint: "Ключи: initial_state, states (array), transitions (event → { from, to })."
+    is_active: Активен
+    created: Тип тикета создан
+    updated: Тип тикета обновлён
+    disabled: Тип тикета отключён
+    active: активен
+    disabled_label: отключён
+    summary: "%{count} типов"
+    empty: Типов пока нет
+    states: "%{n} состояний"
+    transitions: "%{n} переходов"
+    initial_state: "Стартовое: %{s}"
   errors:
     not_found:
       title: Не найдено
       message: Запрашиваемая страница не существует.
   a11y:
     skip_to_main: Перейти к содержимому
+  sso:
+    failed: "Авторизация не удалась: %{e}"
+    welcome: Добро пожаловать
+  auth:
+    sign_in: Войти
+    sign_up: Регистрация
+    sign_out: Выйти
+    email: Email
+    password: Пароль
+    password_confirmation: Подтверждение пароля
+    remember_me: Запомнить меня
+    forgot_password: Забыли пароль?
+    welcome_back: С возвращением
+    welcome_back_subtitle: Войдите, чтобы продолжить работу с тикетами.
+    create_account: Создать аккаунт
+    create_account_subtitle: Зарегистрируйтесь, чтобы начать.
+    already_have_account: Уже есть аккаунт? Войти
+    errors_title: Не удалось войти
+    hero:
+      title: Универсальный helpdesk нового поколения.
+      subtitle: AI-native, multi-tenant, гибкий под любую индустрию.
+      slogan_1: Тикеты, которые сами знают, что с ними делать.
+      slogan_2: От IT-команды до клиники — один продукт.
+      slogan_3: Workflow per ticket type — настраивайся под себя.
+      slogan_4: Клиенты счастливы, агенты не выгорают.
+  password_reset:
+    title: Сброс пароля
+    subtitle: Введи email — отправим ссылку для восстановления
+    submit: Отправить ссылку
+    back_to_sign_in: Вернуться к входу

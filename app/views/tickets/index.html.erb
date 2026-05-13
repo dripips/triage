@@ -1,44 +1,60 @@
-<% content_for :title, t("tickets.title", default: "Tickets") %>
+<% content_for :title, t("tickets.title", default: "Тикеты") %>
 
 <header class="page-header">
   <div>
-    <h1><%= t("tickets.title", default: "Tickets") %></h1>
-    <div class="subtitle">
-      <%= @open_count %> open · <%= @closed_count %> closed
-    </div>
+    <div class="page-header__eyebrow"><%= t("navigation.workspace", default: "Рабочее пространство") %></div>
+    <h1 class="page-header__title m-0"><%= t("tickets.title", default: "Тикеты") %></h1>
+    <p class="page-header__subtitle m-0">
+      <%= t("tickets.summary", default: "%{open} открытых · %{closed} закрытых", open: @open_count, closed: @closed_count) %>
+    </p>
   </div>
-  <div>
-    <%= link_to t("tickets.new", default: "+ New ticket"), new_ticket_path, class: "btn" %>
+  <div class="page-header__actions">
+    <%= link_to "+ #{t('tickets.new', default: 'Новый тикет')}", new_ticket_path, class: "btn btn-primary" %>
   </div>
 </header>
 
+<div class="filter-bar-tr">
+  <%= link_to t("tickets.scope_all",    default: "Все"),       tickets_path,                   class: "filter-chip-tr #{'active' if params[:scope].blank?}" %>
+  <%= link_to t("tickets.scope_mine",   default: "Мои"),       tickets_path(scope: "mine"),    class: "filter-chip-tr #{'active' if params[:scope] == 'mine'}" %>
+  <%= link_to t("tickets.scope_open",   default: "Открытые"),  tickets_path(scope: "open"),    class: "filter-chip-tr #{'active' if params[:scope] == 'open'}" %>
+  <%= link_to t("tickets.scope_closed", default: "Закрытые"),  tickets_path(scope: "closed"),  class: "filter-chip-tr #{'active' if params[:scope] == 'closed'}" %>
+</div>
+
 <% if @tickets.any? %>
-  <div class="card" style="padding: 0;">
+  <div class="card-apple card-apple--flush">
     <% @tickets.each do |ticket| %>
-      <%= link_to ticket_path(ticket), class: "ticket-row" do %>
-        <div>
-          <div class="ticket-row__subject"><%= ticket.subject %></div>
-          <div class="ticket-row__meta">
-            <span><%= ticket.ticket_type.name %></span>
+      <%= link_to ticket_path(ticket), class: "ticket-row-tr" do %>
+        <div class="ticket-row-tr__main">
+          <div class="ticket-row-tr__subject">
+            <span class="ticket-row-tr__id">#<%= ticket.id %></span>
+            <%= ticket.subject %>
+          </div>
+          <div class="ticket-row-tr__meta">
+            <span class="pill pill--neutral"><%= ticket.ticket_type.name %></span>
             <span>·</span>
-            <span><%= ticket.reporter&.email || "anonymous" %></span>
+            <span><%= ticket.reporter&.display_name || t("tickets.anonymous", default: "аноним") %></span>
             <span>·</span>
-            <span><%= time_ago_in_words(ticket.created_at) %> <%= t("common.ago") %></span>
+            <span><%= time_ago_in_words(ticket.created_at) %> <%= t("common.ago", default: "назад") %></span>
           </div>
         </div>
-        <div>
-          <span class="pill pill--<%= ticket.closed? ? 'green' : 'blue' %>"><%= ticket.status %></span>
-          <% if ticket.urgent? %><span class="pill pill--red">urgent</span><% end %>
-          <% if ticket.high?   %><span class="pill pill--orange">high</span><% end %>
+        <div class="ticket-row-tr__pills">
+          <% if    ticket.urgent? %><span class="pill pill--danger">⚡ <%= t("tickets.priority.urgent", default: "urgent") %></span>
+          <% elsif ticket.high?   %><span class="pill pill--warning"><%= t("tickets.priority.high", default: "high") %></span>
+          <% elsif ticket.low?    %><span class="pill pill--neutral"><%= t("tickets.priority.low", default: "low") %></span>
+          <% end %>
+          <span class="pill pill--<%= ticket.closed? ? 'success' : 'info' %>">
+            <%= t("ticket_states.#{ticket.status}", default: ticket.status.humanize) %>
+          </span>
         </div>
       <% end %>
     <% end %>
   </div>
 <% else %>
-  <div class="card">
+  <div class="card-apple">
     <div class="empty-state">
-      <p><%= t("tickets.no_tickets", default: "No tickets yet") %></p>
-      <%= link_to t("tickets.new", default: "+ New ticket"), new_ticket_path, class: "btn" %>
+      <h3 class="empty-state__title"><%= t("tickets.no_tickets", default: "Пока тикетов нет") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("tickets.no_tickets_hint", default: "Создайте первый тикет, чтобы начать") %></p>
+      <%= link_to "+ #{t('tickets.new', default: 'Новый тикет')}", new_ticket_path, class: "btn btn-primary mt-2" %>
     </div>
   </div>
 <% end %>

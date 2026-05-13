@@ -1,0 +1,52 @@
+<%# После транзишена: пересобираем frame с описанием+workflow и тостуем. %>
+<%= turbo_stream.replace dom_id(@ticket) do %>
+  <%= turbo_frame_tag dom_id(@ticket) do %>
+    <div class="card-apple mb-3">
+      <p style="white-space: pre-wrap; margin: 0;"><%= @ticket.description %></p>
+    </div>
+
+    <%
+      transitions = @ticket.ticket_type.transitions.select do |_event, cfg|
+        Array(cfg["from"]).include?(@ticket.status)
+      end
+    %>
+    <% if transitions.any? %>
+      <div class="card-apple mb-3">
+        <div class="card-apple__header">
+          <h3 class="card-apple__title m-0"><%= t("tickets.workflow", default: "Workflow") %></h3>
+        </div>
+        <div class="d-flex gap-2 flex-wrap mt-2">
+          <% transitions.each do |event, _cfg| %>
+            <%= button_to t("ticket_events.#{event}", default: event.to_s.humanize),
+                          transition_ticket_path(@ticket, event: event),
+                          method: :post,
+                          class: "btn btn-soft btn-sm",
+                          form: { class: "d-inline-block" } %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# Обновляем список комментариев — внутри transition! создаётся system-comment %>
+<%= turbo_stream.update "comments" do %>
+  <div id="comments-list">
+    <%= render @ticket.comments.kept.chronological %>
+  </div>
+<% end %>
+
+<%= turbo_stream.replace "comments-count" do %>
+  <span class="pill pill--neutral" id="comments-count"><%= @ticket.comments.kept.count %></span>
+<% end %>
+
+<%= turbo_stream.append "toast-stack" do %>
+  <div class="toast-apple toast-apple--success" data-controller="dismiss" data-dismiss-after-value="3000" role="status">
+    <span class="toast-apple__icon" aria-hidden="true">✓</span>
+    <div class="toast-apple__body">
+      <%= t("tickets.transitioned_to", state: t("ticket_states.#{@ticket.status}", default: @ticket.status.humanize),
+            default: "Статус: %{state}") %>
+    </div>
+    <button type="button" class="toast-apple__dismiss" data-action="click->dismiss#close" aria-label="×">×</button>
+  </div>
+<% end %>

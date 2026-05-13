@@ -9,6 +9,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "dartsass-rails"
+gem "bootstrap", "~> 5.3"
 gem "jbuilder"
 gem "tzinfo-data", platforms: %i[windows jruby]
 

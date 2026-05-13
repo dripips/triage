@@ -10,6 +10,7 @@ en:
     edit: Edit
     delete: Delete
     confirm_delete: Delete?
+    close: Close
     search: Search
     all: All
     yes: "Yes"
@@ -20,40 +21,138 @@ en:
     sign_in: Sign in
     sign_out: Sign out
     ago: ago
+    time_ago: "%{time} ago"
   pundit:
     not_authorized: Access denied
+  user_menu:
+    profile: Profile
+    settings: Settings
+    language: Language
+    theme: Theme
+    theme_light: Light
+    theme_dark: Dark
+    theme_auto: Auto
   navigation:
     dashboard: Dashboard
-    tickets: Tickets
-    knowledge_base: Knowledge base
+    workspace: Workspace
+    tickets: All tickets
+    my_tickets: My tickets
+    knowledge: Knowledge base
+    team: Team
+    customers: Customers
+    ticket_types: Ticket types
+    admin: Administration
     reports: Reports
     settings: Settings
+    sign_out: Sign out
+    menu: Menu
   roles:
     agent: Agent
     supervisor: Supervisor
     admin: Admin
     superadmin: Super-admin
+    customer: Customer
   tickets:
     title: Tickets
     new: New ticket
     subject: Subject
     description: Description
-    priority: Priority
+    priority_label: Priority
     status: Status
     assignee: Assignee
     reporter: Reporter
     type: Type
-    created_at: Created
-    updated_at: Updated
+    created: Ticket created
+    transitioned: Status updated
+    transitioned_to: "Status: %{state}"
+    workflow: Workflow
+    comments: Comments
     no_tickets: No tickets yet
-    priorities:
-      low: Low
-      normal: Normal
-      high: High
-      urgent: Urgent
+    no_tickets_hint: Create the first ticket to get started
+    no_comments: No comments yet
+    summary: "%{open} open · %{closed} closed"
+    anonymous: anonymous
+    unassigned: unassigned
+    scope_all: All
+    scope_mine: Mine
+    scope_open: Open
+    scope_closed: Closed
+    priority:
+      low: low
+      normal: normal
+      high: high
+      urgent: urgent
+  ticket_states:
+    new: New
+    triage: Triage
+    in_progress: In progress
+    waiting_customer: Waiting customer
+    resolved: Resolved
+    closed: Closed
+    rejected: Rejected
+    received: Received
+    investigating: Investigating
+    answered: Answered
+    open: Open
+    assigned: Assigned
+    done: Done
+  ticket_events:
+    triage: Send to triage
+    start: Start
+    resolve: Resolve
+    close: Close
+    reopen: Reopen
+    reject: Reject
+    answer: Answer
+    investigate: Investigate
+    assign: Assign
+    complete: Complete
+  ticket_comments:
+    placeholder: Write a comment...
+    body_label: Comment
+    submit: Post
+    posted: Comment posted
+    internal: Internal (team only)
+    internal_badge: internal
+  users:
+    new: Add staff member
+    name: Name
+    email: Email
+    role: Role
+    locale: Language
+    password: Password
+    password_hint: Leave blank to auto-generate
+    created: Staff member added
+    updated: Profile updated
+    summary: "%{count} staff members"
+    empty: Team is empty
+  customers:
+    new: Add customer
+    external_id: External ID
+    external_id_hint: ID in your system (optional)
+    created: Customer added
+    summary: "%{count} customers"
+    empty: No customers yet
+    empty_hint: Customers will appear automatically via SSO or the email form
+  ticket_types:
+    new: New ticket type
+    key: Key (slug)
+    name: Name
+    workflow_json: Workflow (JSON)
+    workflow_hint: "Keys: initial_state, states (array), transitions (event → { from, to })."
+    is_active: Active
+    created: Ticket type created
+    summary: "%{count} types"
+    empty: No types yet
+    states: "%{n} states"
+    transitions: "%{n} transitions"
+    initial_state: "Initial: %{s}"
   errors:
     not_found:
       title: Not found
       message: The page you requested does not exist.
   a11y:
     skip_to_main: Skip to main content
+  sso:
+    failed: "Authentication failed: %{e}"
+    welcome: Welcome

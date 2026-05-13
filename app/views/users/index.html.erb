@@ -1,0 +1,43 @@
+<% content_for :title, t("navigation.team", default: "Команда") %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= t("navigation.admin", default: "Администрирование") %></div>
+    <h1 class="page-header__title m-0"><%= t("navigation.team", default: "Команда") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("users.summary", default: "%{count} сотрудников", count: @users.size) %></p>
+  </div>
+  <div class="page-header__actions">
+    <%= link_to "+ #{t('users.new', default: 'Добавить сотрудника')}", new_user_path, class: "btn btn-primary" %>
+  </div>
+</header>
+
+<% if @users.any? %>
+  <div class="card-apple card-apple--flush">
+    <% @users.each do |u| %>
+      <%= link_to edit_user_path(u), class: "ticket-row-tr" do %>
+        <div class="ticket-row-tr__main">
+          <div class="d-flex align-items-center gap-3">
+            <span class="avatar-apple"><%= u.email.first(2).upcase %></span>
+            <div>
+              <div class="ticket-row-tr__subject"><%= u.display_name %></div>
+              <div class="ticket-row-tr__meta">
+                <span><%= u.email %></span>
+                <% if u.locale.present? %><span>·</span><span><%= u.locale.upcase %></span><% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-row-tr__pills">
+          <span class="pill pill--info"><%= u.role_label %></span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card-apple">
+    <div class="empty-state">
+      <h3 class="empty-state__title"><%= t("users.empty", default: "Команда пока пуста") %></h3>
+      <%= link_to "+ #{t('users.new', default: 'Добавить сотрудника')}", new_user_path, class: "btn btn-primary mt-2" %>
+    </div>
+  </div>
+<% end %>

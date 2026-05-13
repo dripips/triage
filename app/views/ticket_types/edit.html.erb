@@ -1,0 +1,11 @@
+<% content_for :title, @ticket_type.name %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('navigation.ticket_types', default: 'Типы тикетов')}", ticket_types_path %></div>
+    <h1 class="page-header__title m-0"><%= @ticket_type.name %></h1>
+    <p class="page-header__subtitle m-0">key: <code><%= @ticket_type.key %></code></p>
+  </div>
+</header>
+
+<%= render "form", ticket_type: @ticket_type %>

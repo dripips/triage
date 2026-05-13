@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_090525) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_092731) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -109,7 +109,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_090525) do
     t.string "encrypted_password", default: "", null: false
     t.string "external_id"
     t.string "external_provider", default: "jwt"
+    t.integer "kind", default: 0, null: false
     t.string "locale"
+    t.string "name"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
@@ -119,6 +121,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_090525) do
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["external_provider", "external_id"], name: "index_users_on_external_provider_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["kind"], name: "index_users_on_kind"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

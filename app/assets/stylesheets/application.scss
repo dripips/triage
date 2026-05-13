@@ -1,189 +1,172 @@
-// Triage — minimal Apple-HIG-inspired baseline.
-// Full design-system port (re-using vendor/design-system submodule из HRMS)
-// — отдельная задача.
+// Apple-HIG design system (shared with HRMS via vendor/design-system).
+@import "index";
 
-:root {
-  --blue:    #0A84FF;
-  --indigo:  #5E5CE6;
-  --bg:      #F5F5F7;
-  --bg-elev: #FFFFFF;
-  --label-1: #1D1D1F;
-  --label-2: rgba(60, 60, 67, 0.78);
-  --label-3: rgba(60, 60, 67, 0.54);
-  --separator: rgba(60, 60, 67, 0.18);
-  --fill-3:  rgba(120, 120, 128, 0.10);
-  --radius:  12px;
-  --pill:    999px;
-  --shadow:  0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:      #000;
-    --bg-elev: #1C1C1E;
-    --label-1: #FFF;
-    --label-2: rgba(235, 235, 245, 0.62);
-    --label-3: rgba(235, 235, 245, 0.32);
-    --separator: rgba(235, 235, 245, 0.18);
-    --fill-3:  rgba(120, 120, 128, 0.36);
-  }
-}
-
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--label-1);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+// ── Triage-specific UI bits (всё через design-system токены) ─────────────
+// .app-shell / .topbar-apple / .sidebar-apple / .main-apple / .card-apple
+// уже определены в vendor/design-system — не перетирать.
 
 .skip-to-main {
   position: absolute; top: -40px; left: 12px;
   padding: 8px 14px;
-  background: var(--blue); color: #fff;
-  border-radius: var(--pill); text-decoration: none;
-  z-index: 999; transition: top 160ms;
+  background: var(--ds-blue, #0A84FF); color: #fff;
+  border-radius: 999px; text-decoration: none;
+  z-index: 1080; transition: top 160ms var(--ds-ease-standard, ease);
   &:focus { top: 12px; }
 }
 
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 20px;
-  background: var(--bg-elev);
-  border-bottom: 1px solid var(--separator);
+// ── Toasts: top-right stack ──────────────────────────────────────────────
+.toast-stack {
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 1090;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
 }
+.toast-stack > * { pointer-events: auto; }
 
-.brand {
-  display: inline-flex; align-items: center; gap: 10px;
-  text-decoration: none; color: var(--label-1);
-  font-weight: 700; font-size: 17px;
-}
-.brand-mark {
-  width: 28px; height: 28px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--blue), var(--indigo));
-  color: #fff;
-  display: grid; place-items: center;
-  font-weight: 800;
-}
-
-.topbar-nav {
-  display: flex; gap: 16px; align-items: center;
+// Override .toast-apple style: design-system has .toast-apple defined, but
+// we adapt look-and-feel (icon circle + dismiss).
+.toast-apple {
+  display: flex; align-items: flex-start; gap: 12px;
+  min-width: 280px; max-width: 380px;
+  padding: 12px 16px;
+  background: var(--ds-background-elevated, #FFF);
+  color: var(--ds-label-primary, #1D1D1F);
+  border: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
   font-size: 14px;
-}
-.topbar-nav a {
-  color: var(--label-2); text-decoration: none;
-  transition: color 120ms;
-  &:hover { color: var(--label-1); }
-}
-.topbar-user {
-  font-size: 13px; color: var(--label-3);
-}
+  animation: toast-in 220ms cubic-bezier(0.22, 1.61, 0.36, 1);
 
-.btn-link {
-  background: none; border: none;
-  color: var(--blue); cursor: pointer;
-  font-size: 14px; padding: 0;
-}
+  &__icon {
+    flex: 0 0 auto; width: 20px; height: 20px;
+    display: inline-grid; place-items: center;
+    border-radius: 50%;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  &--notice  .toast-apple__icon { background: var(--ds-blue,  #0A84FF); }
+  &--success .toast-apple__icon { background: var(--ds-green, #34C759); }
+  &--alert   .toast-apple__icon { background: var(--ds-red,   #FF453A); }
 
-.flash {
-  margin: 12px 20px; padding: 10px 16px;
-  border-radius: var(--radius);
-  font-size: 14px;
-}
-.flash-notice { background: #E5F1FF; color: #054ABA; border: 1px solid #B3D4FF; }
-.flash-alert  { background: #FFE4E1; color: #B0223A; border: 1px solid #FFB3AB; }
-
-.main-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 20px;
-}
-
-.page-header {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 24px;
-  flex-wrap: wrap; gap: 12px;
-}
-.page-header h1 {
-  font-size: 28px; font-weight: 800; letter-spacing: -0.02em;
-  margin: 0;
-}
-.page-header .subtitle { color: var(--label-2); font-size: 15px; }
-
-.btn {
-  display: inline-block;
-  padding: 8px 18px; border-radius: var(--pill);
-  background: var(--blue); color: #fff;
-  text-decoration: none; font-weight: 600; font-size: 14px;
-  border: none; cursor: pointer;
-  transition: transform 120ms;
-  &:hover { transform: translateY(-1px); }
-}
-.btn-ghost {
-  background: var(--fill-3); color: var(--label-1);
-}
-
-.card {
-  background: var(--bg-elev);
-  border: 1px solid var(--separator);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-}
-
-.ticket-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--separator);
-  text-decoration: none; color: var(--label-1);
-  transition: background 120ms;
-  &:hover { background: var(--fill-3); }
-  &:last-child { border-bottom: none; }
-}
-.ticket-row__subject { font-weight: 600; }
-.ticket-row__meta {
-  font-size: 12px; color: var(--label-3);
-  display: flex; gap: 8px;
-}
-
-.pill {
-  display: inline-block;
-  padding: 2px 10px; border-radius: var(--pill);
-  font-size: 11px; font-weight: 700;
-  background: var(--fill-3); color: var(--label-2);
-}
-.pill--blue   { background: rgba(10,132,255,0.14);  color: var(--blue); }
-.pill--green  { background: rgba(48,209,88,0.14);   color: #248A3D; }
-.pill--orange { background: rgba(255,159,10,0.14);  color: #C04A00; }
-.pill--red    { background: rgba(255,69,58,0.14);   color: #C5202A; }
-
-.empty-state {
-  padding: 60px 20px; text-align: center;
-  color: var(--label-3);
-}
-
-form .field { margin-bottom: 14px; }
-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--label-2); }
-form input[type="text"],
-form input[type="email"],
-form textarea,
-form select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--separator);
-  border-radius: 8px;
-  background: var(--bg-elev);
-  color: var(--label-1);
-  font-size: 14px;
-  font-family: inherit;
-  &:focus {
-    outline: none;
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(10,132,255,0.18);
+  &__body { flex: 1; min-width: 0; }
+  &__dismiss {
+    background: none; border: none; cursor: pointer;
+    color: var(--ds-label-tertiary, rgba(60,60,67,0.54));
+    font-size: 18px; line-height: 1; padding: 0;
+    transition: color 120ms;
+    &:hover { color: var(--ds-label-primary, #1D1D1F); }
   }
 }
-form textarea { resize: vertical; min-height: 100px; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
 
-:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+// ── Ticket list rows ─────────────────────────────────────────────────────
+.ticket-row-tr {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
+  text-decoration: none;
+  color: var(--ds-label-primary, #1D1D1F);
+  transition: background var(--ds-dur-fast, 140ms) var(--ds-ease-standard, ease);
+  &:hover { background: var(--ds-fill-tertiary, rgba(120,120,128,0.10)); }
+  &:last-child { border-bottom: none; }
+
+  &__main { flex: 1; min-width: 0; }
+  &__subject {
+    font-weight: 600; font-size: 15px;
+    color: var(--ds-label-primary, #1D1D1F);
+    margin-bottom: 4px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  &__id {
+    color: var(--ds-label-tertiary, rgba(60,60,67,0.54));
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; font-weight: 600;
+    margin-right: 6px;
+  }
+  &__meta {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ds-label-secondary, rgba(60,60,67,0.78));
+  }
+  &__pills { display: flex; gap: 6px; flex-wrap: wrap; flex: 0 0 auto; }
+}
+
+// ── Filter chips (scope: All / Mine / Open / Closed) ────────────────────
+.filter-bar-tr {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 16px;
+}
+.filter-chip-tr {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--ds-fill-tertiary, rgba(120,120,128,0.10));
+  color: var(--ds-label-secondary, rgba(60,60,67,0.78));
+  font-size: 13px; font-weight: 500;
+  text-decoration: none;
+  transition: background var(--ds-dur-fast, 140ms), color var(--ds-dur-fast, 140ms),
+              transform var(--ds-dur-fast, 140ms) var(--ds-ease-spring, cubic-bezier(0.22, 1.61, 0.36, 1));
+  &:hover { background: var(--ds-fill-secondary, rgba(120,120,128,0.16)); color: var(--ds-label-primary, #1D1D1F); }
+  &.active {
+    background: var(--ds-blue, #0A84FF);
+    color: #fff;
+  }
+}
+
+// ── Ticket comments thread ──────────────────────────────────────────────
+.ticket-comment-tr {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
+
+  &:first-child { border-top: none; padding-top: 0; }
+
+  &__head {
+    grid-column: 1 / span 2;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    color: var(--ds-label-secondary, rgba(60,60,67,0.78));
+  }
+  &__meta {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    strong { color: var(--ds-label-primary, #1D1D1F); }
+  }
+  &__body {
+    grid-column: 2;
+    color: var(--ds-label-primary, #1D1D1F);
+    font-size: 14px; line-height: 1.5;
+  }
+
+  &--internal {
+    background: rgba(255,159,10,0.05);
+    margin-left: -12px; margin-right: -12px;
+    padding-left: 12px; padding-right: 12px;
+    border-radius: 8px;
+  }
+}
+
+// ── Comment input form ──────────────────────────────────────────────────
+.comment-form-tr {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
+}
+
+// ── Auth top-right (language switcher on sign-in) ───────────────────────
+.auth-topright {
+  position: fixed; top: 16px; right: 16px;
+  z-index: 1050;
+}
+
+// ── Ticket meta (small inline) ──────────────────────────────────────────
+.ticket-meta {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  font-size: 13px;
+  color: var(--ds-label-secondary, rgba(60,60,67,0.78));
+}

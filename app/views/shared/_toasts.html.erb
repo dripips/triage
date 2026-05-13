@@ -1,0 +1,25 @@
+<%# Top-right toast stack. Re-rendered on every page (auto-dismiss via Stimulus).
+    Server-side flash → toast translation; Turbo Streams append further toasts. %>
+<div id="toast-stack" class="toast-stack" data-controller="flash">
+  <% flash.each do |type, message| %>
+    <% next if message.blank? %>
+    <%
+      tone, icon = case type.to_s
+                   when "notice", "success" then ["success", "✓"]
+                   when "alert", "error"    then ["alert",   "!"]
+                   else                          ["notice",  "i"]
+                   end
+    %>
+    <div class="toast-apple toast-apple--<%= tone %>"
+         data-controller="dismiss"
+         data-dismiss-after-value="4500"
+         role="status">
+      <span class="toast-apple__icon" aria-hidden="true"><%= icon %></span>
+      <div class="toast-apple__body"><%= message %></div>
+      <button type="button"
+              class="toast-apple__dismiss"
+              data-action="click->dismiss#close"
+              aria-label="<%= t('common.close', default: 'Закрыть') %>">×</button>
+    </div>
+  <% end %>
+</div>

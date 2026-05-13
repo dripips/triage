@@ -1,0 +1,18 @@
+<div id="<%= dom_id(ticket_comment) %>" class="ticket-comment-tr <%= 'ticket-comment-tr--internal' if ticket_comment.internal %>">
+  <div class="ticket-comment-tr__head">
+    <span class="avatar-apple avatar-apple--sm">
+      <%= (ticket_comment.author&.respond_to?(:email) ? ticket_comment.author.email.to_s : "S").first(2).upcase %>
+    </span>
+    <div class="ticket-comment-tr__meta">
+      <strong><%= ticket_comment.author.respond_to?(:display_name) ? ticket_comment.author.display_name : t("system_user", default: "система") %></strong>
+      <% if ticket_comment.author.respond_to?(:kind_customer?) && ticket_comment.author.kind_customer? %>
+        <span class="pill pill--neutral"><%= t("roles.customer", default: "Клиент") %></span>
+      <% end %>
+      <% if ticket_comment.internal %>
+        <span class="pill pill--warning"><%= t("ticket_comments.internal_badge", default: "внутренний") %></span>
+      <% end %>
+      <span class="footnote text-tertiary">· <%= time_ago_in_words(ticket_comment.created_at) %> <%= t("common.ago", default: "назад") %></span>
+    </div>
+  </div>
+  <div class="ticket-comment-tr__body" style="white-space: pre-wrap;"><%= ticket_comment.body %></div>
+</div>

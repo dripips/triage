@@ -1,0 +1,11 @@
+<% content_for :title, @customer.display_name %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('navigation.customers', default: 'Клиенты')}", customers_path %></div>
+    <h1 class="page-header__title m-0"><%= @customer.display_name %></h1>
+    <p class="page-header__subtitle m-0"><%= @customer.email %></p>
+  </div>
+</header>
+
+<%= render "form", customer: @customer %>

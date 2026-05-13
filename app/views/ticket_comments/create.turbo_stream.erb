@@ -1,0 +1,32 @@
+<%# Turbo Stream — добавляет коммент в список (или заменяет empty-state)
+    и сбрасывает форму. Если комментариев было 0 — заменяем
+    весь список целиком, иначе append'им. %>
+<% if @ticket.comments.kept.count == 1 %>
+  <%= turbo_stream.replace "comments-list" do %>
+    <div id="comments-list">
+      <%= render @comment %>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "comments-list", partial: "ticket_comments/ticket_comment", locals: { ticket_comment: @comment } %>
+<% end %>
+
+<%= turbo_stream.replace "comments-count" do %>
+  <span class="pill pill--neutral" id="comments-count"><%= @ticket.comments.kept.count %></span>
+<% end %>
+
+<%# Свежий пустой form для следующего коммента %>
+<%= turbo_stream.update "comments" do %>
+  <div id="comments-list">
+    <%= render @ticket.comments.kept.chronological %>
+  </div>
+<% end %>
+
+<%# Toast %>
+<%= turbo_stream.append "toast-stack" do %>
+  <div class="toast-apple toast-apple--success" data-controller="dismiss" data-dismiss-after-value="3000" role="status">
+    <span class="toast-apple__icon" aria-hidden="true">✓</span>
+    <div class="toast-apple__body"><%= t("ticket_comments.posted", default: "Комментарий опубликован") %></div>
+    <button type="button" class="toast-apple__dismiss" data-action="click->dismiss#close" aria-label="×">×</button>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+<%= form_with model: comment, url: ticket_comments_path(ticket), class: "comment-form-tr", data: { turbo_frame: "comments" } do |f| %>
+  <div class="mb-2">
+    <%= f.text_area :body,
+                    rows: 3,
+                    class: "form-control",
+                    placeholder: t("ticket_comments.placeholder", default: "Напишите комментарий..."),
+                    required: true,
+                    aria: { label: t("ticket_comments.body_label", default: "Комментарий") } %>
+  </div>
+  <div class="d-flex justify-content-between align-items-center gap-2">
+    <% if current_user&.staff? %>
+      <div class="form-check m-0">
+        <%= f.check_box :internal, class: "form-check-input" %>
+        <%= f.label :internal, t("ticket_comments.internal", default: "Внутренний (только команда)"), class: "form-check-label footnote" %>
+      </div>
+    <% else %>
+      <span></span>
+    <% end %>
+    <%= f.submit t("ticket_comments.submit", default: "Опубликовать"), class: "btn btn-primary btn-sm" %>
+  </div>
+<% end %>

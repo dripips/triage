@@ -9,21 +9,36 @@ class User < ApplicationRecord
   belongs_to :company, optional: true
   has_many :api_tokens, dependent: :destroy
 
-  # Роли — agent / supervisor / admin / superadmin. Customer'ы (external)
-  # пишут тикеты без auth через web-form / email, для них User не нужен.
+  # kind: 0 = staff (helpdesk-команда), 1 = customer (внешний клиент).
+  enum :kind, { staff: 0, customer: 1 }, prefix: :kind, default: :staff
+
+  # Роли — agent / supervisor / admin / superadmin. Заполняется только
+  # для staff; у customer'ов role NULL.
   enum :role, { agent: 0, supervisor: 1, admin: 2, superadmin: 3 }
 
-  validates :role, presence: true
+  validates :role, presence: true, if: -> { kind_staff? }
+  validates :name, presence: true
 
-  scope :staff, -> { where.not(role: nil) }
+  scope :staff_users,    -> { where(kind: kinds[:staff]) }
+  scope :customer_users, -> { where(kind: kinds[:customer]) }
 
   def display_name
-    email.split("@").first.humanize
+    name.presence || email.split("@").first.humanize
   end
 
-  def full_role_name
-    I18n.t("roles.#{role}", default: role.humanize)
+  def role_label
+    if kind_customer?
+      I18n.t("roles.customer", default: "Клиент")
+    else
+      I18n.t("roles.#{role}", default: role.to_s.humanize)
+    end
   end
+
+  # Шорткаты для UI/policies — `current_user.staff?` / `.customer?`.
+  def staff?;       kind_staff?;          end
+  def customer?;    kind_customer?;       end
+  def admin?;       kind_staff? && (role == "admin");      end
+  def superadmin?;  kind_staff? && (role == "superadmin"); end
 
   # Soft-delete: discarded юзеры не могут логиниться
   def active_for_authentication?
