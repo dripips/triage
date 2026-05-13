@@ -21,10 +21,10 @@ jobs:
           bundler-cache: true
 
       - name: Brakeman (Rails static analysis)
-        run: bin/brakeman --no-pager
+        run: bundle exec brakeman --no-pager
 
       - name: Bundler audit (gem CVEs)
-        run: bin/bundler-audit
+        run: bundle exec bundler-audit
 
   scan_js:
     name: Security scan (JavaScript)
@@ -41,7 +41,7 @@ jobs:
           bundler-cache: true
 
       - name: Importmap audit
-        run: bin/importmap audit
+        run: bundle exec rails importmap:audit
 
   lint:
     name: Lint (Rubocop)
@@ -58,7 +58,7 @@ jobs:
           bundler-cache: true
 
       - name: Run Rubocop
-        run: bin/rubocop --no-color
+        run: bundle exec rubocop --no-color
 
   test:
     name: Tests (RSpec)
@@ -79,10 +79,10 @@ jobs:
 
     env:
       RAILS_ENV: test
-      HRMS_DATABASE_HOST: localhost
-      HRMS_DATABASE_PORT: "5432"
-      HRMS_DATABASE_USERNAME: postgres
-      HRMS_DATABASE_PASSWORD: postgres
+      TRIAGE_DATABASE_HOST: localhost
+      TRIAGE_DATABASE_PORT: "5432"
+      TRIAGE_DATABASE_USERNAME: postgres
+      TRIAGE_DATABASE_PASSWORD: postgres
 
     steps:
       - name: Checkout code
@@ -96,10 +96,10 @@ jobs:
           bundler-cache: true
 
       - name: Prepare database
-        run: bin/rails db:test:prepare
+        run: bundle exec rails db:test:prepare
 
       - name: Zeitwerk autoload check (catches class-naming mismatches)
-        run: bin/rails zeitwerk:check
+        run: bundle exec rails zeitwerk:check
 
       - name: Run RSpec (incl. smoke spec)
         run: bundle exec rspec --format documentation
