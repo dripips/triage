@@ -1,4 +1,4 @@
-<%= form_with model: invoice, class: "card-apple" do |f| %>
+<%= form_with model: invoice, class: "card-apple", data: { controller: "invoice-items" } do |f| %>
   <% if invoice.errors.any? %>
     <div class="alert alert-danger mb-3"><%= invoice.errors.full_messages.to_sentence %></div>
   <% end %>
@@ -31,43 +31,66 @@
 
   <h4 class="card-apple__title mb-2"><%= t("invoices.items_title", default: "Позиции") %></h4>
 
-  <table class="table table-sm" id="invoice-items-table">
-    <thead>
-      <tr>
-        <th style="width:35%"><%= t("invoice_items.name", default: "Название") %></th>
-        <th style="width:25%"><%= t("invoice_items.description", default: "Описание") %></th>
-        <th style="width:10%" class="text-end"><%= t("invoice_items.qty", default: "Кол-во") %></th>
-        <th style="width:15%" class="text-end"><%= t("invoice_items.unit_price", default: "Цена (коп)") %></th>
-        <th style="width:15%"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= f.fields_for :invoice_items do |item_f| %>
-        <tr class="invoice-item-row">
-          <td><%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: "Услуга / товар" %></td>
-          <td><%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: "Опционально" %></td>
-          <td><%= item_f.number_field :quantity, step: 0.01, min: 0, class: "form-control form-control-sm text-end" %></td>
-          <td><%= item_f.number_field :unit_price_cents, step: 1, min: 0, class: "form-control form-control-sm text-end" %></td>
-          <td class="text-end">
+  <div data-invoice-items-target="container">
+    <% f.fields_for :invoice_items do |item_f| %>
+      <div class="invoice-item-card card-apple p-3 mb-2" data-invoice-items-target="row">
+        <div class="row g-2">
+          <div class="col-md-5">
+            <%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: t("invoice_items.name", default: "Услуга / товар") %>
+          </div>
+          <div class="col-md-3">
+            <%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: t("invoice_items.description", default: "Описание") %>
+          </div>
+          <div class="col-md-1">
+            <%= item_f.number_field :quantity, step: 0.01, min: 0, class: "form-control form-control-sm text-end", placeholder: t("invoice_items.qty", default: "Кол") %>
+          </div>
+          <div class="col-md-2">
+            <%= item_f.number_field :unit_price_cents, step: 1, min: 0, class: "form-control form-control-sm text-end", placeholder: t("invoice_items.unit_price", default: "Цена") %>
+          </div>
+          <div class="col-md-1 d-flex align-items-center justify-content-end">
             <% if item_f.object.persisted? %>
               <%= item_f.hidden_field :_destroy, value: "0", class: "destroy-flag" %>
-              <button type="button" class="btn btn-ghost btn-sm" onclick="this.closest('tr').querySelector('.destroy-flag').value='1'; this.closest('tr').style.display='none'">✕</button>
             <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <div class="footnote text-tertiary mb-3">
-    <%= t("invoices.price_hint", default: "Цена в копейках (1 руб = 100 коп, 1 USD = 100 центов). Кол-во поддерживает дробные значения.") %>
+            <button type="button" class="btn btn-ghost btn-sm" data-action="click->invoice-items#remove" title="Удалить">✕</button>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 
-  <div class="row g-3 mb-3">
-    <div class="col-12">
-      <%= f.label :notes, t("invoices.notes", default: "Примечания"), class: "form-label" %>
-      <%= f.text_area :notes, rows: 3, class: "form-control", placeholder: t("invoices.notes_placeholder", default: "Условия оплаты, реквизиты, комментарии...") %>
+  <template data-invoice-items-target="template">
+    <div class="invoice-item-card card-apple p-3 mb-2" data-invoice-items-target="row">
+      <div class="row g-2">
+        <div class="col-md-5">
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][name]" class="form-control form-control-sm" placeholder="<%= t('invoice_items.name', default: 'Услуга / товар') %>">
+        </div>
+        <div class="col-md-3">
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][description]" class="form-control form-control-sm" placeholder="<%= t('invoice_items.description', default: 'Описание') %>">
+        </div>
+        <div class="col-md-1">
+          <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][quantity]" value="1" step="0.01" min="0" class="form-control form-control-sm text-end">
+        </div>
+        <div class="col-md-2">
+          <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][unit_price_cents]" value="0" step="1" min="0" class="form-control form-control-sm text-end">
+        </div>
+        <div class="col-md-1 d-flex align-items-center justify-content-end">
+          <button type="button" class="btn btn-ghost btn-sm" data-action="click->invoice-items#remove">✕</button>
+        </div>
+      </div>
     </div>
+  </template>
+
+  <button type="button" class="btn btn-soft btn-sm mb-3" data-action="click->invoice-items#add">
+    + <%= t("invoices.add_item", default: "Добавить позицию") %>
+  </button>
+
+  <div class="footnote text-tertiary mb-3">
+    <%= t("invoices.price_hint", default: "Цена в копейках (100 коп = 1 ₽). Кол-во поддерживает дробные.") %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :notes, t("invoices.notes", default: "Примечания"), class: "form-label" %>
+    <%= f.text_area :notes, rows: 3, class: "form-control", placeholder: t("invoices.notes_placeholder", default: "Условия оплаты, реквизиты, комментарии...") %>
   </div>
 
   <div class="d-flex gap-2 justify-content-end">

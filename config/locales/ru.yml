@@ -37,6 +37,7 @@ ru:
     workspace: Рабочее пространство
     tickets: Все тикеты
     my_tickets: Мои тикеты
+    invoices: Счета
     knowledge: База знаний
     knowledge_base: База знаний
     team: Команда
@@ -193,3 +194,65 @@ ru:
     subtitle: Введи email — отправим ссылку для восстановления
     submit: Отправить ссылку
     back_to_sign_in: Вернуться к входу
+  invoices:
+    title: Счета
+    new: Новый счёт
+    edit: Редактировать счёт
+    created: Счёт создан
+    updated: Счёт обновлён
+    summary: "%{count} счетов"
+    empty: Счетов пока нет
+    empty_hint: Счета создаются из карточки тикета
+    panel_title: Счёт
+    create_new: "+ Выставить счёт"
+    from_price_list: "Из прайса:"
+    status_label: Статус
+    currency: Валюта
+    discount: Скидка %
+    tax_label: НДС %
+    due_at: Оплатить до
+    items_title: Позиции
+    add_item: "+ Добавить позицию"
+    subtotal: Подитог
+    tax: НДС
+    total: ИТОГО
+    notes: Примечания
+    notes_placeholder: Условия оплаты, реквизиты, комментарии...
+    price_hint: Цена в копейках (100 коп = 1 ₽). Кол-во поддерживает дробные.
+    no_items: Нет позиций
+    status:
+      draft: Черновик
+      sent: Отправлен
+      paid: Оплачен
+      overdue: Просрочен
+      cancelled: Отменён
+  invoice_items:
+    name: Название
+    description: Описание
+    qty: Кол-во
+    unit_price: Цена (коп)
+    total: Итого
+    active_label: активна
+    inactive: неактивна
+    empty: Позиции добавляются кнопкой ниже
+  notifications:
+    title: Уведомления
+    unread_count: "%{count} непрочитанных"
+    mark_all_read: Прочитать все
+    empty: Нет уведомлений
+    view_all: Все уведомления
+    actions:
+      ticket_created: Новый тикет
+      ticket_assigned: Назначен тикет
+      ticket_transitioned: Смена статуса
+      comment_added: Новый комментарий
+      message_received: Новое сообщение
+      invoice_created: Выставлен счёт
+  chat:
+    title: Чат
+    empty: Начните переписку
+    placeholder: Написать сообщение...
+    send: Отправить
+    sent: Сообщение отправлено
+    internal: внутренний
+    internal_short: Внутр.
