@@ -17,5 +17,9 @@
     <input type="search" placeholder="<%= t('common.search', default: 'Поиск') %>...">
   </div>
 
+  <% if user_signed_in? %>
+    <%= render "shared/notifications_bell" %>
+  <% end %>
+
   <%= render "shared/language_switcher", variant: :solid %>
 </header>

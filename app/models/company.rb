@@ -2,6 +2,9 @@ class Company < ApplicationRecord
   include Discard::Model
 
   has_many :users, dependent: :destroy
+  has_many :tickets, dependent: :destroy
+  has_many :invoices, dependent: :destroy
+  has_many :app_settings, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 120 }
   validates :subdomain,

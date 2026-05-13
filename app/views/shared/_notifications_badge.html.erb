@@ -1,0 +1,4 @@
+<% unread = current_user.in_app_notifications.unread.count %>
+<% if unread > 0 %>
+  <span class="notif-badge-tr"><%= unread > 9 ? "9+" : unread %></span>
+<% end %>

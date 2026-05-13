@@ -1,0 +1,56 @@
+<% content_for :title, t("settings.tabs.chat", default: "Чат") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<%= form_with model: @setting, url: settings_chat_path, method: :patch, class: "card-apple" do |f| %>
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.chat.title", default: "Чат в тикетах") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.chat.subtitle", default: "Real-time чат между агентом и клиентом внутри тикета") %></p>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="form-check form-switch">
+        <%= f.check_box :enabled, checked: @setting.get("enabled").to_s == "1", class: "form-check-input", role: "switch" %>
+        <%= f.label :enabled, t("settings.chat.enabled", default: "Чат включён"), class: "form-check-label" %>
+      </div>
+      <div class="footnote text-tertiary mt-1"><%= t("settings.chat.enabled_hint", default: "Если выключен — тикеты используют только комментарии (без real-time).") %></div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-check form-switch">
+        <%= f.check_box :allow_customer_chat, checked: @setting.get("allow_customer_chat") != "0", class: "form-check-input", role: "switch" %>
+        <%= f.label :allow_customer_chat, t("settings.chat.allow_customer", default: "Клиенты могут писать в чат"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-check form-switch">
+        <%= f.check_box :show_typing_indicator, checked: @setting.get("show_typing_indicator") == "1", class: "form-check-input", role: "switch" %>
+        <%= f.label :show_typing_indicator, t("settings.chat.typing_indicator", default: "Индикатор набора текста"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-check form-switch">
+        <%= f.check_box :auto_assign_on_reply, checked: @setting.get("auto_assign_on_reply") != "0", class: "form-check-input", role: "switch" %>
+        <%= f.label :auto_assign_on_reply, t("settings.chat.auto_assign", default: "Авто-назначение при ответе"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :max_idle_minutes, t("settings.chat.idle_timeout", default: "Авто-закрытие (минуты idle)"), class: "form-label" %>
+      <%= f.number_field :max_idle_minutes, value: @setting.get("max_idle_minutes") || "0", min: 0, step: 5, class: "form-control" %>
+      <div class="footnote text-tertiary mt-1"><%= t("settings.chat.idle_hint", default: "0 = отключено") %></div>
+    </div>
+    <div class="col-12">
+      <%= f.label :welcome_message, t("settings.chat.welcome_msg", default: "Автоприветствие"), class: "form-label" %>
+      <%= f.text_area :welcome_message, value: @setting.get("welcome_message"), rows: 3, class: "form-control",
+          placeholder: t("settings.chat.welcome_placeholder", default: "Здравствуйте! Чем можем помочь?") %>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3">
+    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+  </div>
+<% end %>

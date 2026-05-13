@@ -1,0 +1,46 @@
+<%
+  unread_count = current_user.in_app_notifications.unread.count
+%>
+<%= turbo_stream_from "notifications_User_#{current_user.id}" %>
+
+<div class="dropdown">
+  <button type="button" class="topbar-apple__icon-btn position-relative"
+          data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"
+          aria-label="<%= t('notifications.title', default: 'Уведомления') %>">
+    <svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 14.5c.83 0 1.5-.67 1.5-1.5h-3c0 .83.67 1.5 1.5 1.5z"/>
+      <path d="M12 6c0-2.21-1.79-4-4-4S4 3.79 4 6c0 4-1.5 5-1.5 5h11S12 10 12 6z"/>
+    </svg>
+    <span id="notifications-badge">
+      <% if unread_count > 0 %>
+        <span class="notif-badge-tr"><%= unread_count > 9 ? "9+" : unread_count %></span>
+      <% end %>
+    </span>
+  </button>
+
+  <div class="dropdown-menu dropdown-menu-apple dropdown-menu-end notif-dropdown-tr" style="width:360px;max-height:400px;overflow-y:auto;">
+    <div class="d-flex justify-content-between align-items-center px-3 py-2">
+      <strong><%= t("notifications.title", default: "Уведомления") %></strong>
+      <% if unread_count > 0 %>
+        <%= button_to t("notifications.mark_all_read", default: "Прочитать все"),
+                      mark_read_notifications_path, method: :post,
+                      class: "btn btn-ghost btn-sm", form: { class: "d-inline" } %>
+      <% end %>
+    </div>
+    <div id="notifications-list">
+      <% notifs = current_user.in_app_notifications.recent.limit(20) %>
+      <% if notifs.any? %>
+        <% notifs.each do |n| %>
+          <%= render "shared/notification_item", notification: n %>
+        <% end %>
+      <% else %>
+        <div class="px-3 py-4 text-center">
+          <span class="footnote text-secondary-apple"><%= t("notifications.empty", default: "Нет уведомлений") %></span>
+        </div>
+      <% end %>
+    </div>
+    <div class="px-3 py-2 border-top">
+      <%= link_to t("notifications.view_all", default: "Все уведомления"), notifications_path, class: "footnote" %>
+    </div>
+  </div>
+</div>

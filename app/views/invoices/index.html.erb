@@ -1,0 +1,42 @@
+<% content_for :title, t("invoices.title", default: "Счета") %>
+
+<header class="page-header">
+  <div>
+    <h1 class="page-header__title m-0"><%= t("invoices.title", default: "Счета") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("invoices.summary", default: "%{count} счетов", count: @invoices.size) %></p>
+  </div>
+</header>
+
+<% if @invoices.any? %>
+  <div class="card-apple card-apple--flush">
+    <% @invoices.each do |inv| %>
+      <%= link_to invoice_path(inv), class: "ticket-row-tr" do %>
+        <div class="ticket-row-tr__main">
+          <div class="ticket-row-tr__subject">
+            <span class="ticket-row-tr__id"><%= inv.number %></span>
+            <% if inv.ticket %><%= inv.ticket.subject.truncate(50) %><% end %>
+          </div>
+          <div class="ticket-row-tr__meta">
+            <span><%= inv.user.display_name %></span>
+            <span>·</span>
+            <span><%= time_ago_in_words(inv.created_at) %> <%= t("common.ago", default: "назад") %></span>
+            <% if inv.due_at %><span>·</span><span>до <%= l(inv.due_at, format: :short) rescue inv.due_at.to_date %></span><% end %>
+          </div>
+        </div>
+        <div class="ticket-row-tr__pills">
+          <span class="text-mono"><strong><%= inv.formatted_total %></strong></span>
+          <span class="pill pill--<%= { 'draft' => 'neutral', 'sent' => 'info', 'paid' => 'success', 'overdue' => 'danger', 'cancelled' => 'neutral' }[inv.status] || 'neutral' %>">
+            <%= t("invoices.status.#{inv.status}", default: inv.status.humanize) %>
+          </span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card-apple">
+    <div class="empty-state">
+      <h3 class="empty-state__title"><%= t("invoices.empty", default: "Счетов пока нет") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("invoices.empty_hint", default: "Счета создаются из карточки тикета") %></p>
+    </div>
+  </div>
+<% end %>

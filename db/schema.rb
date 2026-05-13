@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_122158) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_182400) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -75,6 +75,79 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_122158) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_companies_on_code", unique: true, where: "(code IS NOT NULL)"
     t.index ["subdomain"], name: "index_companies_on_subdomain", unique: true, where: "(subdomain IS NOT NULL)"
+  end
+
+  create_table "conversation_messages", force: :cascade do |t|
+    t.bigint "author_id"
+    t.string "author_type"
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.boolean "internal", default: false, null: false
+    t.integer "message_type", default: 0, null: false
+    t.bigint "ticket_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_conversation_messages_on_author"
+    t.index ["ticket_id", "created_at"], name: "index_conversation_messages_on_ticket_id_and_created_at"
+    t.index ["ticket_id"], name: "index_conversation_messages_on_ticket_id"
+  end
+
+  create_table "in_app_notifications", force: :cascade do |t|
+    t.string "action", null: false
+    t.bigint "actor_id"
+    t.string "actor_type"
+    t.datetime "created_at", null: false
+    t.text "message"
+    t.bigint "notifiable_id"
+    t.string "notifiable_type"
+    t.datetime "read_at"
+    t.bigint "recipient_id", null: false
+    t.string "recipient_type", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["actor_type", "actor_id"], name: "index_in_app_notifications_on_actor"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_in_app_notifications_on_notifiable"
+    t.index ["recipient_type", "recipient_id", "read_at"], name: "idx_notif_recipient_read"
+    t.index ["recipient_type", "recipient_id"], name: "index_in_app_notifications_on_recipient"
+  end
+
+  create_table "invoice_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "invoice_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.decimal "quantity", precision: 10, scale: 2, default: "1.0", null: false
+    t.integer "total_cents", default: 0, null: false
+    t.integer "unit_price_cents", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.string "currency", default: "RUB", null: false
+    t.datetime "discarded_at"
+    t.integer "discount_cents", default: 0, null: false
+    t.decimal "discount_percent", precision: 5, scale: 2, default: "0.0", null: false
+    t.datetime "due_at"
+    t.text "notes"
+    t.string "number", null: false
+    t.datetime "paid_at"
+    t.integer "status", default: 0, null: false
+    t.integer "subtotal_cents", default: 0, null: false
+    t.integer "tax_cents", default: 0, null: false
+    t.decimal "tax_percent", precision: 5, scale: 2, default: "0.0", null: false
+    t.bigint "ticket_id"
+    t.integer "total_cents", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["company_id", "number"], name: "index_invoices_on_company_id_and_number", unique: true
+    t.index ["company_id"], name: "index_invoices_on_company_id"
+    t.index ["discarded_at"], name: "index_invoices_on_discarded_at"
+    t.index ["status"], name: "index_invoices_on_status"
+    t.index ["ticket_id"], name: "index_invoices_on_ticket_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
   create_table "knowledge_articles", force: :cascade do |t|
@@ -203,6 +276,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_122158) do
   add_foreign_key "ai_runs", "users"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "app_settings", "companies"
+  add_foreign_key "conversation_messages", "tickets"
+  add_foreign_key "invoice_items", "invoices"
+  add_foreign_key "invoices", "companies"
+  add_foreign_key "invoices", "tickets"
+  add_foreign_key "invoices", "users"
   add_foreign_key "knowledge_articles", "companies"
   add_foreign_key "knowledge_articles", "ticket_types"
   add_foreign_key "price_items", "price_lists"

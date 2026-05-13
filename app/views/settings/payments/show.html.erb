@@ -1,0 +1,84 @@
+<% content_for :title, t("settings.tabs.payments", default: "Платежи") %>
+
+<header class="page-header">
+  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+</header>
+
+<%= render "shared/settings_tabs" %>
+
+<%= form_with model: @setting, url: settings_payment_path, method: :patch, class: "card-apple" do |f| %>
+  <div class="card-apple__header">
+    <h3 class="card-apple__title m-0"><%= t("settings.payments.title", default: "Платёжные системы") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.payments.subtitle", default: "Подключите платёжную систему для выставления счетов клиентам") %></p>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="form-check form-switch">
+        <%= f.check_box :enabled, checked: @setting.get("enabled").to_s == "1", class: "form-check-input", role: "switch" %>
+        <%= f.label :enabled, t("settings.payments.enabled", default: "Приём платежей включён"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :provider, t("settings.payments.provider", default: "Провайдер"), class: "form-label" %>
+      <%= f.select :provider,
+          [["Stripe", "stripe"], ["ЮKassa", "yookassa"], ["Тинькофф", "tinkoff"], ["Нет (только счета)", "none"]],
+          { selected: @setting.get("provider") || "none" },
+          { class: "form-select" } %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :currency, t("settings.payments.currency", default: "Валюта"), class: "form-label" %>
+      <%= f.select :currency, [["RUB ₽", "RUB"], ["USD $", "USD"], ["EUR €", "EUR"]], { selected: @setting.get("currency") || "RUB" }, { class: "form-select" } %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :tax_rate_percent, t("settings.payments.tax_rate", default: "НДС %"), class: "form-label" %>
+      <%= f.number_field :tax_rate_percent, value: @setting.get("tax_rate_percent") || "0", min: 0, max: 50, class: "form-control" %>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <h5 class="mb-3">Stripe</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :stripe_publishable_key, "Publishable Key", class: "form-label" %>
+      <%= f.text_field :stripe_publishable_key, value: @setting.get("stripe_publishable_key"), class: "form-control text-mono", style: "font-size:13px", placeholder: "pk_live_..." %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :stripe_secret_key, "Secret Key", class: "form-label" %>
+      <%= f.password_field :stripe_secret_key, value: "", class: "form-control", placeholder: @setting.get("stripe_secret_key").present? ? "••••••• (сохранён)" : "sk_live_..." %>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <h5 class="mb-3">ЮKassa</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :yookassa_shop_id, "Shop ID", class: "form-label" %>
+      <%= f.text_field :yookassa_shop_id, value: @setting.get("yookassa_shop_id"), class: "form-control" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :yookassa_secret_key, "Secret Key", class: "form-label" %>
+      <%= f.password_field :yookassa_secret_key, value: "", class: "form-control", placeholder: @setting.get("yookassa_secret_key").present? ? "••••••• (сохранён)" : "" %>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <h5 class="mb-3">Тинькофф</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :tinkoff_terminal_key, "Terminal Key", class: "form-label" %>
+      <%= f.text_field :tinkoff_terminal_key, value: @setting.get("tinkoff_terminal_key"), class: "form-control" %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :tinkoff_secret_key, "Secret Key", class: "form-label" %>
+      <%= f.password_field :tinkoff_secret_key, value: "", class: "form-control", placeholder: @setting.get("tinkoff_secret_key").present? ? "••••••• (сохранён)" : "" %>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3">
+    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,36 @@
+<%
+  is_mine   = message.author == current_user
+  is_system = message.system?
+  is_ai     = message.ai_suggestion?
+%>
+<div id="<%= dom_id(message) %>"
+     class="chat-bubble-tr <%= 'chat-bubble-tr--mine' if is_mine %> <%= 'chat-bubble-tr--system' if is_system %> <%= 'chat-bubble-tr--ai' if is_ai %> <%= 'chat-bubble-tr--internal' if message.internal %>">
+  <% if is_system %>
+    <div class="chat-bubble-tr__sys-line">
+      <span><%= message.body %></span>
+      <span class="chat-bubble-tr__time"><%= message.created_at.strftime("%H:%M") %></span>
+    </div>
+  <% else %>
+    <% unless is_mine %>
+      <div class="chat-bubble-tr__avatar">
+        <span class="avatar-apple avatar-apple--sm">
+          <%= (message.author&.respond_to?(:email) ? message.author.email : "?").to_s.first(2).upcase %>
+        </span>
+      </div>
+    <% end %>
+    <div class="chat-bubble-tr__cloud">
+      <% unless is_mine %>
+        <div class="chat-bubble-tr__name">
+          <%= message.author&.respond_to?(:display_name) ? message.author.display_name : "система" %>
+          <% if message.internal %><span class="pill pill--warning pill--sm">внутр.</span><% end %>
+          <% if is_ai %><span class="pill pill--info pill--sm">AI</span><% end %>
+        </div>
+      <% end %>
+      <div class="chat-bubble-tr__text"><%= simple_format(message.body) %></div>
+      <div class="chat-bubble-tr__time">
+        <% if message.internal && is_mine %><span class="pill pill--warning pill--sm">внутр.</span><% end %>
+        <%= message.created_at.strftime("%H:%M") %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,7 +1,7 @@
 class AppSetting < ApplicationRecord
   belongs_to :company
 
-  CATEGORIES = %w[general ai notifications sso api price_lists].freeze
+  CATEGORIES = %w[general ai notifications sso api price_lists payments chat].freeze
 
   validates :category, presence: true, inclusion: { in: CATEGORIES }
   validates :category, uniqueness: { scope: :company_id }

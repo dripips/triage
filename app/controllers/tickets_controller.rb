@@ -60,7 +60,18 @@ class TicketsController < ApplicationController
     end
     s = s.where(priority: Ticket.priorities[params[:priority]]) if Ticket.priorities.key?(params[:priority])
     s = s.where(ticket_type_id: params[:ticket_type_id]) if params[:ticket_type_id].present?
+    s = s.where(assignee_id: params[:assignee_id]) if params[:assignee_id].present?
     s
+  end
+
+  helper_method :filter_params, :filter_active?
+
+  def filter_params
+    params.permit(:scope, :ticket_type_id, :priority, :assignee_id)
+  end
+
+  def filter_active?
+    params[:ticket_type_id].present? || params[:priority].present? || params[:assignee_id].present?
   end
 
   def load_ticket

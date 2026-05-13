@@ -13,7 +13,8 @@
       { title: t("navigation.workspace", default: "Рабочее пространство"),
         items: [
           { key: :tickets,    path: tickets_path,                icon: "kanban", scope_value: ""     },
-          { key: :my_tickets, path: tickets_path(scope: "mine"), icon: "user",   scope_value: "mine" }
+          { key: :my_tickets, path: tickets_path(scope: "mine"), icon: "user",   scope_value: "mine" },
+          { key: :invoices,   path: invoices_path,                 icon: "file" }
         ] },
       *(current_user&.staff? ? [
         { title: t("navigation.team", default: "Команда"),

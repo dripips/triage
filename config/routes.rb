@@ -2,14 +2,18 @@ Rails.application.routes.draw do
   scope "(:locale)", locale: /ru|en|de/ do
     devise_for :users
 
-    # External SSO — JWT-based login from a third-party customer auth system.
     get "sso", to: "external_sso#callback", as: :external_sso
 
     resources :tickets, only: %i[index show new create] do
       member { post :transition }
       resources :comments, only: %i[create], controller: "ticket_comments"
+      resources :messages, only: %i[create], controller: "conversation_messages"
     end
 
+    resources :invoices, only: %i[index show new create edit update]
+    resources :notifications, only: %i[index] do
+      collection { post :mark_read }
+    end
     resources :ticket_types
     resources :users
     resources :customers, controller: "customers"
@@ -21,6 +25,8 @@ Rails.application.routes.draw do
       resource  :notification,  only: %i[show update], controller: "notifications"
       resource  :sso,           only: %i[show update], controller: "ssos"
       resource  :api_token,     only: %i[show],        controller: "api_tokens"
+      resource  :payment,       only: %i[show update], controller: "payments"
+      resource  :chat,          only: %i[show update], controller: "chats"
       resources :knowledge_articles
       resources :price_lists
     end
@@ -28,7 +34,6 @@ Rails.application.routes.draw do
     root "tickets#index"
   end
 
-  # Locale-free utility endpoints.
   get  "up"             => "rails/health#show", as: :rails_health_check
   post "csp_violations" => "csp_violations#create"
 end

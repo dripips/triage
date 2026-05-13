@@ -13,13 +13,50 @@
   </div>
 </header>
 
+<%# ── Scope chips ── %>
 <div class="filter-bar-tr">
-  <%= link_to t("tickets.scope_all",    default: "Все"),       tickets_path,                   class: "filter-chip-tr #{'active' if params[:scope].blank?}" %>
-  <%= link_to t("tickets.scope_mine",   default: "Мои"),       tickets_path(scope: "mine"),    class: "filter-chip-tr #{'active' if params[:scope] == 'mine'}" %>
-  <%= link_to t("tickets.scope_open",   default: "Открытые"),  tickets_path(scope: "open"),    class: "filter-chip-tr #{'active' if params[:scope] == 'open'}" %>
-  <%= link_to t("tickets.scope_closed", default: "Закрытые"),  tickets_path(scope: "closed"),  class: "filter-chip-tr #{'active' if params[:scope] == 'closed'}" %>
+  <%= link_to t("tickets.scope_all",    default: "Все"),       tickets_path(filter_params.except(:scope)),                   class: "filter-chip-tr #{'active' if params[:scope].blank?}" %>
+  <%= link_to t("tickets.scope_mine",   default: "Мои"),       tickets_path(filter_params.merge(scope: "mine")),    class: "filter-chip-tr #{'active' if params[:scope] == 'mine'}" %>
+  <%= link_to t("tickets.scope_open",   default: "Открытые"),  tickets_path(filter_params.merge(scope: "open")),    class: "filter-chip-tr #{'active' if params[:scope] == 'open'}" %>
+  <%= link_to t("tickets.scope_closed", default: "Закрытые"),  tickets_path(filter_params.merge(scope: "closed")),  class: "filter-chip-tr #{'active' if params[:scope] == 'closed'}" %>
 </div>
 
+<%# ── Advanced filters ── %>
+<details class="mb-3" <%= "open" if filter_active? %>>
+  <summary class="btn btn-ghost btn-sm"><%= t("tickets.filters", default: "Фильтры") %> <%= "●" if filter_active? %></summary>
+  <%= form_with url: tickets_path, method: :get, class: "card-apple mt-2 p-3" do |f| %>
+    <%= hidden_field_tag :scope, params[:scope] if params[:scope].present? %>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <%= f.label :ticket_type_id, t("tickets.type", default: "Тип"), class: "form-label" %>
+        <%= f.select :ticket_type_id,
+            TicketType.where(company: current_company).active_types.map { |tt| [tt.name, tt.id] },
+            { include_blank: t("common.all", default: "Все"), selected: params[:ticket_type_id] },
+            { class: "form-select form-select-sm" } %>
+      </div>
+      <div class="col-md-3">
+        <%= f.label :priority, t("tickets.priority_label", default: "Приоритет"), class: "form-label" %>
+        <%= f.select :priority,
+            Ticket.priorities.keys.map { |p| [t("tickets.priority.#{p}", default: p.humanize), p] },
+            { include_blank: t("common.all", default: "Все"), selected: params[:priority] },
+            { class: "form-select form-select-sm" } %>
+      </div>
+      <div class="col-md-3">
+        <%= f.label :assignee_id, t("tickets.assignee", default: "Исполнитель"), class: "form-label" %>
+        <%= f.select :assignee_id,
+            User.kept.staff_users.where(company: current_company).map { |u| [u.display_name, u.id] },
+            { include_blank: t("common.all", default: "Все"), selected: params[:assignee_id] },
+            { class: "form-select form-select-sm" } %>
+      </div>
+      <div class="col-md-3 d-flex align-items-end gap-2">
+        <%= f.submit t("tickets.apply_filters", default: "Применить"), class: "btn btn-primary btn-sm" %>
+        <%= link_to t("tickets.reset_filters", default: "Сбросить"), tickets_path, class: "btn btn-ghost btn-sm" %>
+      </div>
+    </div>
+  <% end %>
+</details>
+
+<%# ── Ticket list ── %>
 <% if @tickets.any? %>
   <div class="card-apple card-apple--flush">
     <% @tickets.each do |ticket| %>
@@ -35,6 +72,7 @@
             <span><%= ticket.reporter&.display_name || t("tickets.anonymous", default: "аноним") %></span>
             <span>·</span>
             <span><%= time_ago_in_words(ticket.created_at) %> <%= t("common.ago", default: "назад") %></span>
+            <% if ticket.assignee %><span>·</span><span><%= ticket.assignee.display_name %></span><% end %>
           </div>
         </div>
         <div class="ticket-row-tr__pills">

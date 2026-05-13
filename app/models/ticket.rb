@@ -9,6 +9,8 @@ class Ticket < ApplicationRecord
   belongs_to :reporter, polymorphic: true, optional: true
   belongs_to :assignee, class_name: "User", optional: true
   has_many   :comments, class_name: "TicketComment", dependent: :destroy
+  has_many   :conversation_messages, dependent: :destroy
+  has_many   :invoices, dependent: :nullify
 
   validates :subject, presence: true, length: { maximum: 280 }
   validates :status,  presence: true

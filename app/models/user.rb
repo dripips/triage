@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
   belongs_to :company, optional: true
   has_many :api_tokens, dependent: :destroy
+  has_many :in_app_notifications, as: :recipient, dependent: :destroy
 
   # kind: 0 = staff (helpdesk-команда), 1 = customer (внешний клиент).
   enum :kind, { staff: 0, customer: 1 }, prefix: :kind, default: :staff

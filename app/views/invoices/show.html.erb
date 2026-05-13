@@ -1,0 +1,74 @@
+<% content_for :title, @invoice.number %>
+
+<header class="page-header">
+  <div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('invoices.title', default: 'Счета')}", invoices_path %></div>
+    <h1 class="page-header__title m-0"><%= @invoice.number %></h1>
+    <div class="ticket-meta mt-2">
+      <span class="pill pill--<%= { 'draft' => 'neutral', 'sent' => 'info', 'paid' => 'success', 'overdue' => 'danger', 'cancelled' => 'neutral' }[@invoice.status] || 'neutral' %>">
+        <%= t("invoices.status.#{@invoice.status}", default: @invoice.status.humanize) %>
+      </span>
+      <% if @invoice.ticket %>
+        <span>·</span>
+        <%= link_to "##{@invoice.ticket.id} #{@invoice.ticket.subject.truncate(40)}", ticket_path(@invoice.ticket) %>
+      <% end %>
+      <span>·</span>
+      <span><%= @invoice.user.display_name %></span>
+      <% if @invoice.due_at %>
+        <span>·</span>
+        <span>до <%= l(@invoice.due_at, format: :short) rescue @invoice.due_at.to_date %></span>
+      <% end %>
+    </div>
+  </div>
+</header>
+
+<div class="card-apple">
+  <% if @items.any? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width:50%"><%= t("invoice_items.name", default: "Позиция") %></th>
+          <th class="text-end"><%= t("invoice_items.qty", default: "Кол-во") %></th>
+          <th class="text-end"><%= t("invoice_items.unit_price", default: "Цена") %></th>
+          <th class="text-end"><%= t("invoice_items.total", default: "Итого") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td>
+              <strong><%= item.name %></strong>
+              <% if item.description.present? %><div class="footnote text-tertiary"><%= item.description %></div><% end %>
+            </td>
+            <td class="text-end text-mono"><%= item.quantity %></td>
+            <td class="text-end text-mono"><%= item.unit_price %> <%= @invoice.currency %></td>
+            <td class="text-end text-mono"><%= item.total %> <%= @invoice.currency %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-end"><strong><%= t("invoices.subtotal", default: "Подитог") %></strong></td>
+          <td class="text-end text-mono"><strong><%= @invoice.subtotal %> <%= @invoice.currency %></strong></td>
+        </tr>
+        <% if @invoice.tax_cents > 0 %>
+          <tr>
+            <td colspan="3" class="text-end"><%= t("invoices.tax", default: "НДС") %></td>
+            <td class="text-end text-mono"><%= @invoice.tax %> <%= @invoice.currency %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td colspan="3" class="text-end"><strong><%= t("invoices.total", default: "ИТОГО") %></strong></td>
+          <td class="text-end text-mono" style="font-size:16px;"><strong><%= @invoice.formatted_total %></strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  <% else %>
+    <p class="footnote text-secondary-apple m-0"><%= t("invoices.no_items", default: "Нет позиций") %></p>
+  <% end %>
+
+  <% if @invoice.notes.present? %>
+    <hr>
+    <div class="footnote text-secondary-apple"><%= @invoice.notes %></div>
+  <% end %>
+</div>

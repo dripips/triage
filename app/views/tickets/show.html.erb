@@ -1,73 +1,137 @@
 <% content_for :title, @ticket.subject %>
+<%
+  chat_enabled = AppSetting.fetch(company: current_company, category: "chat").get("enabled").to_s == "1"
+  messages = @ticket.conversation_messages.chronological if chat_enabled
+%>
 
 <header class="page-header">
   <div>
-    <div class="page-header__eyebrow">
-      <%= link_to "← #{t('tickets.title', default: 'Тикеты')}", tickets_path %>
-    </div>
+    <div class="page-header__eyebrow"><%= link_to "← #{t('tickets.title', default: 'Тикеты')}", tickets_path %></div>
     <h1 class="page-header__title m-0">#<%= @ticket.id %> · <%= @ticket.subject %></h1>
-    <div class="ticket-meta mt-2">
-      <span class="pill pill--<%= @ticket.closed? ? 'success' : 'info' %>">
-        <%= t("ticket_states.#{@ticket.status}", default: @ticket.status.humanize) %>
-      </span>
-      <span class="pill pill--neutral"><%= @ticket.ticket_type.name %></span>
-      <% if    @ticket.urgent? %><span class="pill pill--danger">⚡ urgent</span>
-      <% elsif @ticket.high?   %><span class="pill pill--warning">high</span>
-      <% elsif @ticket.low?    %><span class="pill pill--neutral">low</span>
-      <% end %>
-    </div>
-    <p class="footnote text-secondary-apple m-0 mt-2">
-      <%= t("tickets.reporter", default: "Кем создан") %>:
-      <strong><%= @ticket.reporter&.display_name || t("tickets.anonymous", default: "аноним") %></strong>
-      ·
-      <%= t("tickets.assignee", default: "Исполнитель") %>:
-      <strong><%= @ticket.assignee&.display_name || t("tickets.unassigned", default: "не назначен") %></strong>
-    </p>
   </div>
 </header>
 
-<%= turbo_frame_tag dom_id(@ticket) do %>
-  <div class="card-apple mb-3">
-    <p class="m-0" style="white-space: pre-wrap;"><%= @ticket.description %></p>
-  </div>
+<div class="row g-4">
+  <%# ═══ LEFT: chat / comments thread ═══ %>
+  <div class="col-12 col-xl-8">
 
-  <% if @transitions.any? %>
-    <div class="card-apple mb-3">
+    <% if chat_enabled %>
+      <%# ── Real-time chat ── %>
+      <%= turbo_stream_from "ticket_#{@ticket.id}_chat" %>
+      <div class="card-apple chat-panel-tr">
+        <div class="chat-panel-tr__head">
+          <h3 class="card-apple__title m-0"><%= t("chat.title", default: "Чат") %></h3>
+          <span class="pill pill--neutral"><%= messages&.size || 0 %></span>
+        </div>
+        <div class="chat-panel-tr__messages" id="chat-messages">
+          <% if messages&.any? %>
+            <%= render messages %>
+          <% else %>
+            <p class="footnote text-secondary-apple text-center py-4 m-0"><%= t("chat.empty", default: "Начните переписку") %></p>
+          <% end %>
+        </div>
+        <%= render "conversation_messages/form", ticket: @ticket %>
+      </div>
+    <% end %>
+
+    <%# ── Legacy comments (always shown) ── %>
+    <div class="card-apple <%= 'mt-3' if chat_enabled %>">
       <div class="card-apple__header">
-        <h3 class="card-apple__title m-0"><%= t("tickets.workflow", default: "Workflow") %></h3>
+        <h3 class="card-apple__title m-0">
+          <%= t("tickets.comments", default: "Комментарии") %>
+          <span class="pill pill--neutral ms-2" id="comments-count"><%= @comments.size %></span>
+        </h3>
       </div>
-      <div class="d-flex gap-2 flex-wrap mt-2">
-        <% @transitions.each do |event, _cfg| %>
-          <%= button_to t("ticket_events.#{event}", default: event.to_s.humanize),
-                        transition_ticket_path(@ticket, event: event),
-                        method: :post,
-                        class: "btn btn-soft btn-sm",
-                        form: { class: "d-inline-block" } %>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-<% end %>
 
-<div class="card-apple">
-  <div class="card-apple__header">
-    <h3 class="card-apple__title m-0">
-      <%= t("tickets.comments", default: "Комментарии") %>
-      <span class="pill pill--neutral ms-2" id="comments-count"><%= @comments.size %></span>
-    </h3>
+      <%= turbo_frame_tag "comments" do %>
+        <div id="comments-list">
+          <% if @comments.any? %>
+            <%= render @comments %>
+          <% else %>
+            <p class="footnote text-secondary-apple m-0 py-3 text-center"><%= t("tickets.no_comments", default: "Пока нет комментариев") %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= render "ticket_comments/form", ticket: @ticket, comment: @new_comment %>
+    </div>
   </div>
 
-  <%= turbo_frame_tag "comments" do %>
-    <div id="comments-list">
-      <% if @comments.any? %>
-        <%= render @comments %>
-      <% else %>
-        <p class="footnote text-secondary-apple m-0 py-3 text-center">
-          <%= t("tickets.no_comments", default: "Пока нет комментариев") %>
-        </p>
-      <% end %>
-    </div>
-  <% end %>
+  <%# ═══ RIGHT: meta + workflow + invoice ═══ %>
+  <div class="col-12 col-xl-4">
 
-  <%= render "ticket_comments/form", ticket: @ticket, comment: @new_comment %>
+    <%# ── Status & meta ── %>
+    <div class="card-apple mb-3">
+      <div class="d-flex flex-column gap-2">
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.status", default: "Статус") %></span>
+          <span class="pill pill--<%= @ticket.closed? ? 'success' : 'info' %>">
+            <%= t("ticket_states.#{@ticket.status}", default: @ticket.status.humanize) %>
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.type", default: "Тип") %></span>
+          <span class="pill pill--neutral"><%= @ticket.ticket_type.name %></span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.priority_label", default: "Приоритет") %></span>
+          <% prio_pill = { "urgent" => "danger", "high" => "warning", "normal" => "info", "low" => "neutral" }[@ticket.priority] || "neutral" %>
+          <span class="pill pill--<%= prio_pill %>"><%= t("tickets.priority.#{@ticket.priority}", default: @ticket.priority.humanize) %></span>
+        </div>
+        <hr class="my-1">
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.reporter", default: "Кем создан") %></span>
+          <strong class="footnote"><%= @ticket.reporter&.display_name || t("tickets.anonymous", default: "аноним") %></strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.assignee", default: "Исполнитель") %></span>
+          <strong class="footnote"><%= @ticket.assignee&.display_name || t("tickets.unassigned", default: "не назначен") %></strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="footnote text-tertiary"><%= t("tickets.created_at", default: "Создан") %></span>
+          <span class="footnote text-tertiary"><%= time_ago_in_words(@ticket.created_at) %> назад</span>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Description ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-2"><%= t("tickets.description", default: "Описание") %></h4>
+      <p class="m-0" style="white-space:pre-wrap;font-size:14px;"><%= @ticket.description %></p>
+    </div>
+
+    <%# ── Workflow transitions ── %>
+    <%= turbo_frame_tag dom_id(@ticket) do %>
+      <% if @transitions.any? %>
+        <div class="card-apple mb-3">
+          <h4 class="card-apple__title mb-2"><%= t("tickets.workflow", default: "Workflow") %></h4>
+          <div class="d-flex gap-2 flex-wrap">
+            <% @transitions.each do |event, _cfg| %>
+              <%= button_to t("ticket_events.#{event}", default: event.to_s.humanize),
+                            transition_ticket_path(@ticket, event: event),
+                            method: :post,
+                            class: "btn btn-soft btn-sm",
+                            form: { class: "d-inline-block" } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%# ── Invoice panel ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-2"><%= t("invoices.panel_title", default: "Счёт") %></h4>
+      <% existing_invoices = Invoice.kept.where(ticket: @ticket).recent.limit(5) %>
+      <% if existing_invoices.any? %>
+        <% existing_invoices.each do |inv| %>
+          <div class="d-flex justify-content-between align-items-center py-1" style="border-bottom:1px solid var(--ds-separator);">
+            <%= link_to inv.number, invoice_path(inv), class: "footnote" %>
+            <span class="pill pill--<%= { 'draft' => 'neutral', 'sent' => 'info', 'paid' => 'success', 'overdue' => 'danger', 'cancelled' => 'neutral' }[inv.status] || 'neutral' %> pill--sm"><%= t("invoices.status.#{inv.status}", default: inv.status.humanize) %></span>
+            <strong class="text-mono footnote"><%= inv.formatted_total %></strong>
+          </div>
+        <% end %>
+      <% end %>
+      <%= link_to t("invoices.create_new", default: "+ Выставить счёт"), new_invoice_path(ticket_id: @ticket.id), class: "btn btn-soft btn-sm mt-2 w-100 text-center" %>
+    </div>
+  </div>
 </div>
