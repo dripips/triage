@@ -136,6 +136,23 @@
         <% end %>
       </div>
 
+      <% ai_enabled = TicketAi.new(company: current_company).enabled? %>
+      <% if ai_enabled %>
+        <div class="card-apple mb-3">
+          <h4 class="card-apple__title mb-2"><%= t("ai_actions.title") %></h4>
+          <div class="d-flex gap-2 flex-wrap">
+            <%= button_to t("ai_actions.suggest_reply"), ticket_ai_actions_suggest_reply_path(@ticket),
+                          method: :post, class: "btn btn-soft btn-sm", form: { class: "d-inline-block" } %>
+            <%= button_to t("ai_actions.categorize"), ticket_ai_actions_categorize_path(@ticket),
+                          method: :post, class: "btn btn-soft btn-sm", form: { class: "d-inline-block" } %>
+            <%= button_to t("ai_actions.summarize"), ticket_ai_actions_summarize_path(@ticket),
+                          method: :post, class: "btn btn-soft btn-sm", form: { class: "d-inline-block" } %>
+            <%= button_to t("ai_actions.sentiment"), ticket_ai_actions_sentiment_path(@ticket),
+                          method: :post, class: "btn btn-soft btn-sm", form: { class: "d-inline-block" } %>
+          </div>
+        </div>
+      <% end %>
+
       <div class="card-apple mb-3">
         <h4 class="card-apple__title mb-2"><%= t("invoices.panel_title") %></h4>
         <% existing_invoices = Invoice.kept.where(ticket: @ticket).recent.limit(5) %>

@@ -266,6 +266,16 @@ ru:
     title: Уведомления
     unread_count: "%{count} непрочитанных"
     mark_all_read: Прочитать все
+  ai_actions:
+    title: AI ассистент
+    suggest_reply: Предложить ответ
+    categorize: Категоризировать
+    summarize: Резюмировать
+    sentiment: Анализ настроения
+    suggestion_ready: AI предложил ответ
+    categorized: AI категоризировал тикет
+    summarized: AI создал резюме
+    sentiment_done: AI проанализировал настроение
     empty: Нет уведомлений
     view_all: Все уведомления
     actions:

@@ -333,6 +333,16 @@ en:
     title: Notifications
     unread_count: "%{count} unread"
     mark_all_read: Mark all read
+  ai_actions:
+    title: AI Assistant
+    suggest_reply: Suggest reply
+    categorize: Categorize
+    summarize: Summarize
+    sentiment: Sentiment analysis
+    suggestion_ready: AI suggested a reply
+    categorized: AI categorized the ticket
+    summarized: AI created a summary
+    sentiment_done: AI analyzed sentiment
     empty: No notifications
     view_all: All notifications
     actions:

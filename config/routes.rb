@@ -11,6 +11,12 @@ Rails.application.routes.draw do
       end
       resources :comments, only: %i[create], controller: "ticket_comments"
       resources :messages, only: %i[create], controller: "conversation_messages"
+      resource :ai_actions, only: [], controller: "ai_actions" do
+        post :suggest_reply
+        post :categorize
+        post :summarize
+        post :sentiment
+      end
     end
 
     resources :invoices, only: %i[index show new create edit update]

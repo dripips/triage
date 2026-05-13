@@ -96,11 +96,168 @@ class TicketAi
     (setting.get("monthly_budget_usd") || 5).to_f
   end
 
+  def categorize(ticket)
+    call(:categorize, build_categorize_prompt(ticket))
+  end
+
+  def suggest_reply(ticket)
+    call(:suggest_reply, build_suggest_reply_prompt(ticket))
+  end
+
+  def summarize(ticket)
+    call(:summarize, build_summarize_prompt(ticket))
+  end
+
+  def analyze_sentiment(ticket)
+    call(:sentiment, build_sentiment_prompt(ticket))
+  end
+
   private
 
   def default_model_for_provider
     models = provider_preset[:models]
     balanced = models.find { |_, v| v[:tier] == "balanced" }
     balanced ? balanced.first : models.keys.first
+  end
+
+  def api_key
+    setting.get("api_key")
+  end
+
+  def system_prompt
+    setting.get("system_prompt").presence ||
+      "You are an AI assistant for a helpdesk system called Triage. Help agents respond to customers professionally and accurately."
+  end
+
+  def temperature
+    (setting.get("temperature") || 0.3).to_f
+  end
+
+  def max_tokens
+    (setting.get("max_tokens") || 1024).to_i
+  end
+
+  def call(task_key, user_message)
+    return { ok: false, error: "AI disabled" } unless enabled?
+    return { ok: false, error: "No API key" } if api_key.blank?
+
+    started_at = Time.current
+    response = if provider_key == "anthropic"
+      call_anthropic(user_message)
+    else
+      call_openai_compatible(user_message)
+    end
+
+    input_tokens  = response.dig(:usage, :input_tokens) || response.dig(:usage, :prompt_tokens) || 0
+    output_tokens = response.dig(:usage, :output_tokens) || response.dig(:usage, :completion_tokens) || 0
+    total_tokens  = input_tokens + output_tokens
+    info = model_info
+    cost = (input_tokens.to_f * info[:input_1m] + output_tokens.to_f * info[:output_1m]) / 1_000_000
+
+    AiRun.create!(
+      company: @company,
+      kind: task_key.to_s,
+      model: model_key,
+      input_tokens: input_tokens,
+      output_tokens: output_tokens,
+      total_tokens: total_tokens,
+      cost_usd: cost,
+      success: response[:ok],
+      payload: response[:ok] ? { content: response[:content] } : nil,
+      error: response[:error]
+    )
+
+    response
+  rescue Faraday::Error, JSON::ParserError => e
+    AiRun.create!(company: @company, kind: task_key.to_s, model: model_key, success: false, error: e.message)
+    { ok: false, error: e.message }
+  end
+
+  def call_openai_compatible(user_message)
+    conn = Faraday.new(url: api_url) do |f|
+      f.request :json
+      f.response :json
+      f.adapter Faraday.default_adapter
+    end
+
+    resp = conn.post do |req|
+      req.headers["Authorization"] = "Bearer #{api_key}"
+      req.headers["Content-Type"]  = "application/json"
+      req.body = {
+        model: model_key,
+        messages: [
+          { role: "system", content: system_prompt },
+          { role: "user",   content: user_message }
+        ],
+        temperature: temperature,
+        max_tokens: max_tokens
+      }.to_json
+    end
+
+    body = resp.body.is_a?(String) ? JSON.parse(resp.body) : resp.body
+    if body["error"]
+      { ok: false, error: body.dig("error", "message") || body["error"].to_s }
+    else
+      {
+        ok: true,
+        content: body.dig("choices", 0, "message", "content"),
+        usage: {
+          prompt_tokens: body.dig("usage", "prompt_tokens") || 0,
+          completion_tokens: body.dig("usage", "completion_tokens") || 0
+        }
+      }
+    end
+  end
+
+  def call_anthropic(user_message)
+    conn = Faraday.new(url: "https://api.anthropic.com") do |f|
+      f.request :json
+      f.response :json
+      f.adapter Faraday.default_adapter
+    end
+
+    resp = conn.post("/v1/messages") do |req|
+      req.headers["x-api-key"]         = api_key
+      req.headers["anthropic-version"] = "2023-06-01"
+      req.headers["Content-Type"]      = "application/json"
+      req.body = {
+        model: model_key,
+        max_tokens: max_tokens,
+        system: system_prompt,
+        messages: [{ role: "user", content: user_message }]
+      }.to_json
+    end
+
+    body = resp.body.is_a?(String) ? JSON.parse(resp.body) : resp.body
+    if body["error"]
+      { ok: false, error: body.dig("error", "message") || body["error"].to_s }
+    else
+      {
+        ok: true,
+        content: body.dig("content", 0, "text"),
+        usage: {
+          input_tokens: body.dig("usage", "input_tokens") || 0,
+          output_tokens: body.dig("usage", "output_tokens") || 0
+        }
+      }
+    end
+  end
+
+  def build_categorize_prompt(ticket)
+    "Categorize this support ticket. Return a JSON with: category (string), priority (low/normal/high/urgent), confidence (0-1).\n\nSubject: #{ticket.subject}\nDescription: #{ticket.description}"
+  end
+
+  def build_suggest_reply_prompt(ticket)
+    comments = ticket.comments.kept.chronological.last(5).map { |c| "#{c.author&.display_name}: #{c.body}" }.join("\n")
+    "Suggest a professional reply for this ticket.\n\nSubject: #{ticket.subject}\nDescription: #{ticket.description}\n\nRecent comments:\n#{comments}\n\nWrite a helpful reply in the same language as the ticket."
+  end
+
+  def build_summarize_prompt(ticket)
+    comments = ticket.comments.kept.chronological.map { |c| "#{c.author&.display_name}: #{c.body}" }.join("\n")
+    "Summarize this support ticket thread in 2-3 sentences.\n\nSubject: #{ticket.subject}\nDescription: #{ticket.description}\n\nComments:\n#{comments}"
+  end
+
+  def build_sentiment_prompt(ticket)
+    "Analyze the customer sentiment for this ticket. Return JSON: { sentiment: positive/neutral/negative, score: -1 to 1, explanation: string }.\n\nSubject: #{ticket.subject}\nDescription: #{ticket.description}"
   end
 end
