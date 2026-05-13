@@ -32,7 +32,7 @@ gem "discard"               # soft delete
 gem "aasm"                  # state machines (ticket workflows)
 
 # ── Notifications ─────────────────────────────────────────────────────────
-gem "noticed", "~> 2.0"
+gem "noticed", "~> 3.0"
 
 # ── AI / external ─────────────────────────────────────────────────────────
 gem "faraday"
