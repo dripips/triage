@@ -8,11 +8,15 @@ class TicketsController < ApplicationController
   end
 
   def show
-    @comments    = @ticket.comments.kept.chronological.includes(:author)
-    @new_comment = @ticket.comments.new
-    @transitions = @ticket.ticket_type.transitions.select do |_event, cfg|
-      Array(cfg["from"]).include?(@ticket.status)
+    if current_user.customer?
+      @comments = @ticket.comments.kept.chronological.where(internal: false).includes(:author)
+    else
+      @comments = @ticket.comments.kept.chronological.includes(:author)
     end
+    @new_comment = @ticket.comments.new
+    @transitions = current_user.staff? ? @ticket.ticket_type.transitions.select { |_event, cfg|
+      Array(cfg["from"]).include?(@ticket.status)
+    } : {}
   end
 
   def new
@@ -58,7 +62,8 @@ class TicketsController < ApplicationController
   private
 
   def scope
-    Ticket.kept.where(company: current_company)
+    base = Ticket.kept.where(company: current_company)
+    current_user&.customer? ? base.where(reporter: current_user) : base
   end
 
   def filtered_scope

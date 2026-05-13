@@ -134,6 +134,10 @@ en:
     summary: "%{count} customers"
     empty: No customers yet
     empty_hint: Customers will appear automatically via SSO or the email form
+    staff_notes: Internal notes
+    staff_notes_hint: Only visible to staff. Customer does not see this.
+    staff_notes_visibility: Only visible to your team
+    staff_notes_badge: Staff note
   ticket_types:
     new: New ticket type
     key: Key (slug)

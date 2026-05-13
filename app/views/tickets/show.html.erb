@@ -1,7 +1,10 @@
 <% content_for :title, @ticket.subject %>
 <%
   chat_enabled = AppSetting.fetch(company: current_company, category: "chat").get("enabled").to_s == "1"
-  messages = @ticket.conversation_messages.chronological if chat_enabled
+  is_staff = current_user&.staff?
+  if chat_enabled
+    messages = is_staff ? @ticket.conversation_messages.chronological : @ticket.conversation_messages.for_customer.chronological
+  end
 %>
 
 <header class="page-header">
@@ -94,13 +97,25 @@
       </div>
     </div>
 
+    <%# ── Customer notes (staff only) ── %>
+    <% if is_staff && @ticket.reporter.respond_to?(:staff_notes) && @ticket.reporter.staff_notes.present? %>
+      <div class="card-apple mb-3" style="background: rgba(255,159,10,0.05); border-left: 3px solid rgba(255,159,10,0.5);">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="pill pill--warning pill--sm"><%= t("customers.staff_notes_badge", default: "Staff note") %></span>
+          <strong class="footnote"><%= @ticket.reporter.display_name %></strong>
+        </div>
+        <p class="m-0 footnote" style="white-space:pre-wrap;"><%= @ticket.reporter.staff_notes %></p>
+      </div>
+    <% end %>
+
     <%# ── Description ── %>
     <div class="card-apple mb-3">
       <h4 class="card-apple__title mb-2"><%= t("tickets.description", default: "Описание") %></h4>
       <p class="m-0" style="white-space:pre-wrap;font-size:14px;"><%= @ticket.description %></p>
     </div>
 
-    <%# ── Actions: assign + workflow ── %>
+    <%# ── Actions: assign + workflow (staff only) ── %>
+    <% if is_staff %>
     <div class="card-apple mb-3">
       <h4 class="card-apple__title mb-3"><%= t("tickets.actions", default: "Действия") %></h4>
 
@@ -140,8 +155,10 @@
         <% end %>
       <% end %>
     </div>
+    <% end %>
 
-    <%# ── Invoice panel ── %>
+    <%# ── Invoice panel (staff only) ── %>
+    <% if is_staff %>
     <div class="card-apple mb-3">
       <h4 class="card-apple__title mb-2"><%= t("invoices.panel_title", default: "Счёт") %></h4>
       <% existing_invoices = Invoice.kept.where(ticket: @ticket).recent.limit(5) %>
@@ -156,5 +173,6 @@
       <% end %>
       <%= link_to t("invoices.create_new", default: "+ Выставить счёт"), new_invoice_path(ticket_id: @ticket.id), class: "btn btn-soft btn-sm mt-2 w-100 text-center" %>
     </div>
+    <% end %>
   </div>
 </div>

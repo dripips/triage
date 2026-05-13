@@ -48,7 +48,7 @@ class CustomersController < ApplicationController
   end
 
   def customer_params
-    params.require(:user).permit(:email, :name, :locale, :external_id, :external_provider)
+    params.require(:user).permit(:email, :name, :locale, :external_id, :external_provider, :staff_notes)
   end
 
   def require_staff!

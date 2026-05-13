@@ -147,6 +147,10 @@ ru:
     summary: "%{count} клиентов"
     empty: Клиентов пока нет
     empty_hint: Клиенты появятся автоматически через SSO или email-форму
+    staff_notes: Заметки команды
+    staff_notes_hint: Только для команды. Клиент не видит.
+    staff_notes_visibility: Видно только вашей команде
+    staff_notes_badge: Заметка
   ticket_types:
     new: Новый тип
     key: Ключ (slug)

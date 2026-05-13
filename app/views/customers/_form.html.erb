@@ -23,6 +23,12 @@
       <%= f.text_field :external_id, class: "form-control",
                         placeholder: t("customers.external_id_hint", default: "ID в вашей системе (опционально)") %>
     </div>
+    <div class="col-12">
+      <%= f.label :staff_notes, t("customers.staff_notes", default: "Internal notes"), class: "form-label" %>
+      <%= f.text_area :staff_notes, rows: 3, class: "form-control",
+          placeholder: t("customers.staff_notes_hint", default: "Only visible to staff. Customer does not see this.") %>
+      <div class="footnote text-tertiary mt-1"><%= t("customers.staff_notes_visibility", default: "Only visible to your team") %></div>
+    </div>
   </div>
 
   <div class="d-flex gap-2 justify-content-end mt-3">
