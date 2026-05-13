@@ -1,10 +1,10 @@
-<% content_for :title, t("navigation.team", default: "Команда") %>
+<% content_for :title, t("navigation.team") %>
 
 <header class="page-header">
   <div>
-    <div class="page-header__eyebrow"><%= t("navigation.admin", default: "Администрирование") %></div>
-    <h1 class="page-header__title m-0"><%= t("navigation.team", default: "Команда") %></h1>
-    <p class="page-header__subtitle m-0"><%= t("users.summary", default: "%{count} сотрудников", count: @users.size) %></p>
+    <div class="page-header__eyebrow"><%= t("navigation.admin") %></div>
+    <h1 class="page-header__title m-0"><%= t("navigation.team") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("users.summary", count: @users.size) %></p>
   </div>
   <div class="page-header__actions">
     <%= link_to "+ #{t('users.new', default: 'Добавить сотрудника')}", new_user_path, class: "btn btn-primary" %>
@@ -36,7 +36,7 @@
 <% else %>
   <div class="card-apple">
     <div class="empty-state">
-      <h3 class="empty-state__title"><%= t("users.empty", default: "Команда пока пуста") %></h3>
+      <h3 class="empty-state__title"><%= t("users.empty") %></h3>
       <%= link_to "+ #{t('users.new', default: 'Добавить сотрудника')}", new_user_path, class: "btn btn-primary mt-2" %>
     </div>
   </div>

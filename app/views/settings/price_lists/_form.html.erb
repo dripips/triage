@@ -5,36 +5,36 @@
 
   <div class="row g-3">
     <div class="col-md-8">
-      <%= f.label :name, t("price_lists.name", default: "Название"), class: "form-label" %>
+      <%= f.label :name, t("price_lists.name"), class: "form-label" %>
       <%= f.text_field :name, required: true, class: "form-control" %>
     </div>
     <div class="col-md-4">
       <div class="form-check form-switch mt-4">
         <%= f.check_box :active, class: "form-check-input", role: "switch" %>
-        <%= f.label :active, t("price_lists.is_active", default: "Активен"), class: "form-check-label" %>
+        <%= f.label :active, t("price_lists.is_active"), class: "form-check-label" %>
       </div>
     </div>
   </div>
 
   <div class="d-flex gap-2 justify-content-end mt-3">
-    <%= link_to t("common.cancel", default: "Отмена"), settings_price_lists_path, class: "btn btn-ghost" %>
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= link_to t("common.cancel"), settings_price_lists_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>
 
 <% if price_list.persisted? && defined?(@items) %>
   <div class="card-apple mt-3">
     <div class="card-apple__header d-flex justify-content-between align-items-center">
-      <h3 class="card-apple__title m-0"><%= t("price_lists.items", default: "Позиции") %></h3>
+      <h3 class="card-apple__title m-0"><%= t("price_lists.items") %></h3>
     </div>
 
     <% if @items.any? %>
       <table class="table mt-2">
         <thead>
           <tr>
-            <th><%= t("price_items.name", default: "Название") %></th>
-            <th><%= t("price_items.price", default: "Цена") %></th>
-            <th><%= t("price_items.status", default: "Статус") %></th>
+            <th><%= t("price_items.name") %></th>
+            <th><%= t("price_items.price") %></th>
+            <th><%= t("price_items.status") %></th>
           </tr>
         </thead>
         <tbody>
@@ -49,9 +49,9 @@
               <td class="text-mono"><%= item.formatted_price %></td>
               <td>
                 <% if item.active %>
-                  <span class="pill pill--success"><%= t("price_items.active_label", default: "активна") %></span>
+                  <span class="pill pill--success"><%= t("price_items.active_label") %></span>
                 <% else %>
-                  <span class="pill pill--neutral"><%= t("price_items.inactive", default: "неактивна") %></span>
+                  <span class="pill pill--neutral"><%= t("price_items.inactive") %></span>
                 <% end %>
               </td>
             </tr>
@@ -59,7 +59,7 @@
         </tbody>
       </table>
     <% else %>
-      <p class="footnote text-secondary-apple mt-2 mb-0"><%= t("price_items.empty", default: "Позиции добавляются через rails console (CRUD в v0.5)") %></p>
+      <p class="footnote text-secondary-apple mt-2 mb-0"><%= t("price_items.empty") %></p>
     <% end %>
   </div>
 <% end %>

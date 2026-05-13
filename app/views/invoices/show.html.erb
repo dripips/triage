@@ -10,7 +10,7 @@
     <h1 class="page-header__title m-0"><%= @invoice.number %></h1>
   </div>
   <div class="page-header__actions d-flex gap-2">
-    <%= link_to t("common.edit", default: "Редактировать"), edit_invoice_path(@invoice), class: "btn btn-ghost" %>
+    <%= link_to t("common.edit"), edit_invoice_path(@invoice), class: "btn btn-ghost" %>
   </div>
 </header>
 
@@ -33,11 +33,11 @@
         <span class="pill pill--<%= status_tone %>"><%= t("invoices.status.#{@invoice.status}", default: @invoice.status.humanize) %></span>
       </div>
       <div class="footnote text-tertiary mt-2">
-        <%= t("invoices.date_issued", default: "Дата") %>: <%= @invoice.created_at.strftime("%d.%m.%Y") %>
+        <%= t("invoices.date_issued") %>: <%= @invoice.created_at.strftime("%d.%m.%Y") %>
       </div>
       <% if @invoice.due_at %>
         <div class="footnote text-tertiary">
-          <%= t("invoices.due_at", default: "Оплатить до") %>: <strong><%= @invoice.due_at.strftime("%d.%m.%Y") %></strong>
+          <%= t("invoices.due_at") %>: <strong><%= @invoice.due_at.strftime("%d.%m.%Y") %></strong>
         </div>
       <% end %>
     </div>
@@ -47,20 +47,20 @@
   <div class="invoice-doc-tr__parties">
     <% if @invoice.ticket %>
       <div>
-        <div class="footnote text-tertiary mb-1"><%= t("invoices.related_ticket", default: "Тикет") %></div>
+        <div class="footnote text-tertiary mb-1"><%= t("invoices.related_ticket") %></div>
         <%= link_to ticket_path(@invoice.ticket), class: "d-block" do %>
           <strong>#<%= @invoice.ticket.id %></strong> · <%= @invoice.ticket.subject.truncate(60) %>
         <% end %>
         <% if @invoice.ticket.reporter.respond_to?(:display_name) %>
           <div class="footnote text-tertiary mt-1">
-            <%= t("invoices.client", default: "Клиент") %>: <strong><%= @invoice.ticket.reporter.display_name %></strong>
+            <%= t("invoices.client") %>: <strong><%= @invoice.ticket.reporter.display_name %></strong>
             <% if @invoice.ticket.reporter.respond_to?(:email) %><br><%= @invoice.ticket.reporter.email %><% end %>
           </div>
         <% end %>
       </div>
     <% end %>
     <div class="text-end">
-      <div class="footnote text-tertiary mb-1"><%= t("invoices.issued_by", default: "Выставил") %></div>
+      <div class="footnote text-tertiary mb-1"><%= t("invoices.issued_by") %></div>
       <strong><%= @invoice.user.display_name %></strong>
       <div class="footnote text-tertiary"><%= @invoice.user.email %></div>
     </div>
@@ -74,12 +74,12 @@
       <thead>
         <tr>
           <th class="invoice-table-tr__num">#</th>
-          <th class="invoice-table-tr__name"><%= t("invoice_items.name", default: "Позиция") %></th>
-          <th class="invoice-table-tr__qty"><%= t("invoice_items.qty", default: "Кол-во") %></th>
-          <th class="invoice-table-tr__price"><%= t("invoice_items.unit_price", default: "Цена") %></th>
+          <th class="invoice-table-tr__name"><%= t("invoice_items.name") %></th>
+          <th class="invoice-table-tr__qty"><%= t("invoice_items.qty") %></th>
+          <th class="invoice-table-tr__price"><%= t("invoice_items.unit_price") %></th>
           <% has_discounts = @items.any? { |i| i.discount_percent.to_d > 0 } %>
-          <% if has_discounts %><th class="invoice-table-tr__discount"><%= t("invoice_items.item_discount", default: "Скидка") %></th><% end %>
-          <th class="invoice-table-tr__total"><%= t("invoice_items.total", default: "Сумма") %></th>
+          <% if has_discounts %><th class="invoice-table-tr__discount"><%= t("invoice_items.item_discount") %></th><% end %>
+          <th class="invoice-table-tr__total"><%= t("invoice_items.total") %></th>
         </tr>
       </thead>
       <tbody>
@@ -109,29 +109,29 @@
   <%# ── Totals block ── %>
   <div class="invoice-totals-tr">
     <div class="invoice-totals-tr__row">
-      <span><%= t("invoices.subtotal", default: "Подитог") %></span>
+      <span><%= t("invoices.subtotal") %></span>
       <span><%= number_with_delimiter(@invoice.subtotal, delimiter: " ") %> <%= sym %></span>
     </div>
     <% if @invoice.discount_cents > 0 %>
       <div class="invoice-totals-tr__row invoice-totals-tr__row--discount">
-        <span><%= t("invoices.discount_line", default: "Скидка") %> (<%= @invoice.discount_percent %>%)</span>
+        <span><%= t("invoices.discount_line") %> (<%= @invoice.discount_percent %>%)</span>
         <span>−<%= number_with_delimiter(@invoice.discount, delimiter: " ") %> <%= sym %></span>
       </div>
     <% end %>
     <% if @invoice.surcharge_cents > 0 && !@invoice.surcharge_hidden %>
       <div class="invoice-totals-tr__row">
-        <span><%= t("invoices.surcharge_line", default: "Наценка") %> (<%= @invoice.surcharge_percent %>%)</span>
+        <span><%= t("invoices.surcharge_line") %> (<%= @invoice.surcharge_percent %>%)</span>
         <span>+<%= number_with_delimiter(@invoice.surcharge_cents / 100.0, delimiter: " ") %> <%= sym %></span>
       </div>
     <% end %>
     <% if @invoice.tax_cents > 0 %>
       <div class="invoice-totals-tr__row">
-        <span><%= t("invoices.tax", default: "НДС") %> (<%= @invoice.tax_percent %>%)</span>
+        <span><%= t("invoices.tax") %> (<%= @invoice.tax_percent %>%)</span>
         <span><%= number_with_delimiter(@invoice.tax, delimiter: " ") %> <%= sym %></span>
       </div>
     <% end %>
     <div class="invoice-totals-tr__total">
-      <span><%= t("invoices.total", default: "ИТОГО") %></span>
+      <span><%= t("invoices.total") %></span>
       <span><%= number_with_delimiter(@invoice.total, delimiter: " ") %> <%= sym %></span>
     </div>
   </div>
@@ -139,7 +139,7 @@
   <%# ── Notes ── %>
   <% if @invoice.notes.present? %>
     <div class="invoice-doc-tr__notes">
-      <div class="footnote text-tertiary mb-1"><%= t("invoices.notes", default: "Примечания") %></div>
+      <div class="footnote text-tertiary mb-1"><%= t("invoices.notes") %></div>
       <p class="m-0" style="white-space:pre-wrap;"><%= @invoice.notes %></p>
     </div>
   <% end %>

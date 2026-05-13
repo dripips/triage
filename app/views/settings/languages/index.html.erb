@@ -1,4 +1,4 @@
-<% content_for :title, t("settings.tabs.languages", default: "Languages") %>
+<% content_for :title, t("settings.tabs.languages") %>
 
 <header class="page-header">
   <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
@@ -8,8 +8,8 @@
 
 <div class="card-apple">
   <div class="card-apple__header">
-    <h3 class="card-apple__title m-0"><%= t("settings.languages.title", default: "Languages") %></h3>
-    <p class="card-apple__subtitle m-0"><%= t("settings.languages.subtitle", default: "Enable or disable available languages for your helpdesk") %></p>
+    <h3 class="card-apple__title m-0"><%= t("settings.languages.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.languages.subtitle") %></p>
   </div>
 
   <div class="d-flex flex-column gap-2 mt-3">
@@ -25,9 +25,9 @@
         <div class="d-flex align-items-center gap-2">
           <% is_enabled = @enabled.include?(lang[:code]) %>
           <% if is_enabled && @enabled.size <= 1 %>
-            <span class="pill pill--info"><%= t("settings.languages.default", default: "Default") %></span>
+            <span class="pill pill--info"><%= t("settings.languages.default") %></span>
           <% else %>
-            <%= button_to settings_language_toggle_path(code: lang[:code]),
+            <%= button_to language_toggle_settings_languages_path(code: lang[:code]),
                           method: :post,
                           class: "form-check form-switch m-0",
                           form: { style: "display:inline" } do %>

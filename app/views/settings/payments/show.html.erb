@@ -1,37 +1,37 @@
-<% content_for :title, t("settings.tabs.payments", default: "Платежи") %>
+<% content_for :title, t("settings.tabs.payments") %>
 
 <header class="page-header">
-  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
 </header>
 
 <%= render "shared/settings_tabs" %>
 
 <%= form_with model: @setting, url: settings_payment_path, method: :patch, class: "card-apple" do |f| %>
   <div class="card-apple__header">
-    <h3 class="card-apple__title m-0"><%= t("settings.payments.title", default: "Платёжные системы") %></h3>
-    <p class="card-apple__subtitle m-0"><%= t("settings.payments.subtitle", default: "Подключите платёжную систему для выставления счетов клиентам") %></p>
+    <h3 class="card-apple__title m-0"><%= t("settings.payments.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.payments.subtitle") %></p>
   </div>
 
   <div class="row g-3 mt-2">
     <div class="col-12">
       <div class="form-check form-switch">
         <%= f.check_box :enabled, checked: @setting.get("enabled").to_s == "1", class: "form-check-input", role: "switch" %>
-        <%= f.label :enabled, t("settings.payments.enabled", default: "Приём платежей включён"), class: "form-check-label" %>
+        <%= f.label :enabled, t("settings.payments.enabled"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
-      <%= f.label :provider, t("settings.payments.provider", default: "Провайдер"), class: "form-label" %>
+      <%= f.label :provider, t("settings.payments.provider"), class: "form-label" %>
       <%= f.select :provider,
-          [["Stripe", "stripe"], ["YooKassa", "yookassa"], ["Tinkoff", "tinkoff"], [t("settings.payments.none", default: "None (invoices only)"), "none"]],
+          [["Stripe", "stripe"], ["YooKassa", "yookassa"], ["Tinkoff", "tinkoff"], [t("settings.payments.none"), "none"]],
           { selected: @setting.get("provider") || "none" },
           { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-3">
-      <%= f.label :currency, t("settings.payments.currency", default: "Валюта"), class: "form-label" %>
+      <%= f.label :currency, t("settings.payments.currency"), class: "form-label" %>
       <%= f.select :currency, [["RUB ₽", "RUB"], ["USD $", "USD"], ["EUR €", "EUR"]], { selected: @setting.get("currency") || "RUB" }, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-3">
-      <%= f.label :tax_rate_percent, t("settings.payments.tax_rate", default: "НДС %"), class: "form-label" %>
+      <%= f.label :tax_rate_percent, t("settings.payments.tax_rate"), class: "form-label" %>
       <%= f.number_field :tax_rate_percent, value: @setting.get("tax_rate_percent") || "0", min: 0, max: 50, class: "form-control" %>
     </div>
   </div>
@@ -79,6 +79,6 @@
   </div>
 
   <div class="d-flex justify-content-end mt-3">
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>

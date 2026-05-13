@@ -1,19 +1,19 @@
-<% content_for :title, t("settings.tabs.api", default: "API токены") %>
+<% content_for :title, t("settings.tabs.api") %>
 
 <header class="page-header">
-  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
 </header>
 
 <%= render "shared/settings_tabs" %>
 
 <div class="card-apple">
   <div class="card-apple__header">
-    <h3 class="card-apple__title m-0"><%= t("settings.api.title", default: "API токены") %></h3>
-    <p class="card-apple__subtitle m-0"><%= t("settings.api.subtitle", default: "Bearer-токены для REST API. Управление токенами — в v0.5.") %></p>
+    <h3 class="card-apple__title m-0"><%= t("settings.api.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.api.subtitle") %></p>
   </div>
 
   <div class="callout callout--warning mt-3">
-    <%= t("settings.api.coming_soon", default: "Создание и отзыв API-токенов будет доступно в следующей версии. Сейчас токены создаются через rails console.") %>
+    <%= t("settings.api.coming_soon") %>
   </div>
 
   <% if defined?(@tokens) && @tokens.any? %>
@@ -38,6 +38,6 @@
       </tbody>
     </table>
   <% else %>
-    <p class="footnote text-secondary-apple mt-3 mb-0"><%= t("settings.api.no_tokens", default: "Токенов пока нет") %></p>
+    <p class="footnote text-secondary-apple mt-3 mb-0"><%= t("settings.api.no_tokens") %></p>
   <% end %>
 </div>

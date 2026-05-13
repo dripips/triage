@@ -1,9 +1,9 @@
-<% content_for :title, t("invoices.title", default: "Счета") %>
+<% content_for :title, t("invoices.title") %>
 
 <header class="page-header">
   <div>
-    <h1 class="page-header__title m-0"><%= t("invoices.title", default: "Счета") %></h1>
-    <p class="page-header__subtitle m-0"><%= t("invoices.summary", default: "%{count} счетов", count: @invoices.size) %></p>
+    <h1 class="page-header__title m-0"><%= t("invoices.title") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("invoices.summary", count: @invoices.size) %></p>
   </div>
 </header>
 
@@ -19,7 +19,7 @@
           <div class="ticket-row-tr__meta">
             <span><%= inv.user.display_name %></span>
             <span>·</span>
-            <span><%= time_ago_in_words(inv.created_at) %> <%= t("common.ago", default: "назад") %></span>
+            <span><%= time_ago_in_words(inv.created_at) %> <%= t("common.ago") %></span>
             <% if inv.due_at %><span>·</span><span>до <%= l(inv.due_at, format: :short) rescue inv.due_at.to_date %></span><% end %>
           </div>
         </div>
@@ -35,8 +35,8 @@
 <% else %>
   <div class="card-apple">
     <div class="empty-state">
-      <h3 class="empty-state__title"><%= t("invoices.empty", default: "Счетов пока нет") %></h3>
-      <p class="footnote text-secondary-apple"><%= t("invoices.empty_hint", default: "Счета создаются из карточки тикета") %></p>
+      <h3 class="empty-state__title"><%= t("invoices.empty") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("invoices.empty_hint") %></p>
     </div>
   </div>
 <% end %>

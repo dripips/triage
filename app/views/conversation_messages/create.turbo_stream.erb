@@ -7,7 +7,7 @@
 <%= turbo_stream.append "toast-stack" do %>
   <div class="toast-apple toast-apple--success" data-controller="dismiss" data-dismiss-after-value="3000" role="status">
     <span class="toast-apple__icon" aria-hidden="true">✓</span>
-    <div class="toast-apple__body"><%= t("chat.sent", default: "Сообщение отправлено") %></div>
+    <div class="toast-apple__body"><%= t("chat.sent") %></div>
     <button type="button" class="toast-apple__dismiss" data-action="click->dismiss#close" aria-label="×">×</button>
   </div>
 <% end %>

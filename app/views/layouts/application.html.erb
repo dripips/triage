@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>" data-theme="<%= current_theme %>" data-bs-theme="<%= current_theme == 'dark' ? 'dark' : 'light' %>">
   <head>
-    <title><%= content_for(:title) || t("app.name", default: "Triage") %></title>
+    <title><%= content_for(:title) || t("app.name") %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,7 +26,7 @@
   </head>
 
   <body>
-    <a href="#main-content" class="skip-to-main"><%= t("a11y.skip_to_main", default: "Skip to main") %></a>
+    <a href="#main-content" class="skip-to-main"><%= t("a11y.skip_to_main") %></a>
 
     <%= render "shared/toasts" %>
 

@@ -1,61 +1,61 @@
-<% content_for :title, t("settings.tabs.sso", default: "SSO") %>
+<% content_for :title, t("settings.tabs.sso") %>
 
 <header class="page-header">
-  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
 </header>
 
 <%= render "shared/settings_tabs" %>
 
 <%= form_with model: @setting, url: settings_sso_path, method: :patch, class: "card-apple" do |f| %>
   <div class="card-apple__header">
-    <h3 class="card-apple__title m-0"><%= t("settings.sso.title", default: "External SSO (JWT)") %></h3>
-    <p class="card-apple__subtitle m-0"><%= t("settings.sso.subtitle", default: "Клиенты с собственной системой авторизации могут логиниться через JWT-токен") %></p>
+    <h3 class="card-apple__title m-0"><%= t("settings.sso.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.sso.subtitle") %></p>
   </div>
 
   <div class="row g-3 mt-2">
     <div class="col-12">
       <div class="form-check form-switch">
         <%= f.check_box :enabled, checked: @setting.get("enabled") == "1", class: "form-check-input", role: "switch" %>
-        <%= f.label :enabled, t("settings.sso.enabled", default: "SSO включён"), class: "form-check-label" %>
+        <%= f.label :enabled, t("settings.sso.enabled"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
-      <%= f.label :secret, t("settings.sso.secret", default: "JWT Secret"), class: "form-label" %>
+      <%= f.label :secret, t("settings.sso.secret"), class: "form-label" %>
       <%= f.password_field :secret, value: @setting.get("secret"), class: "form-control", placeholder: "your-shared-secret" %>
     </div>
     <div class="col-md-6">
-      <%= f.label :algorithm, t("settings.sso.algorithm", default: "Алгоритм"), class: "form-label" %>
+      <%= f.label :algorithm, t("settings.sso.algorithm"), class: "form-label" %>
       <%= f.select :algorithm,
                    [["HS256", "HS256"], ["HS384", "HS384"], ["HS512", "HS512"]],
                    { selected: @setting.get("algorithm") || "HS256" },
                    { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-4">
-      <%= f.label :user_id_claim, t("settings.sso.user_id_claim", default: "Claim: user_id"), class: "form-label" %>
+      <%= f.label :user_id_claim, t("settings.sso.user_id_claim"), class: "form-label" %>
       <%= f.text_field :user_id_claim, value: @setting.get("user_id_claim") || "sub", class: "form-control" %>
     </div>
     <div class="col-md-4">
-      <%= f.label :email_claim, t("settings.sso.email_claim", default: "Claim: email"), class: "form-label" %>
+      <%= f.label :email_claim, t("settings.sso.email_claim"), class: "form-label" %>
       <%= f.text_field :email_claim, value: @setting.get("email_claim") || "email", class: "form-control" %>
     </div>
     <div class="col-md-4">
-      <%= f.label :name_claim, t("settings.sso.name_claim", default: "Claim: name"), class: "form-label" %>
+      <%= f.label :name_claim, t("settings.sso.name_claim"), class: "form-label" %>
       <%= f.text_field :name_claim, value: @setting.get("name_claim") || "name", class: "form-control" %>
     </div>
     <div class="col-md-6">
       <div class="form-check form-switch">
         <%= f.check_box :auto_provision, checked: @setting.get("auto_provision") != "0", class: "form-check-input", role: "switch" %>
-        <%= f.label :auto_provision, t("settings.sso.auto_provision", default: "Авто-создание пользователей"), class: "form-check-label" %>
+        <%= f.label :auto_provision, t("settings.sso.auto_provision"), class: "form-check-label" %>
       </div>
     </div>
   </div>
 
   <div class="callout callout--warning mt-3">
-    <strong><%= t("settings.sso.endpoint", default: "Endpoint") %>:</strong>
+    <strong><%= t("settings.sso.endpoint") %>:</strong>
     <code><%= external_sso_url(token: "TOKEN", return_to: "/") %></code>
   </div>
 
   <div class="d-flex justify-content-end mt-3">
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>

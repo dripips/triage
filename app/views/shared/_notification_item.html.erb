@@ -3,6 +3,6 @@
   <div class="notif-item-tr__dot"><% unless notification.read? %><span></span><% end %></div>
   <div class="notif-item-tr__content">
     <div class="notif-item-tr__text"><%= notification.message %></div>
-    <div class="notif-item-tr__time footnote text-tertiary"><%= time_ago_in_words(notification.created_at) %> назад</div>
+    <div class="notif-item-tr__time footnote text-tertiary"><%= time_ago_in_words(notification.created_at) %> <%= t("common.ago") %></div>
   </div>
 <% end %>

@@ -38,11 +38,11 @@
         <div class="row g-2 align-items-end">
           <div class="col-md-3">
             <label class="footnote text-tertiary"><%= t("invoice_items.name") %></label>
-            <%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: t("invoice_items.name_placeholder", default: "Service, product...") %>
+            <%= item_f.text_field :name, class: "form-control form-control-sm", placeholder: t("invoice_items.name_placeholder") %>
           </div>
           <div class="col-md-2">
             <label class="footnote text-tertiary"><%= t("invoice_items.description") %></label>
-            <%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: t("invoice_items.desc_placeholder", default: "Optional") %>
+            <%= item_f.text_field :description, class: "form-control form-control-sm", placeholder: t("invoice_items.desc_placeholder") %>
           </div>
           <div class="col-md-1">
             <label class="footnote text-tertiary"><%= t("invoice_items.qty") %></label>
@@ -60,7 +60,7 @@
           <div class="col-md-2">
             <label class="footnote text-tertiary" title="<%= t('invoice_items.surcharge_tooltip', default: 'Hidden surcharge — not visible to client') %>">
               <%= t("invoice_items.surcharge") %> %
-              <span class="pill pill--warning pill--sm ms-1" title="<%= t('invoice_items.surcharge_tooltip') %>"><%= t("invoice_items.hidden_short", default: "hid.") %></span>
+              <span class="pill pill--warning pill--sm ms-1" title="<%= t('invoice_items.surcharge_tooltip') %>"><%= t("invoice_items.hidden_short") %></span>
             </label>
             <%= item_f.number_field :surcharge_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm text-end", placeholder: "0" %>
           </div>
@@ -80,11 +80,11 @@
       <div class="row g-2 align-items-end">
         <div class="col-md-3">
           <label class="footnote text-tertiary"><%= t("invoice_items.name") %></label>
-          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][name]" class="form-control form-control-sm" placeholder="<%= t("invoice_items.name_placeholder", default: "Service, product...") %>">
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][name]" class="form-control form-control-sm" placeholder="<%= t("invoice_items.name_placeholder") %>">
         </div>
         <div class="col-md-2">
           <label class="footnote text-tertiary"><%= t("invoice_items.description") %></label>
-          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][description]" class="form-control form-control-sm" placeholder="<%= t("invoice_items.desc_placeholder", default: "Optional") %>">
+          <input type="text" name="invoice[invoice_items_attributes][NEW_IDX][description]" class="form-control form-control-sm" placeholder="<%= t("invoice_items.desc_placeholder") %>">
         </div>
         <div class="col-md-1">
           <label class="footnote text-tertiary"><%= t("invoice_items.qty") %></label>
@@ -99,7 +99,7 @@
           <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][discount_percent]" value="0" step="0.5" min="0" max="100" class="form-control form-control-sm text-end">
         </div>
         <div class="col-md-2">
-          <label class="footnote text-tertiary"><%= t("invoice_items.surcharge") %> % <span class="pill pill--warning pill--sm"><%= t("invoice_items.hidden_short", default: "hid.") %></span></label>
+          <label class="footnote text-tertiary"><%= t("invoice_items.surcharge") %> % <span class="pill pill--warning pill--sm"><%= t("invoice_items.hidden_short") %></span></label>
           <input type="number" name="invoice[invoice_items_attributes][NEW_IDX][surcharge_percent]" value="0" step="0.5" min="0" max="100" class="form-control form-control-sm text-end">
         </div>
         <div class="col-md-1 d-flex align-items-end justify-content-end">
@@ -122,7 +122,7 @@
       <div class="col-md-3">
         <label class="form-label">
           <%= t("invoices.surcharge") %>
-          <span class="pill pill--warning pill--sm ms-1" title="<%= t('invoices.surcharge_tooltip', default: 'Hidden — not shown to client') %>"><%= t("invoice_items.hidden_short", default: "hid.") %></span>
+          <span class="pill pill--warning pill--sm ms-1" title="<%= t('invoices.surcharge_tooltip', default: 'Hidden — not shown to client') %>"><%= t("invoice_items.hidden_short") %></span>
         </label>
         <%= f.number_field :surcharge_percent, step: 0.5, min: 0, max: 100, class: "form-control form-control-sm" %>
       </div>

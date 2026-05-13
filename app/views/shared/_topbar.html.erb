@@ -9,7 +9,7 @@
     </svg>
   </button>
 
-  <span class="topbar-apple__title"><%= content_for?(:page_title) ? yield(:page_title) : (content_for(:title).presence || t("app.name", default: "Triage")) %></span>
+  <span class="topbar-apple__title"><%= content_for?(:page_title) ? yield(:page_title) : (content_for(:title).presence || t("app.name")) %></span>
 
   <div class="topbar-apple__spacer"></div>
 

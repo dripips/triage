@@ -1,15 +1,15 @@
 <div id="chat-form">
   <%= form_with model: ConversationMessage.new, url: ticket_messages_path(ticket), class: "chat-input-tr", data: { turbo_frame: "_top" } do |f| %>
     <div class="chat-input-tr__row">
-      <%= f.text_area :body, rows: 2, class: "form-control", placeholder: t("chat.placeholder", default: "Написать сообщение..."), required: true %>
+      <%= f.text_area :body, rows: 2, class: "form-control", placeholder: t("chat.placeholder"), required: true %>
       <div class="chat-input-tr__actions">
         <% if current_user&.staff? %>
           <label class="form-check m-0">
             <%= f.check_box :internal, class: "form-check-input" %>
-            <span class="footnote"><%= t("chat.internal_short", default: "Внутр.") %></span>
+            <span class="footnote"><%= t("chat.internal_short") %></span>
           </label>
         <% end %>
-        <%= f.submit t("chat.send", default: "Отправить"), class: "btn btn-primary btn-sm" %>
+        <%= f.submit t("chat.send"), class: "btn btn-primary btn-sm" %>
       </div>
     </div>
   <% end %>

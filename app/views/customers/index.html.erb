@@ -1,10 +1,10 @@
-<% content_for :title, t("navigation.customers", default: "Клиенты") %>
+<% content_for :title, t("navigation.customers") %>
 
 <header class="page-header">
   <div>
-    <div class="page-header__eyebrow"><%= t("navigation.admin", default: "Администрирование") %></div>
-    <h1 class="page-header__title m-0"><%= t("navigation.customers", default: "Клиенты") %></h1>
-    <p class="page-header__subtitle m-0"><%= t("customers.summary", default: "%{count} клиентов", count: @customers.size) %></p>
+    <div class="page-header__eyebrow"><%= t("navigation.admin") %></div>
+    <h1 class="page-header__title m-0"><%= t("navigation.customers") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("customers.summary", count: @customers.size) %></p>
   </div>
   <div class="page-header__actions">
     <%= link_to "+ #{t('customers.new', default: 'Добавить клиента')}", new_customer_path, class: "btn btn-primary" %>
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="ticket-row-tr__pills">
-          <span class="pill pill--neutral"><%= t("roles.customer", default: "Клиент") %></span>
+          <span class="pill pill--neutral"><%= t("roles.customer") %></span>
           <% if c.locale.present? %><span class="pill pill--info"><%= c.locale.upcase %></span><% end %>
         </div>
       <% end %>
@@ -40,8 +40,8 @@
 <% else %>
   <div class="card-apple">
     <div class="empty-state">
-      <h3 class="empty-state__title"><%= t("customers.empty", default: "Клиентов пока нет") %></h3>
-      <p class="footnote text-secondary-apple"><%= t("customers.empty_hint", default: "Клиенты появятся автоматически через SSO или email-форму") %></p>
+      <h3 class="empty-state__title"><%= t("customers.empty") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("customers.empty_hint") %></p>
       <%= link_to "+ #{t('customers.new', default: 'Добавить вручную')}", new_customer_path, class: "btn btn-primary mt-2" %>
     </div>
   </div>

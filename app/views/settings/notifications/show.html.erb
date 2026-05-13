@@ -1,49 +1,49 @@
-<% content_for :title, t("settings.tabs.notifications", default: "Уведомления") %>
+<% content_for :title, t("settings.tabs.notifications") %>
 
 <header class="page-header">
-  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
 </header>
 
 <%= render "shared/settings_tabs" %>
 
 <%= form_with model: @setting, url: settings_notification_path, method: :patch, class: "card-apple" do |f| %>
   <div class="card-apple__header">
-    <h3 class="card-apple__title m-0"><%= t("settings.notifications.title", default: "Уведомления") %></h3>
-    <p class="card-apple__subtitle m-0"><%= t("settings.notifications.subtitle", default: "Когда и как отправлять уведомления команде и клиентам") %></p>
+    <h3 class="card-apple__title m-0"><%= t("settings.notifications.title") %></h3>
+    <p class="card-apple__subtitle m-0"><%= t("settings.notifications.subtitle") %></p>
   </div>
 
   <div class="row g-3 mt-2">
     <div class="col-12">
       <div class="form-check form-switch">
         <%= f.check_box :in_app_enabled, checked: @setting.get("in_app_enabled") != "0", class: "form-check-input", role: "switch" %>
-        <%= f.label :in_app_enabled, t("settings.notifications.in_app", default: "In-app уведомления (toast)"), class: "form-check-label" %>
+        <%= f.label :in_app_enabled, t("settings.notifications.in_app"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-check form-switch">
         <%= f.check_box :email_on_new_ticket, checked: @setting.get("email_on_new_ticket") != "0", class: "form-check-input", role: "switch" %>
-        <%= f.label :email_on_new_ticket, t("settings.notifications.email_new", default: "Email при новом тикете"), class: "form-check-label" %>
+        <%= f.label :email_on_new_ticket, t("settings.notifications.email_new"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-check form-switch">
         <%= f.check_box :email_on_comment, checked: @setting.get("email_on_comment") != "0", class: "form-check-input", role: "switch" %>
-        <%= f.label :email_on_comment, t("settings.notifications.email_comment", default: "Email при новом комментарии"), class: "form-check-label" %>
+        <%= f.label :email_on_comment, t("settings.notifications.email_comment"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-check form-switch">
         <%= f.check_box :email_on_transition, checked: @setting.get("email_on_transition") == "1", class: "form-check-input", role: "switch" %>
-        <%= f.label :email_on_transition, t("settings.notifications.email_transition", default: "Email при смене статуса"), class: "form-check-label" %>
+        <%= f.label :email_on_transition, t("settings.notifications.email_transition"), class: "form-check-label" %>
       </div>
     </div>
     <div class="col-md-6">
-      <%= f.label :digest_frequency, t("settings.notifications.digest", default: "Дайджест"), class: "form-label" %>
+      <%= f.label :digest_frequency, t("settings.notifications.digest"), class: "form-label" %>
       <%= f.select :digest_frequency,
                    [
-                     [t("settings.notifications.digest_none", default: "Отключён"), "none"],
-                     [t("settings.notifications.digest_daily", default: "Ежедневный"), "daily"],
-                     [t("settings.notifications.digest_weekly", default: "Еженедельный"), "weekly"]
+                     [t("settings.notifications.digest_none"), "none"],
+                     [t("settings.notifications.digest_daily"), "daily"],
+                     [t("settings.notifications.digest_weekly"), "weekly"]
                    ],
                    { selected: @setting.get("digest_frequency") || "none" },
                    { class: "form-select", data: { controller: "apple-select" } } %>
@@ -51,6 +51,6 @@
   </div>
 
   <div class="d-flex justify-content-end mt-3">
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -1,8 +1,8 @@
-<% content_for :title, t("settings.tabs.ai", default: "AI ассистент") %>
+<% content_for :title, t("settings.tabs.ai") %>
 
 <header class="page-header">
   <div>
-    <h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1>
+    <h1 class="page-header__title m-0"><%= t("settings.title") %></h1>
   </div>
 </header>
 
@@ -24,8 +24,8 @@
     <div class="card-apple mb-3">
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h3 class="card-apple__title m-0"><%= t("settings.ai.title", default: "AI ассистент") %></h3>
-          <p class="card-apple__subtitle m-0"><%= t("settings.ai.subtitle", default: "Настройка AI-модели для работы с тикетами") %></p>
+          <h3 class="card-apple__title m-0"><%= t("settings.ai.title") %></h3>
+          <p class="card-apple__subtitle m-0"><%= t("settings.ai.subtitle") %></p>
         </div>
         <div class="form-check form-switch">
           <%= f.check_box :enabled, checked: @setting.get("enabled").to_s == "1" || @setting.get("enabled") == true,
@@ -39,22 +39,22 @@
         <label class="filter-chip-tr" data-ai-settings-target="modeChip" style="cursor:pointer">
           <%= f.radio_button :mode, "standard", checked: mode == "standard",
               data: { ai_settings_target: "modeRadio", action: "change->ai-settings#switchMode" }, class: "d-none" %>
-          <%= t("settings.ai.mode_standard", default: "Стандартный") %>
+          <%= t("settings.ai.mode_standard") %>
         </label>
         <label class="filter-chip-tr" data-ai-settings-target="modeChip" style="cursor:pointer">
           <%= f.radio_button :mode, "advanced", checked: mode == "advanced",
               data: { ai_settings_target: "modeRadio", action: "change->ai-settings#switchMode" }, class: "d-none" %>
-          <%= t("settings.ai.mode_advanced", default: "Расширенный") %>
+          <%= t("settings.ai.mode_advanced") %>
         </label>
       </div>
       <div class="footnote text-tertiary">
-        <%= t("settings.ai.mode_hint", default: "Стандартный — готовые пресеты. Расширенный — полный контроль.") %>
+        <%= t("settings.ai.mode_hint") %>
       </div>
     </div>
 
     <%# ── Provider ── %>
     <div class="card-apple mb-3">
-      <h4 class="card-apple__title mb-3"><%= t("settings.ai.provider", default: "Провайдер") %></h4>
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.provider") %></h4>
       <div class="d-flex flex-wrap gap-2">
         <% presets.each do |key, preset| %>
           <label class="filter-chip-tr" data-ai-settings-target="providerChip" style="cursor:pointer">
@@ -70,14 +70,14 @@
     <div class="card-apple mb-3">
       <div class="row g-3">
         <div class="col-12">
-          <%= f.label :api_key, t("settings.ai.api_key", default: "API ключ"), class: "form-label" %>
+          <%= f.label :api_key, t("settings.ai.api_key"), class: "form-label" %>
           <%= f.password_field :api_key, value: "",
               class: "form-control",
               placeholder: @setting.get("api_key").present? ? "••••••••••• (saved)" : "sk-..., AQVN..., ..." %>
-          <div class="footnote text-tertiary mt-1"><%= t("settings.ai.api_key_hint", default: "Оставьте пустым чтобы сохранить текущий ключ.") %></div>
+          <div class="footnote text-tertiary mt-1"><%= t("settings.ai.api_key_hint") %></div>
         </div>
         <div class="col-12" data-ai-settings-target="apiUrlBlock">
-          <%= f.label :api_base_url, t("settings.ai.api_base_url", default: "API Endpoint URL"), class: "form-label" %>
+          <%= f.label :api_base_url, t("settings.ai.api_base_url"), class: "form-label" %>
           <%= f.text_field :api_base_url, value: @setting.get("api_base_url") || @ai.api_url,
               class: "form-control text-mono", style: "font-size:13px",
               placeholder: "https://api.openai.com/v1/chat/completions" %>
@@ -87,7 +87,7 @@
 
     <%# ── Models ── %>
     <div class="card-apple mb-3">
-      <h4 class="card-apple__title mb-3"><%= t("settings.ai.model_select", default: "Модель") %></h4>
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.model_select") %></h4>
 
       <%# Standard mode: rich model cards per provider %>
       <% presets.each do |pkey, preset| %>
@@ -133,14 +133,14 @@
 
       <%# Custom provider: always free-form %>
       <div data-ai-settings-target="modelCards" data-provider="custom">
-        <%= f.label :model, t("settings.ai.model_custom", default: "Название модели:"), class: "form-label" %>
+        <%= f.label :model, t("settings.ai.model_custom"), class: "form-label" %>
         <%= f.text_field :model, value: model_key, class: "form-control text-mono", style: "font-size:13px",
             placeholder: "llama3.2, mistral, my-fine-tuned-model..." %>
       </div>
 
       <%# Free-form field for advanced mode (all providers) %>
       <div class="mt-3" data-ai-settings-target="advancedBlock">
-        <%= f.label :model, t("settings.ai.model_freeform", default: "Или впишите модель вручную:"), class: "form-label" %>
+        <%= f.label :model, t("settings.ai.model_freeform"), class: "form-label" %>
         <%= f.text_field :model, value: model_key, class: "form-control text-mono", style: "font-size:13px",
             placeholder: "claude-sonnet-4-5-20250514, gpt-4.1..." %>
       </div>
@@ -148,7 +148,7 @@
 
     <%# ── AI Features ── %>
     <div class="card-apple mb-3">
-      <h4 class="card-apple__title mb-3"><%= t("settings.ai.features_title", default: "AI-функции") %></h4>
+      <h4 class="card-apple__title mb-3"><%= t("settings.ai.features_title") %></h4>
       <div class="row g-3">
         <% %w[auto_categorize auto_suggest_reply auto_summarize auto_sentiment].each do |key| %>
           <div class="col-md-6">
@@ -164,7 +164,7 @@
     <%# ── Advanced params ── %>
     <div data-ai-settings-target="advancedBlock">
       <div class="card-apple mb-3">
-        <h4 class="card-apple__title mb-3"><%= t("settings.ai.advanced_title", default: "Расширенные параметры") %></h4>
+        <h4 class="card-apple__title mb-3"><%= t("settings.ai.advanced_title") %></h4>
         <div class="row g-3">
           <div class="col-md-4">
             <%= f.label :temperature, "Temperature", class: "form-label" %>
@@ -175,11 +175,11 @@
             <%= f.number_field :max_tokens, value: @setting.get("max_tokens") || "1024", step: 128, min: 128, max: 16384, class: "form-control" %>
           </div>
           <div class="col-md-4">
-            <%= f.label :monthly_budget_usd, t("settings.ai.budget", default: "Бюджет $/мес"), class: "form-label" %>
+            <%= f.label :monthly_budget_usd, t("settings.ai.budget"), class: "form-label" %>
             <%= f.number_field :monthly_budget_usd, value: @setting.get("monthly_budget_usd") || "5", step: 1, min: 0, class: "form-control" %>
           </div>
           <div class="col-12">
-            <%= f.label :system_prompt, t("settings.ai.system_prompt", default: "Системный промпт"), class: "form-label" %>
+            <%= f.label :system_prompt, t("settings.ai.system_prompt"), class: "form-label" %>
             <%= f.text_area :system_prompt, value: @setting.get("system_prompt"), rows: 8, class: "form-control text-mono",
                 style: "font-family:'JetBrains Mono',monospace;font-size:13px",
                 placeholder: "Ты — AI-ассистент helpdesk-системы Triage..." %>
@@ -189,16 +189,16 @@
     </div>
 
     <div class="d-flex justify-content-end mb-4">
-      <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+      <%= f.submit t("common.save"), class: "btn btn-primary" %>
     </div>
   </div>
 
   <%# ═══ RIGHT: cost + usage ═══ %>
   <div class="col-12 col-xl-5">
     <div class="card-apple mb-3">
-      <h4 class="card-apple__title mb-2"><%= t("settings.ai.cost_title", default: "Калькулятор стоимости") %></h4>
+      <h4 class="card-apple__title mb-2"><%= t("settings.ai.cost_title") %></h4>
       <table class="table table-sm mt-2">
-        <thead><tr><th><%= t("settings.ai.task", default: "Task") %></th><th><%= t("settings.ai.est_cost", default: "≈ Cost") %></th></tr></thead>
+        <thead><tr><th><%= t("settings.ai.task") %></th><th><%= t("settings.ai.est_cost") %></th></tr></thead>
         <tbody>
           <% TicketAi::TASK_KINDS.each do |task_key, task_info| %>
             <tr>
@@ -209,25 +209,25 @@
         </tbody>
       </table>
       <div class="footnote text-tertiary mt-2">
-        <%= t("settings.ai.model_label", default: "Model") %>: <strong><%= @ai.model_info[:label] %></strong> · <%= t("settings.ai.budget", default: "Budget") %>: $<%= @ai.monthly_budget %>/<%= t("settings.ai.month", default: "mo") %>
+        <%= t("settings.ai.model_label") %>: <strong><%= @ai.model_info[:label] %></strong> · <%= t("settings.ai.budget") %>: $<%= @ai.monthly_budget %>/<%= t("settings.ai.month") %>
       </div>
     </div>
 
     <div class="card-apple mb-3">
-      <h4 class="card-apple__title mb-2"><%= t("settings.ai.usage_title", default: "Расход за месяц") %></h4>
+      <h4 class="card-apple__title mb-2"><%= t("settings.ai.usage_title") %></h4>
       <div class="d-flex gap-3 mt-2">
         <div>
-          <div class="footnote text-tertiary"><%= t("settings.ai.usage_cost", default: "Spent") %></div>
+          <div class="footnote text-tertiary"><%= t("settings.ai.usage_cost") %></div>
           <strong class="text-mono">$<%= sprintf("%.2f", @usage_this_month) %></strong>
         </div>
         <div>
-          <div class="footnote text-tertiary"><%= t("settings.ai.usage_runs", default: "Requests") %></div>
+          <div class="footnote text-tertiary"><%= t("settings.ai.usage_runs") %></div>
           <strong><%= AiRun.where(company: current_company).this_month.count %></strong>
         </div>
       </div>
       <% if @by_kind.any? %>
         <table class="table table-sm mt-2">
-          <thead><tr><th><%= t("settings.ai.task", default: "Task") %></th><th>#</th><th>$</th></tr></thead>
+          <thead><tr><th><%= t("settings.ai.task") %></th><th>#</th><th>$</th></tr></thead>
           <tbody>
             <% @by_kind.each do |row| %>
               <tr>
@@ -239,7 +239,7 @@
           </tbody>
         </table>
       <% else %>
-        <p class="footnote text-secondary-apple m-0 mt-2"><%= t("settings.ai.no_usage", default: "No AI requests this month") %></p>
+        <p class="footnote text-secondary-apple m-0 mt-2"><%= t("settings.ai.no_usage") %></p>
       <% end %>
     </div>
   </div>

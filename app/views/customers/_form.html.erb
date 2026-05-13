@@ -5,34 +5,34 @@
 
   <div class="row g-3">
     <div class="col-md-6">
-      <%= f.label :name, t("users.name", default: "Имя"), class: "form-label" %>
+      <%= f.label :name, t("users.name"), class: "form-label" %>
       <%= f.text_field :name, required: true, class: "form-control" %>
     </div>
     <div class="col-md-6">
-      <%= f.label :email, t("users.email", default: "Email"), class: "form-label" %>
+      <%= f.label :email, t("users.email"), class: "form-label" %>
       <%= f.email_field :email, required: true, class: "form-control" %>
     </div>
     <div class="col-md-6">
-      <%= f.label :locale, t("users.locale", default: "Язык"), class: "form-label" %>
+      <%= f.label :locale, t("users.locale"), class: "form-label" %>
       <%= f.select :locale,
                    TriageLocales::AVAILABLE.map { |l| [ l[:native_name], l[:code] ] },
                    {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-6">
-      <%= f.label :external_id, t("customers.external_id", default: "External ID"), class: "form-label" %>
+      <%= f.label :external_id, t("customers.external_id"), class: "form-label" %>
       <%= f.text_field :external_id, class: "form-control",
-                        placeholder: t("customers.external_id_hint", default: "ID в вашей системе (опционально)") %>
+                        placeholder: t("customers.external_id_hint") %>
     </div>
     <div class="col-12">
-      <%= f.label :staff_notes, t("customers.staff_notes", default: "Internal notes"), class: "form-label" %>
+      <%= f.label :staff_notes, t("customers.staff_notes"), class: "form-label" %>
       <%= f.text_area :staff_notes, rows: 3, class: "form-control",
-          placeholder: t("customers.staff_notes_hint", default: "Only visible to staff. Customer does not see this.") %>
-      <div class="footnote text-tertiary mt-1"><%= t("customers.staff_notes_visibility", default: "Only visible to your team") %></div>
+          placeholder: t("customers.staff_notes_hint") %>
+      <div class="footnote text-tertiary mt-1"><%= t("customers.staff_notes_visibility") %></div>
     </div>
   </div>
 
   <div class="d-flex gap-2 justify-content-end mt-3">
-    <%= link_to t("common.cancel", default: "Отмена"), customers_path, class: "btn btn-ghost" %>
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= link_to t("common.cancel"), customers_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>

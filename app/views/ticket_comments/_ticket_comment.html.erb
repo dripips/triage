@@ -4,14 +4,14 @@
       <%= (ticket_comment.author&.respond_to?(:email) ? ticket_comment.author.email.to_s : "S").first(2).upcase %>
     </span>
     <div class="ticket-comment-tr__meta">
-      <strong><%= ticket_comment.author.respond_to?(:display_name) ? ticket_comment.author.display_name : t("system_user", default: "система") %></strong>
+      <strong><%= ticket_comment.author.respond_to?(:display_name) ? ticket_comment.author.display_name : t("system_user") %></strong>
       <% if ticket_comment.author.respond_to?(:kind_customer?) && ticket_comment.author.kind_customer? %>
-        <span class="pill pill--neutral"><%= t("roles.customer", default: "Клиент") %></span>
+        <span class="pill pill--neutral"><%= t("roles.customer") %></span>
       <% end %>
       <% if ticket_comment.internal %>
-        <span class="pill pill--warning"><%= t("ticket_comments.internal_badge", default: "внутренний") %></span>
+        <span class="pill pill--warning"><%= t("ticket_comments.internal_badge") %></span>
       <% end %>
-      <span class="footnote text-tertiary">· <%= time_ago_in_words(ticket_comment.created_at) %> <%= t("common.ago", default: "назад") %></span>
+      <span class="footnote text-tertiary">· <%= time_ago_in_words(ticket_comment.created_at) %> <%= t("common.ago") %></span>
     </div>
   </div>
   <div class="ticket-comment-tr__body" style="white-space: pre-wrap;"><%= ticket_comment.body %></div>

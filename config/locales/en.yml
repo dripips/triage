@@ -151,6 +151,113 @@ en:
     states: "%{n} states"
     transitions: "%{n} transitions"
     initial_state: "Initial: %{s}"
+  knowledge:
+    title_field: Title
+    body: Content
+    ticket_type: Ticket type
+    all_types: "— All types —"
+    position: Position (sort order)
+    publish: Published (visible to AI and agents)
+    new: New article
+    created: Article created
+    updated: Article updated
+    deleted: Article deleted
+    summary: "%{count} articles"
+    empty: No articles yet
+    empty_hint: Knowledge base articles help the AI assistant give accurate answers.
+    published: published
+    draft: draft
+  price_lists:
+    name: Name
+    is_active: Active
+    new: New price list
+    created: Price list created
+    updated: Price list updated
+    deleted: Price list deleted
+    summary: "%{count} price lists"
+    empty: No price lists yet
+    empty_hint: Create a price list so agents see prices when replying to customers
+    items_count: "%{n} items"
+    active_label: active
+    inactive: inactive
+    items: Items
+  price_items:
+    name: Name
+    price: Price
+    status: Status
+    active_label: active
+    inactive: inactive
+    empty: Items are added via the button below
+  ticket_types:
+    new: New type
+    key: Key (slug)
+    name: Name
+    workflow_json: Workflow (JSON)
+    workflow_hint: "Keys: initial_state, states (array), transitions (event → { from, to })."
+    is_active: Active
+    created: Type created
+    updated: Type updated
+    disabled: Type disabled
+    active: active
+    disabled_label: disabled
+    summary: "%{count} types"
+    empty: No types yet
+    states: "%{n} states"
+    transitions: "%{n} transitions"
+    initial_state: "Initial: %{s}"
+  users:
+    new: Add staff member
+    name: Name
+    email: Email
+    role: Role
+    locale: Language
+    password: Password
+    password_hint: Leave blank to auto-generate
+    created: Staff member added
+    updated: Profile updated
+    disabled: Staff member disabled
+    summary: "%{count} staff members"
+    empty: Team is empty
+  tickets:
+    title: Tickets
+    new: New ticket
+    subject: Subject
+    description: Description
+    priority_label: Priority
+    status: Status
+    assignee: Assignee
+    reporter: Reporter
+    type: Type
+    created_at: Created
+    updated_at: Updated
+    created: Ticket created
+    transitioned: Status updated
+    workflow: Workflow
+    comments: Comments
+    no_tickets: No tickets yet
+    no_tickets_hint: Create the first ticket to get started
+    no_comments: No comments yet
+    summary: "%{open} open · %{closed} closed"
+    anonymous: anonymous
+    unassigned: unassigned
+    scope_all: All
+    scope_mine: Mine
+    scope_open: Open
+    scope_closed: Closed
+    actions: Actions
+    take_work: Take this ticket
+    select_assignee: Assign to...
+    assign_btn: Assign
+    change_status: Change status
+    assigned_to: "Assigned to %{name}"
+    filters: Filters
+    apply_filters: Apply
+    reset_filters: Reset
+    priority:
+      low: low
+      normal: normal
+      high: high
+      urgent: urgent
   errors:
     not_found:
       title: Not found

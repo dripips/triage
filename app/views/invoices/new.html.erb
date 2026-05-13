@@ -1,15 +1,15 @@
-<% content_for :title, t("invoices.new", default: "Новый счёт") %>
+<% content_for :title, t("invoices.new") %>
 
 <header class="page-header">
   <div>
     <div class="page-header__eyebrow"><%= link_to "← #{t('invoices.title', default: 'Счета')}", invoices_path %></div>
-    <h1 class="page-header__title m-0"><%= t("invoices.new", default: "Новый счёт") %></h1>
+    <h1 class="page-header__title m-0"><%= t("invoices.new") %></h1>
     <% if @ticket %><p class="page-header__subtitle m-0">#<%= @ticket.id %> · <%= @ticket.subject %></p><% end %>
   </div>
   <% if @price_lists&.any? %>
     <div class="page-header__actions">
       <div class="d-flex gap-2 align-items-center">
-        <span class="footnote text-tertiary"><%= t("invoices.from_price_list", default: "Из прайса:") %></span>
+        <span class="footnote text-tertiary"><%= t("invoices.from_price_list") %></span>
         <% @price_lists.each do |pl| %>
           <%= link_to pl.name, new_invoice_path(ticket_id: @ticket&.id, from_price_list: pl.id), class: "btn btn-ghost btn-sm" %>
         <% end %>

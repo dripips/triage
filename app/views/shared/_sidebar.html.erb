@@ -2,7 +2,7 @@
   <div class="sidebar-apple__head">
     <%= link_to root_path, class: "sidebar-apple__brand" do %>
       <span class="sidebar-apple__brand-mark">T</span>
-      <span><%= t("app.name", default: "Triage") %></span>
+      <span><%= t("app.name") %></span>
     <% end %>
     <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#appSidebar" aria-label="Close"></button>
   </div>
@@ -10,7 +10,7 @@
   <%
     current_scope = params[:scope].to_s
     nav_sections = [
-      { title: t("navigation.workspace", default: "Рабочее пространство"),
+      { title: t("navigation.workspace"),
         items: [
           *(current_user&.staff? ? [
             { key: :tickets,    path: tickets_path,                icon: "kanban", scope_value: ""     },
@@ -21,14 +21,14 @@
           { key: :invoices, path: invoices_path, icon: "file" }
         ] },
       *(current_user&.staff? ? [
-        { title: t("navigation.team", default: "Команда"),
+        { title: t("navigation.team"),
           items: [
             { key: :team,       path: users_path,         icon: "people" },
             { key: :customers,  path: customers_path,     icon: "user_search" }
           ] }
       ] : []),
       *(current_user&.admin? || current_user&.superadmin? ? [
-        { title: t("navigation.admin", default: "Администрирование"),
+        { title: t("navigation.admin"),
           items: [
             { key: :ticket_types, path: ticket_types_path,  icon: "diagram" },
             { key: :knowledge,    path: settings_knowledge_articles_path, icon: "book", exact_prefix: "/settings/knowledge" },
@@ -88,30 +88,30 @@
           </li>
           <li><hr class="dropdown-divider"></li>
 
-          <li class="dropdown-menu-apple__group"><%= t("user_menu.language", default: "Язык") %></li>
+          <li class="dropdown-menu-apple__group"><%= t("user_menu.language") %></li>
           <li>
             <%= render "shared/language_segments" %>
           </li>
 
           <li><hr class="dropdown-divider"></li>
 
-          <li class="dropdown-menu-apple__group"><%= t("user_menu.theme", default: "Тема") %></li>
+          <li class="dropdown-menu-apple__group"><%= t("user_menu.theme") %></li>
           <li>
             <div class="theme-segments" role="radiogroup">
               <button type="button" class="theme-segment"
                       data-theme-target="option" data-action="click->theme#set" data-theme-mode-param="light">
                 <%= render "shared/icons/sun" %>
-                <span><%= t("user_menu.theme_light", default: "Светлая") %></span>
+                <span><%= t("user_menu.theme_light") %></span>
               </button>
               <button type="button" class="theme-segment"
                       data-theme-target="option" data-action="click->theme#set" data-theme-mode-param="dark">
                 <%= render "shared/icons/moon" %>
-                <span><%= t("user_menu.theme_dark", default: "Тёмная") %></span>
+                <span><%= t("user_menu.theme_dark") %></span>
               </button>
               <button type="button" class="theme-segment"
                       data-theme-target="option" data-action="click->theme#set" data-theme-mode-param="auto">
                 <%= render "shared/icons/monitor" %>
-                <span><%= t("user_menu.theme_auto", default: "Авто") %></span>
+                <span><%= t("user_menu.theme_auto") %></span>
               </button>
             </div>
           </li>
@@ -123,7 +123,7 @@
                           class: "dropdown-item dropdown-item--danger",
                           form: { class: "d-block" } do %>
               <span class="dropdown-item__icon"><%= render "shared/icons/logout" %></span>
-              <span><%= t("navigation.sign_out", default: "Выйти") %></span>
+              <span><%= t("navigation.sign_out") %></span>
             <% end %>
           </li>
         </ul>

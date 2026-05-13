@@ -1,10 +1,10 @@
-<% content_for :title, t("navigation.ticket_types", default: "Типы тикетов") %>
+<% content_for :title, t("navigation.ticket_types") %>
 
 <header class="page-header">
   <div>
-    <div class="page-header__eyebrow"><%= t("navigation.admin", default: "Администрирование") %></div>
-    <h1 class="page-header__title m-0"><%= t("navigation.ticket_types", default: "Типы тикетов") %></h1>
-    <p class="page-header__subtitle m-0"><%= t("ticket_types.summary", default: "%{count} типов", count: @ticket_types.size) %></p>
+    <div class="page-header__eyebrow"><%= t("navigation.admin") %></div>
+    <h1 class="page-header__title m-0"><%= t("navigation.ticket_types") %></h1>
+    <p class="page-header__subtitle m-0"><%= t("ticket_types.summary", count: @ticket_types.size) %></p>
   </div>
   <div class="page-header__actions">
     <%= link_to "+ #{t('ticket_types.new', default: 'Новый тип')}", new_ticket_type_path, class: "btn btn-primary" %>
@@ -20,18 +20,18 @@
             <code class="footnote text-tertiary"><%= tt.key %></code> · <%= tt.name %>
           </div>
           <div class="ticket-row-tr__meta">
-            <span><%= t("ticket_types.states", default: "%{n} состояний", n: tt.states.size) %></span>
+            <span><%= t("ticket_types.states", n: tt.states.size) %></span>
             <span>·</span>
-            <span><%= t("ticket_types.transitions", default: "%{n} переходов", n: tt.transitions.size) %></span>
+            <span><%= t("ticket_types.transitions", n: tt.transitions.size) %></span>
             <span>·</span>
-            <span><%= t("ticket_types.initial_state", default: "Стартовое: %{s}", s: tt.initial_state) %></span>
+            <span><%= t("ticket_types.initial_state", s: tt.initial_state) %></span>
           </div>
         </div>
         <div class="ticket-row-tr__pills">
           <% if tt.active %>
-            <span class="pill pill--success"><%= t("ticket_types.active", default: "активен") %></span>
+            <span class="pill pill--success"><%= t("ticket_types.active") %></span>
           <% else %>
-            <span class="pill pill--neutral"><%= t("ticket_types.disabled", default: "отключён") %></span>
+            <span class="pill pill--neutral"><%= t("ticket_types.disabled") %></span>
           <% end %>
         </div>
       <% end %>
@@ -40,7 +40,7 @@
 <% else %>
   <div class="card-apple">
     <div class="empty-state">
-      <h3 class="empty-state__title"><%= t("ticket_types.empty", default: "Типов пока нет") %></h3>
+      <h3 class="empty-state__title"><%= t("ticket_types.empty") %></h3>
       <%= link_to "+ #{t('ticket_types.new', default: 'Новый тип')}", new_ticket_type_path, class: "btn btn-primary mt-2" %>
     </div>
   </div>

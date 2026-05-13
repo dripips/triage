@@ -2,7 +2,7 @@
   <section class="auth-shell__form-side">
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-shell__form" }) do |f| %>
       <div class="sidebar-apple__brand" style="margin-bottom: var(--ds-space-4); padding: 0;">
-        <span class="sidebar-apple__brand-mark"><%= t("app.name", default: "Triage").first %></span>
+        <span class="sidebar-apple__brand-mark"><%= t("app.name").first %></span>
         <span><%= t("app.name") %></span>
       </div>
 

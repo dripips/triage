@@ -1,13 +1,13 @@
-<% content_for :title, t("settings.tabs.kb", default: "База знаний") %>
+<% content_for :title, t("settings.tabs.kb") %>
 
 <header class="page-header">
-  <div><h1 class="page-header__title m-0"><%= t("settings.title", default: "Настройки") %></h1></div>
+  <div><h1 class="page-header__title m-0"><%= t("settings.title") %></h1></div>
 </header>
 
 <%= render "shared/settings_tabs" %>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <p class="footnote text-secondary-apple m-0"><%= t("knowledge.summary", default: "%{count} статей", count: @articles.size) %></p>
+  <p class="footnote text-secondary-apple m-0"><%= t("knowledge.summary", count: @articles.size) %></p>
   <%= link_to "+ #{t('knowledge.new', default: 'Новая статья')}", new_settings_knowledge_article_path, class: "btn btn-primary btn-sm" %>
 </div>
 
@@ -24,9 +24,9 @@
         </div>
         <div class="ticket-row-tr__pills">
           <% if a.published %>
-            <span class="pill pill--success"><%= t("knowledge.published", default: "опубликована") %></span>
+            <span class="pill pill--success"><%= t("knowledge.published") %></span>
           <% else %>
-            <span class="pill pill--neutral"><%= t("knowledge.draft", default: "черновик") %></span>
+            <span class="pill pill--neutral"><%= t("knowledge.draft") %></span>
           <% end %>
         </div>
       <% end %>
@@ -35,8 +35,8 @@
 <% else %>
   <div class="card-apple">
     <div class="empty-state">
-      <h3 class="empty-state__title"><%= t("knowledge.empty", default: "Статей пока нет") %></h3>
-      <p class="footnote text-secondary-apple"><%= t("knowledge.empty_hint", default: "Статьи базы знаний помогают AI-ассистенту давать точные ответы.") %></p>
+      <h3 class="empty-state__title"><%= t("knowledge.empty") %></h3>
+      <p class="footnote text-secondary-apple"><%= t("knowledge.empty_hint") %></p>
     </div>
   </div>
 <% end %>

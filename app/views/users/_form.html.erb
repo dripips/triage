@@ -5,36 +5,36 @@
 
   <div class="row g-3">
     <div class="col-md-6">
-      <%= f.label :name, t("users.name", default: "Имя"), class: "form-label" %>
+      <%= f.label :name, t("users.name"), class: "form-label" %>
       <%= f.text_field :name, required: true, class: "form-control" %>
     </div>
     <div class="col-md-6">
-      <%= f.label :email, t("users.email", default: "Email"), class: "form-label" %>
+      <%= f.label :email, t("users.email"), class: "form-label" %>
       <%= f.email_field :email, required: true, class: "form-control" %>
     </div>
     <div class="col-md-6">
-      <%= f.label :role, t("users.role", default: "Роль"), class: "form-label" %>
+      <%= f.label :role, t("users.role"), class: "form-label" %>
       <%= f.select :role,
                    User.roles.keys.map { |r| [ I18n.t("roles.#{r}", default: r.humanize), r ] },
                    {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <div class="col-md-6">
-      <%= f.label :locale, t("users.locale", default: "Язык"), class: "form-label" %>
+      <%= f.label :locale, t("users.locale"), class: "form-label" %>
       <%= f.select :locale,
                    TriageLocales::AVAILABLE.map { |l| [ l[:native_name], l[:code] ] },
                    {}, { class: "form-select", data: { controller: "apple-select" } } %>
     </div>
     <% if user.new_record? %>
       <div class="col-md-6">
-        <%= f.label :password, t("users.password", default: "Пароль"), class: "form-label" %>
+        <%= f.label :password, t("users.password"), class: "form-label" %>
         <%= f.password_field :password, class: "form-control",
-                              placeholder: t("users.password_hint", default: "Оставьте пустым — сгенерируется") %>
+                              placeholder: t("users.password_hint") %>
       </div>
     <% end %>
   </div>
 
   <div class="d-flex gap-2 justify-content-end mt-3">
-    <%= link_to t("common.cancel", default: "Отмена"), users_path, class: "btn btn-ghost" %>
-    <%= f.submit t("common.save", default: "Сохранить"), class: "btn btn-primary" %>
+    <%= link_to t("common.cancel"), users_path, class: "btn btn-ghost" %>
+    <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>
 <% end %>
