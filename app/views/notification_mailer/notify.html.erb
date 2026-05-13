@@ -1,0 +1,5 @@
+<h2><%= @notification.action.humanize %></h2>
+<p><%= @notification.message %></p>
+<% if @notification.url.present? %>
+  <p><%= link_to t("notifications.view_details", default: "View details"), @notification.url %></p>
+<% end %>

@@ -383,6 +383,11 @@ ru:
       digest_none: Отключён
       digest_daily: Ежедневный
       digest_weekly: Еженедельный
+      telegram_enabled: Включён
+      telegram_token: Bot Token
+      telegram_chat_id: Chat ID
+      slack_enabled: Включён
+      slack_webhook: Webhook URL
     sso:
       title: External SSO (JWT)
       subtitle: Клиенты с собственной системой авторизации могут логиниться через JWT

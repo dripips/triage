@@ -23,8 +23,15 @@ class InAppNotification < ApplicationRecord
   end
 
   after_create_commit :broadcast_to_recipient
+  after_create_commit :deliver_external
 
   private
+
+  def deliver_external
+    NotificationDelivery.deliver(self)
+  rescue => e
+    Rails.logger.error("[InAppNotification] delivery failed: #{e.message}")
+  end
 
   def broadcast_to_recipient
     broadcast_prepend_to(

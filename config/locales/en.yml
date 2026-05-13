@@ -452,6 +452,11 @@ en:
       digest_none: Disabled
       digest_daily: Daily
       digest_weekly: Weekly
+      telegram_enabled: Enabled
+      telegram_token: Bot Token
+      telegram_chat_id: Chat ID
+      slack_enabled: Enabled
+      slack_webhook: Webhook URL
     sso:
       title: External SSO (JWT)
       subtitle: Customers with their own auth system can log in via JWT

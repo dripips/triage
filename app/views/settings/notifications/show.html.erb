@@ -50,6 +50,43 @@
     </div>
   </div>
 
+  <hr class="my-3">
+
+  <h5 class="mb-3">Telegram</h5>
+  <div class="row g-3">
+    <div class="col-md-2">
+      <div class="form-check form-switch">
+        <%= f.check_box :telegram_enabled, checked: @setting.get("telegram_enabled") == "1", class: "form-check-input", role: "switch" %>
+        <%= f.label :telegram_enabled, t("settings.notifications.telegram_enabled"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <%= f.label :telegram_bot_token, t("settings.notifications.telegram_token"), class: "form-label" %>
+      <%= f.text_field :telegram_bot_token, value: @setting.get("telegram_bot_token"), class: "form-control text-mono", style: "font-size:13px" %>
+    </div>
+    <div class="col-md-5">
+      <%= f.label :telegram_chat_id, t("settings.notifications.telegram_chat_id"), class: "form-label" %>
+      <%= f.text_field :telegram_chat_id, value: @setting.get("telegram_chat_id"), class: "form-control" %>
+    </div>
+  </div>
+
+  <hr class="my-3">
+
+  <h5 class="mb-3">Slack</h5>
+  <div class="row g-3">
+    <div class="col-md-2">
+      <div class="form-check form-switch">
+        <%= f.check_box :slack_enabled, checked: @setting.get("slack_enabled") == "1", class: "form-check-input", role: "switch" %>
+        <%= f.label :slack_enabled, t("settings.notifications.slack_enabled"), class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <%= f.label :slack_webhook_url, t("settings.notifications.slack_webhook"), class: "form-label" %>
+      <%= f.text_field :slack_webhook_url, value: @setting.get("slack_webhook_url"), class: "form-control text-mono", style: "font-size:13px",
+          placeholder: "https://hooks.slack.com/services/..." %>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-end mt-3">
     <%= f.submit t("common.save"), class: "btn btn-primary" %>
   </div>

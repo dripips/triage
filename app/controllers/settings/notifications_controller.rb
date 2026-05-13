@@ -15,7 +15,9 @@ module Settings
     def notification_params
       params.require(:app_setting).permit(
         :email_on_new_ticket, :email_on_comment, :email_on_transition,
-        :in_app_enabled, :digest_frequency
+        :in_app_enabled, :digest_frequency,
+        :telegram_enabled, :telegram_bot_token, :telegram_chat_id,
+        :slack_enabled, :slack_webhook_url
       )
     end
   end
