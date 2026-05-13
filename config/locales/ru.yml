@@ -263,6 +263,19 @@ ru:
     active_label: активна
     inactive: неактивна
     empty: Позиции добавляются кнопкой ниже
+  price_items:
+    name: Название
+    description: Описание
+    price: Цена
+    status: Статус
+    active_label: активна
+    inactive: неактивна
+    empty: Добавьте позиции ниже
+    new_placeholder: Название новой позиции
+    add: Добавить
+    created: Позиция добавлена
+    updated: Позиция обновлена
+    deleted: Позиция удалена
   notifications:
     title: Уведомления
     unread_count: "%{count} непрочитанных"

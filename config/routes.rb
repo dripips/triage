@@ -43,7 +43,9 @@ Rails.application.routes.draw do
         end
       end
       resources :knowledge_articles
-      resources :price_lists
+      resources :price_lists do
+        resources :price_items, only: %i[create update destroy], controller: "price_items"
+      end
     end
 
     root "tickets#index"
