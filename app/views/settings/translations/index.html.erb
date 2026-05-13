@@ -27,7 +27,7 @@
   </div>
 
   <% @entries.each do |entry| %>
-    <%= form_with url: update_settings_translations_path, method: :post,
+    <%= form_with url: settings_translations_path, method: :post,
         class: "d-flex gap-2 align-items-center py-2", style: "border-bottom:1px solid var(--ds-separator);" do %>
       <input type="hidden" name="key" value="<%= entry[:key] %>">
       <input type="hidden" name="locale_code" value="<%= @locale %>">
