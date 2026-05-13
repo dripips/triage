@@ -26,7 +26,24 @@
           <% if is_ai %><span class="pill pill--info pill--sm">AI</span><% end %>
         </div>
       <% end %>
-      <div class="chat-bubble-tr__text"><%= simple_format(conversation_message.body) %></div>
+      <% if conversation_message.body.present? %>
+        <div class="chat-bubble-tr__text"><%= simple_format(conversation_message.body) %></div>
+      <% end %>
+      <% if conversation_message.files.attached? %>
+        <div class="chat-bubble-tr__files">
+          <% conversation_message.files.each do |file| %>
+            <% if file.content_type&.start_with?("image/") %>
+              <%= link_to rails_blob_path(file, disposition: "inline"), target: "_blank", class: "chat-bubble-tr__img-link" do %>
+                <%= image_tag rails_blob_path(file, disposition: "inline"), class: "chat-bubble-tr__img" %>
+              <% end %>
+            <% else %>
+              <%= link_to rails_blob_path(file, disposition: "attachment"), class: "pill pill--info pill--sm" do %>
+                📎 <%= file.filename %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
       <div class="chat-bubble-tr__footer">
         <% if conversation_message.internal && is_mine %><span class="pill pill--warning pill--sm"><%= I18n.t("chat.internal_short") %></span><% end %>
         <span class="chat-bubble-tr__time"><%= conversation_message.created_at.strftime("%H:%M") %></span>

@@ -1,10 +1,11 @@
 class ConversationMessage < ApplicationRecord
   belongs_to :ticket
   belongs_to :author, polymorphic: true, optional: true
+  has_many_attached :files
 
   enum :message_type, { text: 0, system: 1, ai_suggestion: 2, file_attachment: 3 }
 
-  validates :body, presence: true
+  validates :body, presence: true, unless: -> { files.attached? }
 
   scope :chronological, -> { order(:created_at) }
   scope :public_only,   -> { where(internal: false) }

@@ -363,6 +363,7 @@ en:
     internal_short: Int.
     read: Read
     delivered: Delivered
+    attach_file: Attach file
   settings:
     title: Settings
     subtitle: System configuration for your company

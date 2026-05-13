@@ -269,6 +269,16 @@
 }
 .chat-bubble-tr--mine .chat-bubble-tr__read { color: rgba(255,255,255,0.8); }
 
+.chat-bubble-tr__files { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chat-bubble-tr__img { max-width: 240px; max-height: 180px; border-radius: 8px; object-fit: cover; }
+.chat-bubble-tr__img-link { display: inline-block; }
+.chat-input-tr__preview { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 0; }
+.chat-input-tr__attach {
+  cursor: pointer; display: inline-flex; align-items: center;
+  color: var(--ds-label-secondary, rgba(60,60,67,0.78));
+  &:hover { color: var(--ds-blue, #0A84FF); }
+}
+
 .chat-input-tr {
   border-top: 1px solid var(--ds-separator, rgba(60,60,67,0.18));
   padding-top: 12px;

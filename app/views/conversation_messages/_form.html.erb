@@ -1,9 +1,18 @@
 <div id="chat-form">
-  <%= form_with model: ConversationMessage.new, url: ticket_messages_path(ticket), class: "chat-input-tr", data: { turbo_frame: "_top" } do |f| %>
+  <%= form_with model: ConversationMessage.new, url: ticket_messages_path(ticket),
+                class: "chat-input-tr", data: { turbo_frame: "_top", controller: "chat-paste" } do |f| %>
     <div class="chat-input-tr__row">
-      <%= f.text_area :body, rows: 2, class: "form-control", placeholder: t("chat.placeholder"), required: true %>
+      <%= f.text_area :body, rows: 2, class: "form-control",
+          placeholder: t("chat.placeholder"),
+          data: { action: "paste->chat-paste#onPaste" } %>
       <div class="chat-input-tr__actions">
-        <% if current_user&.staff? %>
+        <label class="btn btn-ghost btn-sm chat-input-tr__attach" title="<%= t('chat.attach_file') %>">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <path d="M14 8.5l-5.5 5.5a4 4 0 01-5.65-5.65l5.5-5.5a2.67 2.67 0 013.77 3.77l-5.5 5.5a1.33 1.33 0 01-1.88-1.88l5-5"/>
+          </svg>
+          <%= f.file_field :files, multiple: true, class: "d-none", data: { chat_paste_target: "fileInput" } %>
+        </label>
+        <% if defined?(current_user) && current_user&.staff? rescue false %>
           <label class="form-check m-0">
             <%= f.check_box :internal, class: "form-check-input" %>
             <span class="footnote"><%= t("chat.internal_short") %></span>
@@ -12,5 +21,6 @@
         <%= f.submit t("chat.send"), class: "btn btn-primary btn-sm" %>
       </div>
     </div>
+    <div class="chat-input-tr__preview d-none" data-chat-paste-target="preview"></div>
   <% end %>
 </div>

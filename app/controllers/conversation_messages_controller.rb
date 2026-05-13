@@ -25,6 +25,6 @@ class ConversationMessagesController < ApplicationController
   end
 
   def message_params
-    params.require(:conversation_message).permit(:body, :internal)
+    params.require(:conversation_message).permit(:body, :internal, files: [])
   end
 end
