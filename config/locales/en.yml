@@ -156,3 +156,94 @@ en:
   sso:
     failed: "Authentication failed: %{e}"
     welcome: Welcome
+  ticket_system:
+    transition: "%{actor} changed status: %{from} → %{to}"
+    self_assign: "%{actor} took the ticket"
+    assigned: "%{actor} assigned to %{assignee}"
+    assigned_notification: "You've been assigned ticket %{ticket}"
+  system_user: System
+  invoices:
+    title: Invoices
+    new: New invoice
+    edit: Edit invoice
+    created: Invoice created
+    updated: Invoice updated
+    summary: "%{count} invoices"
+    empty: No invoices yet
+    empty_hint: Invoices are created from the ticket page
+    panel_title: Invoice
+    create_new: "+ Create invoice"
+    from_price_list: "From price list:"
+    status_label: Status
+    currency: Currency
+    discount: Discount %
+    tax_label: VAT %
+    tax_from_settings: VAT %
+    tax_hint: "Default from settings (%{rate}%). Can be overridden per invoice."
+    surcharge: Surcharge %
+    surcharge_hidden: Hide surcharge
+    due_at: Due by
+    date_issued: Date
+    related_ticket: Ticket
+    client: Client
+    issued_by: Issued by
+    items_title: Items
+    add_item: "+ Add item"
+    subtotal: Subtotal
+    discount_line: Discount
+    surcharge_line: Surcharge
+    tax: VAT
+    total: TOTAL
+    notes: Notes
+    notes_placeholder: Payment terms, details, comments...
+    price_hint: Quantity supports decimals.
+    no_items: No items
+    status:
+      draft: Draft
+      sent: Sent
+      paid: Paid
+      overdue: Overdue
+      cancelled: Cancelled
+  invoice_items:
+    name: Name
+    description: Description
+    qty: Qty
+    unit_price: Price
+    price_label: "Price (%{sym})"
+    item_discount: Discount
+    total: Total
+  notifications:
+    title: Notifications
+    unread_count: "%{count} unread"
+    mark_all_read: Mark all read
+    empty: No notifications
+    view_all: All notifications
+    actions:
+      ticket_created: New ticket
+      ticket_assigned: Ticket assigned
+      ticket_transitioned: Status changed
+      comment_added: New comment
+      message_received: New message
+      invoice_created: Invoice created
+  chat:
+    title: Chat
+    empty: Start a conversation
+    placeholder: Write a message...
+    send: Send
+    sent: Message sent
+    internal: internal
+    internal_short: Int.
+  settings:
+    title: Settings
+    subtitle: System configuration for your company
+    saved: Settings saved
+    tabs:
+      general: General
+      ai: AI Assistant
+      notifications: Notifications
+      sso: SSO
+      api: API Tokens
+      kb: Knowledge Base
+      price_lists: Price Lists
+      payments: Payments
+      chat: Chat

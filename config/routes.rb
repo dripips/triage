@@ -5,7 +5,10 @@ Rails.application.routes.draw do
     get "sso", to: "external_sso#callback", as: :external_sso
 
     resources :tickets, only: %i[index show new create] do
-      member { post :transition }
+      member do
+        post :transition
+        post :assign
+      end
       resources :comments, only: %i[create], controller: "ticket_comments"
       resources :messages, only: %i[create], controller: "conversation_messages"
     end

@@ -1,5 +1,5 @@
 class TicketsController < ApplicationController
-  before_action :load_ticket, only: %i[show transition]
+  before_action :load_ticket, only: %i[show transition assign]
 
   def index
     @tickets = filtered_scope.recent.includes(:ticket_type, :assignee, :reporter).limit(100)
@@ -42,6 +42,16 @@ class TicketsController < ApplicationController
     respond_to do |format|
       format.turbo_stream  # → app/views/tickets/transition.turbo_stream.erb
       format.html { redirect_to ticket_path(@ticket), notice: t("tickets.transitioned", default: "Статус обновлён") }
+    end
+  end
+
+  def assign
+    user = User.kept.staff_users.where(company: current_company).find(params[:assignee_id])
+    @ticket.assign_to!(user, actor: current_user)
+
+    respond_to do |format|
+      format.turbo_stream { redirect_to ticket_path(@ticket), notice: t("tickets.assigned_to", name: user.display_name, default: "Назначен на %{name}") }
+      format.html { redirect_to ticket_path(@ticket), notice: t("tickets.assigned_to", name: user.display_name, default: "Назначен на %{name}") }
     end
   end
 

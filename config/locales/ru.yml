@@ -81,6 +81,12 @@ ru:
     scope_mine: Мои
     scope_open: Открытые
     scope_closed: Закрытые
+    actions: Действия
+    take_work: Взять в работу
+    select_assignee: Назначить на...
+    assign_btn: Назначить
+    change_status: Сменить статус
+    assigned_to: "Назначен на %{name}"
     priority:
       low: низкий
       normal: обычный
@@ -248,6 +254,12 @@ ru:
       comment_added: Новый комментарий
       message_received: Новое сообщение
       invoice_created: Выставлен счёт
+  ticket_system:
+    transition: "%{actor} изменил статус: %{from} → %{to}"
+    self_assign: "%{actor} взял тикет в работу"
+    assigned: "%{actor} назначил на %{assignee}"
+    assigned_notification: "Вам назначен тикет %{ticket}"
+  system_user: Система
   chat:
     title: Чат
     empty: Начните переписку

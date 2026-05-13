@@ -100,11 +100,34 @@
       <p class="m-0" style="white-space:pre-wrap;font-size:14px;"><%= @ticket.description %></p>
     </div>
 
-    <%# ── Workflow transitions ── %>
-    <%= turbo_frame_tag dom_id(@ticket) do %>
-      <% if @transitions.any? %>
-        <div class="card-apple mb-3">
-          <h4 class="card-apple__title mb-2"><%= t("tickets.workflow", default: "Workflow") %></h4>
+    <%# ── Actions: assign + workflow ── %>
+    <div class="card-apple mb-3">
+      <h4 class="card-apple__title mb-3"><%= t("tickets.actions", default: "Действия") %></h4>
+
+      <%# Взять в работу / Назначить %>
+      <% if @ticket.assignee.nil? || @ticket.assignee != current_user %>
+        <div class="d-flex gap-2 mb-3">
+          <%= button_to t("tickets.take_work", default: "Взять в работу"),
+                        assign_ticket_path(@ticket, assignee_id: current_user.id),
+                        method: :post, class: "btn btn-primary btn-sm",
+                        form: { class: "d-inline-block" } %>
+        </div>
+      <% end %>
+
+      <% staff = User.kept.staff_users.where(company: current_company).where.not(id: @ticket.assignee_id) %>
+      <% if staff.any? %>
+        <%= form_with url: assign_ticket_path(@ticket), method: :post, class: "d-flex gap-2 mb-3" do |f| %>
+          <%= f.select :assignee_id, staff.map { |u| [u.display_name, u.id] },
+              { include_blank: t("tickets.select_assignee", default: "Назначить на...") },
+              { class: "form-select form-select-sm", data: { controller: "apple-select" }, style: "max-width: 200px;" } %>
+          <%= f.submit t("tickets.assign_btn", default: "Назначить"), class: "btn btn-soft btn-sm" %>
+        <% end %>
+      <% end %>
+
+      <%# Workflow transitions %>
+      <%= turbo_frame_tag dom_id(@ticket) do %>
+        <% if @transitions.any? %>
+          <div class="footnote text-tertiary mb-2"><%= t("tickets.change_status", default: "Сменить статус") %></div>
           <div class="d-flex gap-2 flex-wrap">
             <% @transitions.each do |event, _cfg| %>
               <%= button_to t("ticket_events.#{event}", default: event.to_s.humanize),
@@ -114,9 +137,9 @@
                             form: { class: "d-inline-block" } %>
             <% end %>
           </div>
-        </div>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
 
     <%# ── Invoice panel ── %>
     <div class="card-apple mb-3">
