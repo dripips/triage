@@ -215,6 +215,65 @@ if first_bug && first_bug.comments.count < 3
   first_bug.comments.create!(author: customers[0], body: "Спасибо, жду исправления — пока работаю через Chrome.", internal: false)
 end
 
+# ── 7. Knowledge base articles ─────────────────────────────────────────
+[
+  { title: "Как сбросить пароль", body: "Перейдите на страницу входа, нажмите «Забыли пароль?», введите email.", ticket_type: bug_type, published: true },
+  { title: "Правила приёма жалоб", body: "Жалоба регистрируется в течение 24 часов. Ответ клиенту — в течение 48 часов.", ticket_type: comp_type, published: true },
+  { title: "Как подключить VPN", body: "Скачайте Cisco AnyConnect, введите адрес сервера vpn.company.com, войдите с корпоративным логином.", ticket_type: it_type, published: true }
+].each do |attrs|
+  article = KnowledgeArticle.find_or_initialize_by(company: company, title: attrs[:title])
+  article.assign_attributes(attrs.merge(company: company, position: 0))
+  article.save!
+  puts "[seed] KB article: #{article.title}"
+end
+
+# ── 8. Price list + items ──────────────────────────────────────────────
+pl = PriceList.find_or_create_by!(company: company, name: "Основной прайс") do |p|
+  p.active = true
+end
+[
+  { name: "Консультация (30 мин)",  amount_cents: 150000, description: "Базовая консультация" },
+  { name: "Диагностика оборудования", amount_cents: 250000, description: "Полная проверка" },
+  { name: "Настройка ПО",           amount_cents: 300000, description: "Установка и настройка" },
+  { name: "Выезд специалиста",      amount_cents: 500000, description: "Выезд в пределах города" }
+].each do |attrs|
+  item = pl.price_items.find_or_initialize_by(name: attrs[:name])
+  item.assign_attributes(attrs.merge(active: true, position: 0))
+  item.save!
+end
+puts "[seed] price list: #{pl.name} (#{pl.price_items.count} items)"
+
+# ── 9. Chat messages for first ticket ─────────────────────────────────
+if first_bug && first_bug.conversation_messages.count < 3
+  first_bug.conversation_messages.create!(author: customers[0], body: "Добрый день! Кнопка сохранить не работает уже второй день.", message_type: :text)
+  first_bug.conversation_messages.create!(author: agent, body: "Здравствуйте! Спасибо за обращение. Уточните, пожалуйста — какая версия macOS?", message_type: :text)
+  first_bug.conversation_messages.create!(author: customers[0], body: "macOS Sonoma 14.5, Safari 17.4.1", message_type: :text)
+  first_bug.conversation_messages.create!(author: agent, body: "Спасибо, воспроизвёл. Передал фронтенд-команде, исправим в ближайшем релизе.", message_type: :text)
+  puts "[seed] chat messages for ticket ##{first_bug.id}"
+end
+
+# ── 10. Sample invoice ─────────────────────────────────────────────────
+if first_bug && Invoice.where(company: company, ticket: first_bug).none?
+  inv = Invoice.create!(
+    company: company, ticket: first_bug, user: admin,
+    currency: "RUB", status: :sent, tax_percent: 20, due_at: 7.days.from_now
+  )
+  inv.invoice_items.create!(name: "Диагностика Safari-бага", quantity: 1, unit_price_cents: 250000)
+  inv.invoice_items.create!(name: "Исправление фронтенда",   quantity: 2, unit_price_cents: 300000)
+  inv.recalculate_totals
+  inv.save!
+  puts "[seed] invoice: #{inv.number} (#{inv.formatted_total})"
+end
+
+# ── 11. Notifications ─────────────────────────────────────────────────
+admin = User.find_by(email: "admin@triage.local")
+if admin.in_app_notifications.count < 3
+  InAppNotification.create!(recipient: admin, actor: agent, action: "ticket_created", message: "Новый тикет: Layout сломан на iPhone SE", url: "/tickets/7")
+  InAppNotification.create!(recipient: admin, actor: sup, action: "ticket_assigned", message: "Вам назначен тикет #5", url: "/tickets/5")
+  InAppNotification.create!(recipient: admin, actor: customers[0], action: "message_received", message: "Новое сообщение в тикете #1", url: "/tickets/1")
+  puts "[seed] notifications for admin"
+end
+
 puts "[seed] done. password for all accounts: #{default_password}"
 puts ""
 puts "Test accounts:"

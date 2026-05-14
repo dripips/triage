@@ -59,10 +59,10 @@ class TicketTypesController < ApplicationController
       "initial_state" => "new",
       "states" => %w[new triage in_progress resolved closed],
       "transitions" => {
-        "triage"      => { "from" => ["new"],         "to" => "triage" },
-        "start"       => { "from" => ["triage"],      "to" => "in_progress" },
-        "resolve"     => { "from" => ["in_progress"], "to" => "resolved" },
-        "close"       => { "from" => ["resolved"],    "to" => "closed" }
+        "triage"      => { "from" => [ "new" ],         "to" => "triage" },
+        "start"       => { "from" => [ "triage" ],      "to" => "in_progress" },
+        "resolve"     => { "from" => [ "in_progress" ], "to" => "resolved" },
+        "close"       => { "from" => [ "resolved" ],    "to" => "closed" }
       }
     }
   end

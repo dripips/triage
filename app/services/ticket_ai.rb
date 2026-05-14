@@ -269,7 +269,7 @@ class TicketAi
         model: model_key,
         max_tokens: max_tokens,
         system: system_prompt,
-        messages: [{ role: "user", content: user_message }]
+        messages: [ { role: "user", content: user_message } ]
       }.to_json
     end
 
