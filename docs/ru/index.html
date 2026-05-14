@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="theme-color" content="#0A84FF">
+  <title>Triage — AI-helpdesk с открытым исходным кодом</title>
+  <meta name="description" content="Универсальный helpdesk для любой команды. AI-агенты, чат в реальном времени, счета, кастомные workflow. Rails 8 · Apple HIG · 3 языка. MIT лицензия.">
+  <link rel="canonical" href="https://dripips.github.io/triage/ru/">
+  <link rel="alternate" hreflang="en" href="https://dripips.github.io/triage/">
+  <link rel="alternate" hreflang="ru" href="https://dripips.github.io/triage/ru/">
+  <link rel="alternate" hreflang="de" href="https://dripips.github.io/triage/de/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Triage — AI-helpdesk с открытым исходным кодом">
+  <meta property="og:description" content="Универсальный helpdesk. AI-агенты · Чат · Счета · Rails 8 · MIT.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png">
+  <meta property="og:url" content="https://dripips.github.io/triage/ru/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar__row">
+    <a href="#top" class="brand">
+      <span class="brand__mark">T</span>
+      <span class="brand__name">Triage</span>
+      <span class="brand__pill">v1.0</span>
+    </a>
+    <nav class="topbar__nav">
+      <a href="#features">Возможности</a>
+      <a href="#install">Установка</a>
+      <div class="lang-switcher">
+        <a class="lang-switcher__opt" href="../">EN</a>
+        <span class="lang-switcher__opt is-active">RU</span>
+        <a class="lang-switcher__opt" href="../de/">DE</a>
+      </div>
+      <a href="https://github.com/dripips/triage" class="topbar__link-strong">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <div class="hero__eyebrow"><span class="dot dot--green"></span> Open source · MIT · v1.0</div>
+      <h1 class="hero__title">AI-helpdesk<br>для <span class="grad">любой команды</span>.</h1>
+      <p class="hero__lead">Универсальная система поддержки для <strong>любой индустрии</strong> — от IT до ветклиники. Чат, счета, AI-агенты, кастомные workflow. Rails 8 · Apple HIG · 3 языка.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#install">Установить за 2 минуты</a>
+        <a class="btn btn--ghost" href="https://github.com/dripips/triage">⭐ GitHub</a>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png" alt="Triage список тикетов" loading="eager" class="hero__shot">
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <h2 class="section-title">Что внутри</h2>
+    <div class="grid">
+      <div class="card"><div class="card__icon">🤖</div><h3>AI-агенты</h3><p>OpenAI / Anthropic / YandexGPT / Ollama. Авто-категоризация, подсказки ответов, резюме, анализ настроения. Автономный режим.</p></div>
+      <div class="card"><div class="card__icon">💬</div><h3>Чат как в Telegram</h3><p>Real-time через Turbo Streams + Action Cable. Прочитано ✓✓, разделители дат, вложения, вставка из буфера.</p></div>
+      <div class="card"><div class="card__icon">🧾</div><h3>Счета</h3><p>Скидки + скрытая наценка per-позиция. Прайс-листы. PDF. Stripe / ЮKassa / Тинькофф.</p></div>
+      <div class="card"><div class="card__icon">🔔</div><h3>Уведомления</h3><p>In-app колокольчик, Email, Telegram, Slack. Turbo Stream broadcast.</p></div>
+      <div class="card"><div class="card__icon">🔁</div><h3>Кастомные workflow</h3><p>Состояния per-типу тикета через JSON. Транзишены, авто-назначение.</p></div>
+      <div class="card"><div class="card__icon">🌐</div><h3>3 языка</h3><p>RU / EN / DE. Редактор переводов per-ключ. Управление языками в настройках.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="install">
+  <div class="container">
+    <h2 class="section-title">Быстрая установка</h2>
+    <pre class="code-block"><code>git clone https://github.com/dripips/triage.git
+cd triage
+bin/setup
+bin/dev</code></pre>
+    <p class="section-lead">Откройте <strong>http://localhost:3000</strong>. Логин: <code>admin@triage.local</code> / <code>password123</code>.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer__row">
+    <div><span class="brand__mark" style="display:inline-grid;width:28px;height:28px;place-items:center;border-radius:8px;background:linear-gradient(135deg,#0A84FF,#5E5CE6);color:#fff;font-weight:800;font-size:14px;">T</span> <strong>Triage</strong> · MIT · 2026</div>
+    <div><a href="https://github.com/dripips/triage">GitHub</a> · <a href="https://github.com/dripips/rubby-hrms">HRMS</a></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="theme-color" content="#0A84FF">
+
+  <title>Triage — Open-source AI-native helpdesk</title>
+  <meta name="description" content="Universal helpdesk for any team. AI agents for auto-categorization, suggested replies, sentiment. Real-time chat, invoicing, multi-tenant. Rails 8 · Apple HIG · 3 locales. MIT license.">
+  <link rel="canonical" href="https://dripips.github.io/triage/">
+  <link rel="alternate" hreflang="en" href="https://dripips.github.io/triage/">
+  <link rel="alternate" hreflang="ru" href="https://dripips.github.io/triage/ru/">
+  <link rel="alternate" hreflang="de" href="https://dripips.github.io/triage/de/">
+  <link rel="alternate" hreflang="x-default" href="https://dripips.github.io/triage/">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:title" content="Triage — Open-source AI-native helpdesk">
+  <meta property="og:description" content="Universal helpdesk for any team. AI agents · Real-time chat · Invoicing · Rails 8 · MIT.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png">
+  <meta property="og:image:width" content="1440">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="Triage ticket list preview">
+  <meta property="og:url" content="https://dripips.github.io/triage/">
+  <meta property="og:site_name" content="Triage">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Triage — Open-source AI-native helpdesk">
+  <meta name="twitter:description" content="Universal helpdesk. AI agents · Real-time chat · Invoicing · MIT.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png">
+
+  <link rel="icon" href="https://raw.githubusercontent.com/dripips/triage/master/public/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="./style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Triage",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Helpdesk, Customer Support",
+    "operatingSystem": "Linux, macOS, Windows (Docker)",
+    "description": "Open-source AI-native helpdesk for any team. Real-time chat, invoicing, custom workflows, multi-tenant.",
+    "license": "https://opensource.org/licenses/MIT",
+    "softwareVersion": "1.0",
+    "datePublished": "2026-05-14",
+    "url": "https://dripips.github.io/triage/",
+    "downloadUrl": "https://github.com/dripips/triage",
+    "screenshot": "https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "dripips", "url": "https://github.com/dripips" },
+    "inLanguage": [ "en", "ru", "de" ]
+  }
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar__row">
+    <a href="#top" class="brand">
+      <span class="brand__mark">T</span>
+      <span class="brand__name">Triage</span>
+      <span class="brand__pill">v1.0</span>
+    </a>
+    <nav class="topbar__nav">
+      <a href="#features">Features</a>
+      <a href="#ai">AI</a>
+      <a href="#install">Install</a>
+      <a href="#screenshots">Screenshots</a>
+      <div class="lang-switcher">
+        <span class="lang-switcher__opt is-active">EN</span>
+        <a class="lang-switcher__opt" href="./ru/">RU</a>
+        <a class="lang-switcher__opt" href="./de/">DE</a>
+      </div>
+      <a href="https://github.com/dripips/triage" class="topbar__link-strong">GitHub →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ─────────────── HERO ─────────────── -->
+<section class="hero" id="top">
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <div class="hero__eyebrow">
+        <span class="dot dot--green"></span> Open source · MIT · v1.0
+      </div>
+      <h1 class="hero__title">
+        AI-native helpdesk<br>
+        for <span class="grad">any team</span>.
+      </h1>
+      <p class="hero__lead">
+        Universal support system for <strong>any industry</strong> — from devs to vet clinics. Real-time chat, invoicing, AI agents, custom workflows. Rails 8 · Apple HIG · 3 locales.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#install">Install in 2 minutes</a>
+        <a class="btn btn--ghost" href="https://github.com/dripips/triage">⭐ Star on GitHub</a>
+      </div>
+      <div class="hero__meta">
+        <span>Rails 8.1</span><span>·</span>
+        <span>PostgreSQL 18</span><span>·</span>
+        <span>Hotwire</span><span>·</span>
+        <span>AI agents</span><span>·</span>
+        <span>RU · EN · DE</span>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png"
+           alt="Triage ticket list"
+           loading="eager"
+           class="hero__shot">
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── WHY ─────────────── -->
+<section class="why">
+  <div class="container">
+    <h2 class="section-title">Why another helpdesk?</h2>
+    <p class="section-lead">
+      Most OSS helpdesks were built before the LLM era and hardcode "customer support" vocabulary. They don't bend to an IT helpdesk for a school, a bug tracker for 3 devs, or a complaint system for a vet clinic.
+    </p>
+    <p class="section-lead">
+      <strong>Triage bends to your team.</strong> Every ticket type gets its own custom fields, workflow states, and AI behaviour. Configure once — the system adapts.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────── FEATURES ─────────────── -->
+<section class="features" id="features">
+  <div class="container">
+    <h2 class="section-title">What's inside</h2>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card__icon">🤖</div>
+        <h3>AI agents</h3>
+        <p>OpenAI / Anthropic / YandexGPT / Ollama. Auto-categorize, suggest replies, summarize threads, sentiment analysis. Autonomous mode monitors chats in real time.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">💬</div>
+        <h3>Telegram-style chat</h3>
+        <p>Real-time via Turbo Streams + Action Cable. Read receipts ✓✓, date separators, file attachments, clipboard paste. System events in chat feed.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🧾</div>
+        <h3>Invoicing</h3>
+        <p>Per-item discount + hidden surcharge. Price list integration. PDF print. Payment config: Stripe, YooKassa, Tinkoff.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🔔</div>
+        <h3>Multi-channel notifications</h3>
+        <p>In-app bell with badge, email (SMTP), Telegram bot, Slack webhook. Turbo Stream broadcast for real-time updates.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🔁</div>
+        <h3>Custom workflows</h3>
+        <p>AASM-like states defined per ticket type via JSON. Transitions, auto-assign, human-readable system comments.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🌐</div>
+        <h3>Three locales</h3>
+        <p>RU / EN / DE with full coverage. DB-backed per-key translation editor. Language management in settings.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">👥</div>
+        <h3>Staff / Customer</h3>
+        <p>Role-based access. Customers see only their tickets and public messages. Internal notes hidden from customers.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">🔐</div>
+        <h3>External SSO</h3>
+        <p>JWT-based login from any customer auth system. Per-company secret, claim mapping, auto-provision.</p>
+      </div>
+      <div class="card">
+        <div class="card__icon">⚙️</div>
+        <h3>11 settings sections</h3>
+        <p>General, AI, Notifications, SSO, API, Knowledge Base, Price Lists, Payments, Chat, Languages, Translations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── AI ─────────────── -->
+<section class="why" id="ai">
+  <div class="container">
+    <h2 class="section-title">AI that actually helps</h2>
+    <p class="section-lead">
+      Standard mode: pick a provider, enter API key, done. Advanced mode: custom endpoint, temperature, per-task prompts, budget cap. AI monitors every chat and suggests corrections when agents go off-track.
+    </p>
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card">
+        <h3>Auto-categorize</h3>
+        <p>New ticket → AI assigns category + priority + confidence.</p>
+      </div>
+      <div class="card">
+        <h3>Suggest reply</h3>
+        <p>AI drafts a reply based on ticket + KB + price list context.</p>
+      </div>
+      <div class="card">
+        <h3>Chat monitoring</h3>
+        <p>Autonomous AI watches conversations, posts internal suggestions when needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── SCREENSHOTS ─────────────── -->
+<section class="features" id="screenshots">
+  <div class="container">
+    <h2 class="section-title">Screenshots</h2>
+    <div class="screenshots">
+      <figure>
+        <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/01-tickets.png" alt="Ticket list" loading="lazy">
+        <figcaption>Ticket list with filters and scope chips</figcaption>
+      </figure>
+      <figure>
+        <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/02-ticket-show.png" alt="Ticket detail" loading="lazy">
+        <figcaption>Ticket detail — chat + meta + actions</figcaption>
+      </figure>
+      <figure>
+        <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/03-ticket-new.png" alt="New ticket" loading="lazy">
+        <figcaption>New ticket form</figcaption>
+      </figure>
+      <figure>
+        <img src="https://raw.githubusercontent.com/dripips/triage/master/docs/screenshots/04-sign-in.png" alt="Sign in" loading="lazy">
+        <figcaption>Sign-in with hero rotator</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── INSTALL ─────────────── -->
+<section class="why" id="install">
+  <div class="container">
+    <h2 class="section-title">Quick install</h2>
+    <pre class="code-block"><code>git clone https://github.com/dripips/triage.git
+cd triage
+bin/setup
+bin/dev</code></pre>
+    <p class="section-lead">Open <strong>http://localhost:3000</strong>. Login as <code>admin@triage.local</code> / <code>password123</code>.</p>
+  </div>
+</section>
+
+<!-- ─────────────── FOOTER ─────────────── -->
+<footer class="footer">
+  <div class="container footer__row">
+    <div>
+      <span class="brand__mark" style="display:inline-grid;width:28px;height:28px;place-items:center;border-radius:8px;background:linear-gradient(135deg,#0A84FF,#5E5CE6);color:#fff;font-weight:800;font-size:14px;">T</span>
+      <strong>Triage</strong> · MIT · 2026
+    </div>
+    <div>
+      <a href="https://github.com/dripips/triage">GitHub</a> ·
+      <a href="https://github.com/dripips/rubby-hrms">HRMS (sibling)</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
