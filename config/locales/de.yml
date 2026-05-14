@@ -10,6 +10,7 @@ de:
     edit: Bearbeiten
     delete: Löschen
     confirm_delete: Löschen?
+    close: Schließen
     search: Suche
     all: Alle
     yes: Ja
@@ -20,40 +21,305 @@ de:
     sign_in: Anmelden
     sign_out: Abmelden
     ago: her
+    time_ago: "vor %{time}"
   pundit:
     not_authorized: Zugriff verweigert
+  user_menu:
+    profile: Profil
+    settings: Einstellungen
+    language: Sprache
+    theme: Design
+    theme_light: Hell
+    theme_dark: Dunkel
+    theme_auto: Auto
   navigation:
     dashboard: Dashboard
-    tickets: Tickets
-    knowledge_base: Wissensdatenbank
+    workspace: Arbeitsbereich
+    tickets: Alle Tickets
+    my_tickets: Meine Tickets
+    invoices: Rechnungen
+    knowledge: Wissensdatenbank
+    team: Team
+    customers: Kunden
+    ticket_types: Ticket-Typen
+    admin: Verwaltung
     reports: Berichte
     settings: Einstellungen
+    sign_out: Abmelden
+    menu: Menü
   roles:
     agent: Agent
     supervisor: Supervisor
     admin: Admin
     superadmin: Super-Admin
+    customer: Kunde
   tickets:
     title: Tickets
     new: Neues Ticket
     subject: Betreff
     description: Beschreibung
-    priority: Priorität
+    priority_label: Priorität
     status: Status
     assignee: Bearbeiter
     reporter: Ersteller
     type: Typ
     created_at: Erstellt
-    updated_at: Aktualisiert
+    created: Ticket erstellt
+    transitioned: Status aktualisiert
+    workflow: Workflow
+    comments: Kommentare
     no_tickets: Noch keine Tickets
-    priorities:
-      low: Niedrig
-      normal: Normal
-      high: Hoch
-      urgent: Dringend
+    no_tickets_hint: Erstellen Sie das erste Ticket
+    no_comments: Noch keine Kommentare
+    summary: "%{open} offen · %{closed} geschlossen"
+    anonymous: anonym
+    unassigned: nicht zugewiesen
+    scope_all: Alle
+    scope_mine: Meine
+    scope_open: Offen
+    scope_closed: Geschlossen
+    actions: Aktionen
+    take_work: Ticket übernehmen
+    select_assignee: Zuweisen an...
+    assign_btn: Zuweisen
+    change_status: Status ändern
+    assigned_to: "Zugewiesen an %{name}"
+    filters: Filter
+    apply_filters: Anwenden
+    reset_filters: Zurücksetzen
+    priority:
+      low: niedrig
+      normal: normal
+      high: hoch
+      urgent: dringend
+  ticket_states:
+    new: Neu
+    triage: Triage
+    in_progress: In Bearbeitung
+    waiting_customer: Wartet auf Kunde
+    resolved: Gelöst
+    closed: Geschlossen
+    rejected: Abgelehnt
+    received: Eingegangen
+    investigating: Analyse
+    answered: Beantwortet
+    open: Offen
+    assigned: Zugewiesen
+    done: Erledigt
+  ticket_events:
+    triage: Zur Triage
+    start: Bearbeitung starten
+    resolve: Lösen
+    close: Schließen
+    reopen: Wieder öffnen
+    reject: Ablehnen
+    answer: Antworten
+    investigate: Untersuchen
+    assign: Zuweisen
+    complete: Abschließen
+  ticket_comments:
+    placeholder: Kommentar schreiben...
+    body_label: Kommentar
+    submit: Veröffentlichen
+    posted: Kommentar veröffentlicht
+    internal: Intern (nur Team)
+    internal_badge: intern
+  ticket_system:
+    transition: "%{actor} hat Status geändert: %{from} → %{to}"
+    self_assign: "%{actor} hat das Ticket übernommen"
+    assigned: "%{actor} hat an %{assignee} zugewiesen"
+    assigned_notification: "Ihnen wurde Ticket %{ticket} zugewiesen"
+  system_user: System
+  users:
+    new: Mitarbeiter hinzufügen
+    name: Name
+    email: E-Mail
+    role: Rolle
+    locale: Sprache
+    password: Passwort
+    password_hint: Leer lassen für automatische Generierung
+    created: Mitarbeiter hinzugefügt
+    updated: Profil aktualisiert
+    summary: "%{count} Mitarbeiter"
+    empty: Team ist leer
+  customers:
+    new: Kunde hinzufügen
+    external_id: Externe ID
+    external_id_hint: ID in Ihrem System (optional)
+    created: Kunde hinzugefügt
+    summary: "%{count} Kunden"
+    empty: Noch keine Kunden
+    empty_hint: Kunden erscheinen automatisch über SSO oder E-Mail
+    staff_notes: Interne Notizen
+    staff_notes_hint: Nur für das Team sichtbar
+    staff_notes_visibility: Nur für Ihr Team sichtbar
+    staff_notes_badge: Team-Notiz
+  invoices:
+    title: Rechnungen
+    new: Neue Rechnung
+    edit: Rechnung bearbeiten
+    created: Rechnung erstellt
+    updated: Rechnung aktualisiert
+    summary: "%{count} Rechnungen"
+    empty: Noch keine Rechnungen
+    empty_hint: Rechnungen werden aus der Ticket-Seite erstellt
+    panel_title: Rechnung
+    create_new: "+ Rechnung erstellen"
+    print_pdf: Drucken / PDF
+    status_label: Status
+    currency: Währung
+    discount: Rabatt %
+    surcharge: Aufschlag %
+    surcharge_hidden: Aufschlag ausblenden
+    tax_label: MwSt %
+    tax_from_settings: MwSt %
+    tax_hint: "Standard aus Einstellungen (%{rate}%). Kann pro Rechnung geändert werden."
+    due_at: Fällig bis
+    date_issued: Datum
+    related_ticket: Ticket
+    client: Kunde
+    issued_by: Erstellt von
+    items_title: Positionen
+    add_item: "+ Position hinzufügen"
+    subtotal: Zwischensumme
+    discount_line: Rabatt
+    surcharge_line: Aufschlag
+    tax: MwSt
+    total: GESAMT
+    notes: Anmerkungen
+    notes_placeholder: Zahlungsbedingungen, Details...
+    price_hint: Dezimalwerte unterstützt.
+    status:
+      draft: Entwurf
+      sent: Gesendet
+      paid: Bezahlt
+      overdue: Überfällig
+      cancelled: Storniert
+  invoice_items:
+    name: Bezeichnung
+    name_placeholder: Dienstleistung, Produkt...
+    description: Beschreibung
+    desc_placeholder: Optional
+    qty: Menge
+    unit_price: Preis
+    price_label: "Preis (%{sym})"
+    item_discount: Rabatt
+    surcharge: Aufschlag
+    surcharge_tooltip: Versteckter Aufschlag — für Kunden nicht sichtbar
+    hidden_short: verst.
+    total: Summe
+  notifications:
+    title: Benachrichtigungen
+    unread_count: "%{count} ungelesen"
+    mark_all_read: Alle als gelesen markieren
+    empty: Keine Benachrichtigungen
+    view_all: Alle Benachrichtigungen
+    actions:
+      ticket_created: Neues Ticket
+      ticket_assigned: Ticket zugewiesen
+      ticket_transitioned: Statusänderung
+      comment_added: Neuer Kommentar
+      message_received: Neue Nachricht
+      invoice_created: Rechnung erstellt
+  ai_actions:
+    title: KI-Assistent
+    suggest_reply: Antwort vorschlagen
+    categorize: Kategorisieren
+    summarize: Zusammenfassen
+    sentiment: Stimmungsanalyse
+    suggestion_ready: KI hat eine Antwort vorgeschlagen
+    categorized: KI hat das Ticket kategorisiert
+    summarized: KI hat eine Zusammenfassung erstellt
+    sentiment_done: KI hat die Stimmung analysiert
+  chat:
+    title: Chat
+    empty: Gespräch beginnen
+    placeholder: Nachricht schreiben...
+    send: Senden
+    sent: Nachricht gesendet
+    internal: intern
+    internal_short: Int.
+    read: Gelesen
+    delivered: Zugestellt
+    attach_file: Datei anhängen
+  knowledge:
+    title_field: Titel
+    body: Inhalt
+    ticket_type: Ticket-Typ
+    all_types: "— Alle Typen —"
+    position: Position
+    publish: Veröffentlicht
+    new: Neuer Artikel
+    created: Artikel erstellt
+    updated: Artikel aktualisiert
+    summary: "%{count} Artikel"
+    empty: Noch keine Artikel
+    empty_hint: Wissensdatenbank-Artikel helfen dem KI-Assistenten.
+    published: veröffentlicht
+    draft: Entwurf
+  price_lists:
+    name: Name
+    is_active: Aktiv
+    new: Neue Preisliste
+    summary: "%{count} Preislisten"
+    empty: Noch keine Preislisten
+    items: Positionen
+  price_items:
+    name: Bezeichnung
+    description: Beschreibung
+    price: Preis
+    new_placeholder: Name der neuen Position
+    add: Hinzufügen
+  ticket_types:
+    new: Neuer Typ
+    key: Schlüssel
+    name: Name
+    workflow_json: Workflow (JSON)
+    is_active: Aktiv
+    summary: "%{count} Typen"
+    empty: Noch keine Typen
+    states: "%{n} Zustände"
+    transitions: "%{n} Übergänge"
+    initial_state: "Start: %{s}"
+  settings:
+    title: Einstellungen
+    subtitle: Systemkonfiguration
+    saved: Einstellungen gespeichert
+    tabs:
+      general: Allgemein
+      ai: KI-Assistent
+      notifications: Benachrichtigungen
+      sso: SSO
+      api: API-Token
+      kb: Wissensdatenbank
+      price_lists: Preislisten
+      payments: Zahlungen
+      chat: Chat
+      languages: Sprachen
+      translations: Übersetzungen
   errors:
     not_found:
       title: Nicht gefunden
       message: Die angeforderte Seite existiert nicht.
   a11y:
     skip_to_main: Zum Inhalt springen
+  sso:
+    failed: "Authentifizierung fehlgeschlagen: %{e}"
+    welcome: Willkommen
+  auth:
+    sign_in: Anmelden
+    sign_up: Registrieren
+    email: E-Mail
+    password: Passwort
+    remember_me: Angemeldet bleiben
+    forgot_password: Passwort vergessen?
+    welcome_back: Willkommen zurück
+    welcome_back_subtitle: Melden Sie sich an, um fortzufahren.
+    create_account: Konto erstellen
+    hero:
+      title: Universelles Helpdesk der nächsten Generation.
+      subtitle: KI-nativ, multi-tenant, flexibel für jede Branche.
+      slogan_1: Tickets, die wissen, was zu tun ist.
+      slogan_2: Vom IT-Team bis zur Klinik — ein Produkt.
+      slogan_3: Workflow pro Ticket-Typ — passen Sie es an.
+      slogan_4: Kunden zufrieden, Agenten nicht ausgebrannt.

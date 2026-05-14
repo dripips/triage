@@ -48,7 +48,9 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :role, :locale, :password, :password_confirmation)
+    permitted = [ :email, :name, :locale, :password, :password_confirmation ]
+    permitted << :role if current_user&.admin? || current_user&.superadmin?
+    params.require(:user).permit(permitted)
   end
 
   def require_staff!
