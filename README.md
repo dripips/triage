@@ -37,19 +37,56 @@ Triage bends — **every ticket type has its own custom fields, workflow (AASM s
 
 ## Screenshots
 
+### Sign-in
+Split-screen hero with rotating slogans.
+![Sign in](docs/screenshots/01-sign-in.png)
+
 ### Ticket list
 Filter by type, priority, assignee. Scope chips (All / Mine / Open / Closed).
-![Tickets](docs/screenshots/01-tickets.png)
+![Tickets](docs/screenshots/02-tickets.png)
 
 ### Ticket detail
 Left: TG-style chat + comments. Right: meta, actions, assign, workflow, invoice.
-![Ticket show](docs/screenshots/02-ticket-show.png)
+![Ticket show](docs/screenshots/03-ticket-show.png)
 
-### New ticket
-![New ticket](docs/screenshots/03-ticket-new.png)
+### AI Assistant settings
+Standard (presets) or Advanced (full control). Cost calculator + usage dashboard.
+![AI Settings](docs/screenshots/10-settings-ai.png)
 
-### Sign-in
-![Sign in](docs/screenshots/04-sign-in.png)
+### Invoices
+![Invoices](docs/screenshots/08-invoices.png)
+
+<details>
+<summary><strong>More screenshots</strong></summary>
+
+#### New ticket
+![New ticket](docs/screenshots/04-ticket-new.png)
+
+#### Team
+![Team](docs/screenshots/05-team.png)
+
+#### Customers
+![Customers](docs/screenshots/06-customers.png)
+
+#### Ticket types
+![Ticket types](docs/screenshots/07-ticket-types.png)
+
+#### Settings
+![Settings](docs/screenshots/09-settings.png)
+
+#### Knowledge base
+![KB](docs/screenshots/11-knowledge-base.png)
+
+#### Price lists
+![Price lists](docs/screenshots/12-price-lists.png)
+
+#### Notifications
+![Notifications](docs/screenshots/13-notifications.png)
+
+#### Languages
+![Languages](docs/screenshots/14-languages.png)
+
+</details>
 
 ## Quick install
 
